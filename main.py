@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 import uvicorn
 from settings import settings
 from api import router
@@ -6,6 +7,7 @@ from api import router
 
 app = FastAPI()
 app.include_router(router)
+app.mount('/static', StaticFiles(directory='templates'), name='static')
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host=settings.server_host, port=settings.server_port, reload=True)
