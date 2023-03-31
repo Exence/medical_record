@@ -1,0 +1,5 @@
+scss/
+__pycache__/
+env/
+.env
+
