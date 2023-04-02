@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<head>
+	<link rel="stylesheet" href="{{ url_for('static', path='css/bootstrap.min.css') }}">
+	<link rel="icon" href="{{url_for('static', path='images/logo.png')}}">
+	{% block title %}
+	{% endblock %}
+</head>
+<body>
+	{% include 'navbar.html' %}
+	{% block content %}
+	{% endblock %}
+
+	
+	{% block script %}
+	{% endblock %}
+	<script src="{{ url_for('static', path='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>

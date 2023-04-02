@@ -19,12 +19,33 @@ def get_connection():
     finally:
         connection.close()
 
-def execute_read_query(connection, query):
+def execute_read_query_all(connection, query):
     cursor = connection.cursor()
     result = None
     try:
         cursor.execute(query)
         result = cursor.fetchall()
+        cursor.close()
         return result
+    except OperationalError as e:
+        print(f"The error '{e}' occurred")
+
+def execute_read_query_first(connection, query):
+    cursor = connection.cursor()
+    result = None
+    try:
+        cursor.execute(query)
+        result = cursor.fetchone()
+        cursor.close()
+        return result
+    except OperationalError as e:
+        print(f"The error '{e}' occurred")
+
+def execute_insert_query(connection, query, data):
+    try:
+        cursor = connection.cursor()
+        cursor.execute(query, data)
+        connection.commit()
+        cursor.close()
     except OperationalError as e:
         print(f"The error '{e}' occurred")

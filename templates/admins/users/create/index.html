@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}
+	<title> Создать пользователя </title>
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<h3> Новый пользователь </h3>
+    {% if msg %}
+			<div class="alert alert-success" role="success">
+				{{ msg }}
+			</div>
+		{% endif %}
+		{% if error %}
+			<div class="alert alert-danger" role="alert">
+		  		{{ error }}
+			</div>
+		{% endif %}
+		<form class="row g-3 needs-validation" id="validation-form" name="form_data" novalidate method="post">
+      <div class="col-md-4">
+        <label for="surname" class="form-label only-letters">Фамилия</label>
+        <input type="text" class="form-control" name="surname" id="surname" placeholder="Иванов" required>
+      </div>
+      <div class="col-md-4">
+        <label for="validation-name" class="form-label">Имя</label>
+        <input type="text" class="form-control only-letters" name="name" id="name" placeholder="Иван" required>
+      </div>
+      <div class="col-md-4">
+        <label for="validation-patronymic" class="form-label only-letters">Отчество</label>
+        <input type="text" class="form-control" name="patronymic" id="patronymic" placeholder="Иванович" required>
+      </div>
+      <div class="col-md-4">
+        <label for="validationCustomUsername" class="form-label">Имя пользователя</label>
+        <div class="input-group has-validation">
+          <span class="input-group-text" id="inputGroupPrepend">@</span>
+          <input type="text" class="form-control" name="login" id="login" aria-describedby="inputGroupPrepend" required>
+          <div class="invalid-feedback">
+            Пожалуйста, выберите имя пользователя.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="access_level" class="form-label">Уровень доступа</label>
+        <select class="form-select" name="access_level" id="access_level" required>
+          <option>db_admin</option>
+          <option>admin</option>
+          <option selected>user</option>
+        </select>
+        <div class="invalid-feedback">
+          Пожалуйста, выберите корректный уровень доступа.
+        </div>
+      </div>    
+      <div class="col-md-4">
+        <label for="kindergarten_name" class="form-label">Детский сад</label>
+        <select class="form-select" name="kindergarten_name" id="kindergarten_name" required>
+          <option selected> МБДОУ Детский сад №1</option>
+          <option> МБДОУ Детский сад №2</option>
+          <option> МБДОУ Детский сад №3</option>
+          <option> МБДОУ Детский сад №4</option>
+        </select>
+        <div class="invalid-feedback">
+          Пожалуйста, выберите корректный уровень доступа.
+        </div>
+      </div> 
+      <div class="col-md-4">
+          <label for="validation-patronymic" class="form-label">Пароль</label>
+          <input type="password" class="form-control" name="password" placeholder="Пароль" required>
+        </div>        
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit">Создать пользователя</button>
+      </div>
+    </form>
+	</div>
+{% endblock %}
+{% block script %}
+    <script src="{{ url_for('static', path='js/create_user.js') }}"></script>
+{% endblock %}

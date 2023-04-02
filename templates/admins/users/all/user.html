@@ -1,0 +1,9 @@
+<div class="card" style="width: 100%;">
+    <div class="card-body border border-warning rounded">
+      <h5 class="card-title">{{ obj.surname }} {{ obj.name }} {{ obj.patronymic }}</h5>
+      <p class="card-text">Уровень доступа: {{ obj.access_level }}</p>
+      <p class="card-text">{{ obj.kindergarten_name }}</p>
+      <a href="/users/update/{{obj.login}}/" class="btn btn-primary">Редактировать</a>
+      <a href="/users/delete/{{obj.login}}/" class="btn btn-danger">Удалить</a>
+    </div>
+  </div>

@@ -18,28 +18,16 @@ from pydantic import ValidationError
 from settings import settings
 from database import (
     get_connection,
-    execute_read_query,
+    execute_read_query_first,
 )
-from models.auth import (
-    Token,
-    User,
-    UserCreate,
-) 
+from models.auth import Token
+from models.user import User
+from services.serialization import serialization_user
+
 from typing import Any
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth')
-
-def _serialization_user(user_data: list) -> User:
-    return User (
-        login = user_data[0],
-        surname = user_data[1],
-        name = user_data[2],
-        patronymic = user_data[3],
-        password_hash = user_data[4],
-        access_level = user_data[5],
-        kindergarten_num = user_data[6])
-
 
 def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
     return AuthService.validate_token(token)
@@ -48,10 +36,6 @@ class AuthService():
     @classmethod
     def verify_password(cls, password: str, password_hash: str) -> bool:        
         return bcrypt.verify(password + settings.password_salt, password_hash)
-
-    @classmethod
-    def get_hashed_password(cls, password: str) -> str:
-        return bcrypt.encrypt(password + settings.password_salt)
 
     @classmethod
     def validate_token(cls, token: str) -> User:
@@ -70,7 +54,7 @@ class AuthService():
             )
         except JWTError:
             raise exception from None
-
+        
         user_data = payload.get('user')
         
         try:
@@ -97,23 +81,10 @@ class AuthService():
             settings.jwt_secret,
             algorithm=settings.jwt_algorithm,
         )
-
         return Token(access_token=token)
 
     def __init__(self, connection: Any = Depends(get_connection)):
         self.connection = connection
-
-    def register_new_user(self, user_data: UserCreate) -> Token:
-        user_data.password_hash = self.get_hashed_password(user_data.password_hash)
-        user = [(user_data.login, user_data.surname, user_data.name, user_data.patronymic, user_data.password_hash, user_data.access_level, user_data.kindergarten_num)]
-        insert_query = (
-        f"INSERT INTO users (login, surname, name, patronymic, password_hash, access_level, kindergarten_num) VALUES %s"
-        )
-        self.connection.autocommit = True
-        cursor = self.connection.cursor()
-        cursor.execute(insert_query, user)
-        return self.create_token(_serialization_user(user[0]))
-
 
     def authenticate_user(self, login: str, password: str) -> Token:
         exception = HTTPException(
@@ -123,13 +94,14 @@ class AuthService():
                 'WWW-Authenticate': 'bearer'
             },
         )
-        select_user = f"SELECT * FROM users WHERE login='{login}'"
-        query_user = execute_read_query(self.connection, select_user)
+        select_user = f"SELECT * FROM users WHERE login='{login.lower()}'"
+        query_user = execute_read_query_first(self.connection, select_user)
+
         if not query_user:
             raise exception
         
-        user = _serialization_user(query_user[0])
-        
+        user = serialization_user(self.connection, query_user)
+       
         if not self.verify_password(password, user.password_hash):
             raise exception
 

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}
+	<title> Пользователи </title>
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<h3> Все пользователи... </h3>
+		{% if msg %}
+			<div class="alert alert-success" role="alert">
+  				{{msg}}
+			</div>
+		{% endif %}
+		{% if error %}
+			<div class="alert alert-danger" role="alert">
+		  		{{ error }}
+			</div>
+		{% endif %}
+		<div class="row">
+			{% for user in users %}
+				<div class="col-md-4 mr-auto">
+					{% with obj=user %}
+						{% include '/admins/users/all/user.html' %}
+					{% endwith %}
+					{% if loop.index % 3 %}
+						<br>
+					{% endif %}
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
