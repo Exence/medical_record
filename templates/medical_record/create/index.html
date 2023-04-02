@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block title %}
+	<title> Завести новую медкарту </title>
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<h3> Создание медкарты </h3>
+		{% if msg %}
+			<div class="alert alert-success" role="alert">
+  				{{msg}}
+			</div>
+		{% endif %}
+		{% if error %}
+			<div class="alert alert-danger" role="alert">
+		  		{{ error }}
+			</div>
+		{% endif %}
+		<form class="row g-3 needs-validation" id="validation-form" name="form_data" novalidate method="post">
+            <div class="col-12">
+                <label for="kindergarten_name" class="form-label">Детский сад</label>
+                <div class="col-md-3">
+                    <select class="form-select" name="kindergarten_name" id="kindergarten_name" required>
+                        <option selected> МБДОУ Детский сад №1</option>
+                        <option> МБДОУ Детский сад №2</option>
+                        <option> МБДОУ Детский сад №3</option>
+                        <option> МБДОУ Детский сад №4</option>
+                      </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+              <label for="surname" class="form-label">Фамилия</label>
+              <input type="text" class="form-control only-letters" name="surname" id="surname" placeholder="Иванов" required>
+            </div>
+            <div class="col-md-4">
+              <label for="name" class="form-label">Имя</label>
+              <input type="text" class="form-control only-letters" name="name" id="name" placeholder="Иван" required>
+            </div>
+            <div class="col-md-4">
+              <label for="patronymic" class="form-label">Отчество</label>
+              <input type="text" class="form-control only-letters" name="patronymic" id="patronymic" placeholder="Иванович" required>
+            </div>
+            <div class="form-group col-md-2" >
+                <label for="birthday" class="form-label" required>Дата рождения</label>
+                <input type="date" class="form-control" name="birthday" id="birthday">
+                <div class="invalid-feedback">
+                    Пожалуйста, введите дату рождения.
+                </div>
+            </div>
+            <div class="form-group col-md-2" >
+                <label>Пол</label>
+                <div class="form-check col-md-2">
+                    <input class="form-check-input" type="radio" name="sex" id="flexRadioSex1">
+                    <label class="form-check-label" for="flexRadioSex1">
+                    Мужской
+                    </label>
+                </div>
+                <div class="form-check col-md-2">
+                    <input class="form-check-input" type="radio" name="sex" id="flexRadioSex2" checked>
+                    <label class="form-check-label" for="flexRadioSex2">
+                    Женский
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-2">
+              <label for="group_num" class="form-label">Группа</label>
+              <select class="form-select" name="group_num" id="group_num" required>
+                <option selected>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+              </select>
+            </div> 
+            <div class="form-group col-md-2" >
+                <label for="entering_date" class="form-label">Дата поступления</label>
+                <input type="date" class="form-control" name="entering_date" id="entering_date">
+                <div class="invalid-feedback" required>
+                    Пожалуйста, введите дату поступления.
+                </div>
+            </div>   
+            <div class="col-md-4">
+              <label for="clinic" class="form-label">Обслуживающая поликлиника</label>
+              <select class="form-select" name="clinic" id="clinic" required>
+                <option selected>Городская детская поликлиника №1</option>
+                <option>Городская детская поликлиника №2</option>
+                <option>Городская детская поликлиника №3</option>
+                <option>Городская детская поликлиника №4</option>
+              </select>
+            </div> 
+            <div class="col-12">
+                <label for="address" class="form-label">Домашний адрес</label>
+              <input type="text" class="form-control" name="address" id="address" placeholder="Город, улица, дом, квартира" required>
+            </div> 
+            <div class="col-md-4">
+                <label for="exampleDataList" class="form-label">Отец</label>
+                <input class="form-control" type="text" placeholder="Выберите: 'Внести данные'" aria-label="Выберите: 'Внести данные'" name="father" id="father-input" readonly>
+            </div>
+            <div class="col-md-2  align-self-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#parentModal" id="create-father-btn">
+                    Внести данные
+                </button>
+            </div>
+            <div class="col-md-4">
+                <label for="exampleDataList" class="form-label">Мать</label>
+                <input class="form-control" type="text" placeholder="Выберите: 'Внести данные'" aria-label="Выберите: 'Внести данные'" name="mother" id="mother-input" readonly>
+            </div>  
+            <div class="col-md-2  align-self-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#parentModal" id="create-mother-btn">
+                    Внести данные
+                </button>
+            </div>
+            <div class="col-md-4">
+                <label for="family_characteristics" class="form-label">Характеристика семьи</label>
+                <select class="form-select" name="family_characteristics" id="family_characteristics" required>
+                  <option selected>Полная</option>
+                  <option>Неполная</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="family_microclimate" class="form-label">Микроклимат в семье</label>
+                <select class="form-select" name="family_microclimate" id="family_microclimate" required>
+                  <option selected>Благоприятный</option>
+                  <option>Неблагоприятный</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="rest_and_class_opportunities" class="form-label">Место для отдыха и занятий</label>
+                <select class="form-select" name="rest_and_class_opportunities" id="rest_and_class_opportunities" required>
+                  <option selected>Комната</option>
+                  <option>Индивидуальный стол</option>
+                  <option>Нет</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label for="case_history" class="form-label">Семейный анамнез</label>
+                <textarea class="form-control" name="case_history" id="case_history" rows="5"></textarea>
+            </div>
+            <div class="col-12">
+              <button class="btn btn-primary" type="submit">Сохранить медкарту</button>
+            </div>
+          </form>
+          </div>
+	</div>
+
+    <!-- Father modal -->
+    <div class="modal fade" id="parentModal" tabindex="-1" aria-labelledby="parentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="parentModalLabel">Добавление данных</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <label for="surname-modal" class="form-label">Фамилия</label>
+                    <input type="text" class="form-control only-letters-modal" id="surname-modal" placeholder="Иванов" required>
+                </div>
+                <div class="col-md-12">
+                    <label for="name-modal" class="form-label">Имя</label>
+                    <input type="text" class="form-control only-letters-modal" id="name-modal" placeholder="Иван" required>
+                </div>
+                <div class="col-md-12">
+                    <label for="patronymic-modal" class="form-label">Отчество</label>
+                    <input type="text" class="form-control only-letters-modal" id="patronymic-modal " placeholder="Иванович" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="birthday_year" class="form-label">Год рождения</label>
+                    <input type="text" class="form-control only-digits-modal" id="birthday_year" placeholder="ГГГГ" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="education" class="form-label">Образование</label>
+                    <select class="form-select" id="education-modal" required>
+                      <option selected>б/обр.</option>
+                      <option>н/ср.</option>
+                      <option>ср.</option>
+                      <option>ср.-спец.</option>
+                      <option>н/высш.</option>
+                      <option>высш.</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="phone" class="form-label">Номер телефона</label>
+                    <div class="input-group has-validation">
+                        <span class="input-group-text" id="inputGroupPrepend">+7</span>                        
+                        <input type="tel" class="form-control only-digits-modal" id="phone-modal" placeholder="1234567890" required>
+                    </div>                    
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="modal-commit">Сохранить</button>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', path='js/create_medcard.js') }}"></script>
+{% endblock %}
