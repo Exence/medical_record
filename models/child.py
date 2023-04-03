@@ -129,12 +129,12 @@ class CreateChildForm(BaseModel):
         address: str = Form(...),
         clinic: str = Form(...),
         entering_date: str = Form(...),
-        father: str = Form(),
-        mother: str = Form(),
+        father: str = Form(default=""),
+        mother: str = Form(default=""),
         family_characteristics: str = Form(...),
         family_microclimate: str = Form(...),
         rest_and_class_opportunities: str = Form(...),
-        case_history: str = Form(...)
+        case_history: str = Form(default="")
     ):
         return cls(surname = surname,
             name = name,
