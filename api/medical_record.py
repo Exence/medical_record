@@ -37,7 +37,7 @@ def create_user(request: Request,
     if service.create_new_medcard(form_data, access_token):
         msg = "Новая медкарта успешно добавлена в систему"
     else:
-        error = "Ошибка работы с БД при добавлении медкарты"
+        error = "Ошибка работы с БД при добавлении медкарты. Медкарта НЕ добавлена!"
     return templates.TemplateResponse(
-                    "/admins/users/create/index.html", {"request": request, "msg": msg, "error": error}
+                    "/medical_record/create/index.html", {"request": request, "msg": msg, "error": error}
                 )

@@ -8,7 +8,6 @@ from pydantic import (
 import re
 
 
-LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 REACTION_MATCH_PATTERN = re.compile(r"^(Не|За)медленная$")
 
@@ -16,62 +15,6 @@ class OrmModel(BaseModel):
     class Config:
         orm_mode = True
 
-        
-class KindergartenBase(BaseModel):
-    number: int = Field(..., gt=-1, lt=1000)
-    name: str = Field(...,max_length=150)
-
-class Kindergarten(KindergartenBase, OrmModel):
-    pass
-
-class KindergartenCreate(KindergartenBase):
-    pass
-
-class ParentBase(BaseModel):
-    surname: str = Field(..., max_length=150)
-    name: str = Field(..., max_length=150)
-    patronymic: str = Field(..., max_length=150)
-    birthday_year: int = Field(..., gt=1900)
-    education: str = Field(...)
-    phone_num: int = Field(...,gt=80000000000, lt=90000000000)
-
-class Parent(ParentBase, OrmModel):
-    id: int = Field(...)
-
-
-class ParentCreate(ParentBase):
-    @validator("name")
-    def validate_name(cls, value):
-        if not LETTER_MATCH_PATTERN.match(value):
-            raise HTTPException(
-                status_code=422, detail="Name should contains only letters"
-            )
-        return value
-    
-    @validator("surname")
-    def validate_surname(cls, value):
-        if not LETTER_MATCH_PATTERN.match(value):
-            raise HTTPException(
-                status_code=422, detail="Surname should contains only letters"
-            )
-        return value
-    
-    @validator("patronymic")
-    def validate_patronymic(cls, value):
-        if not LETTER_MATCH_PATTERN.match(value):
-            raise HTTPException(
-                status_code=422, detail="Patronymic should contains only letters"
-            )
-        return value
-    
-    @validator("education")
-    def validate_education(cls, value):
-        if not value in ['б/обр.', 'н/ср.', 'ср.', 'ср.-спец.', 'н/высш.', 'высш.']:
-            raise HTTPException(
-                status_code=422, detail="Education should be in ['б/обр.', 'н/ср.', 'ср.', 'ср.-спец.', 'н/высш.', 'высш.']"
-            )
-        return value
-    
 
 class MedicalCertificateBase(BaseModel):
     medcard_num: int = Field(...)
