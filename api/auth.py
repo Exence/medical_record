@@ -36,18 +36,19 @@ async def sign_in(
             login=form_data.username,
             password=form_data.password
         )
+        current_user = service.validate_token(jwt_token.access_token)
         msg = "Login Succesful"
         response = templates.TemplateResponse(
-                    "login_page/index.html", {"request": request, "msg": msg}
+                    "cabinet/index.html", {"request": request, "msg": msg, "user": current_user}
                 )
         response.set_cookie(
             key="access_token", value=f"{jwt_token.access_token}", httponly=True
         )
         return response
     except:
-        msg = "Something Wrong while authentication or storing tokens!"
+        error = "Something Wrong while authentication or storing tokens!"
         return templates.TemplateResponse(
-            "login_page/index.html", {"request": request, "error": msg}
+            "login_page/index.html", {"request": request, "error": error}
         )
 
 @router.get('/user', response_model=User)
@@ -56,3 +57,12 @@ def get_user(user: User = Depends(get_current_user)):
     Получение текущего Пользователя
     """
     return user
+
+@router.get('/leave')
+def delete_cookies( response: Response, request: Request,):
+    msg = "Выход успешно выполнен"
+    response = templates.TemplateResponse(
+                "login_page/index.html", {"request": request, "msg": msg}
+            )
+    response.delete_cookie(key="access_token")
+    return response

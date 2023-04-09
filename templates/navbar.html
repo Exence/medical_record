@@ -8,28 +8,31 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">На главную</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/docs/">Docs</a>
-          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Медкарты
+              Справочники
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="/medical_record/all">Просмотр медкарт</a></li>
-              <li><a class="dropdown-item" href="/medical_record/create">Завести новую медкарту</a></li>
+              <li><a class="dropdown-item" href="/vaccinations/vac_names">Наименования прививок</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Аккаунт
+              Работа с медкартами
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="/register">Личный кабинет</a></li>
-              <li><a class="dropdown-item" href="/login">Войти в систему</a></li>
+              <li><a class="dropdown-item" href="/medical_record/create">Создание</a></li>
+              <li><a class="dropdown-item" href="/medical_record/all">Просмотр</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Отчеты
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/reports/annual ">Годовой отчет</a></li>
+              <li><a class="dropdown-item" href="/reports/immunization">Отчет по прививкам</a></li>
+              <li><a class="dropdown-item" href="/reports/tuberculin">Туберкулинодиагностика</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -37,9 +40,13 @@
               Пользователи
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="/users/create">Добавить нового пользователя</a></li>
-              <li><a class="dropdown-item" href="/users/all">Редактировать/удалить пользователя</a></li>
+              <li><a class="dropdown-item" href="/users/cabinet">Личный кабинет</a></li>
+              <li><a class="dropdown-item" href="/users/create">Добавление</a></li>
+              <li><a class="dropdown-item" href="/users/all">Просмотр / редактирование / удаление</a></li>
             </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/auth/leave">Выход</a>
           </li>
         </ul>
         <form class="d-flex" action="/search">

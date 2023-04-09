@@ -1,0 +1,9 @@
+<div name="div-mother-{{ mother.id }}" class="col-12 mb-3">
+    <p><strong>Мать: </strong> <u><mark>{{ mother.surname }} {{ mother.name }} {{ mother.patronymic }}, {{ mother.birthday_year }} г.р.</mark></u>, образование: <u><mark>{{ mother.education }}</mark></u> </br>
+    <strong>тел.: </strong> <u><mark>{{ mother.phone_num }}</mark></u>
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" id="btn-update-mother">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" id="btn-delete-mother" onclick="">Удалить</button>
+    </div>
+</div>

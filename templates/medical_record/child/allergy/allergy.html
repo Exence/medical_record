@@ -1,0 +1,13 @@
+<div name="div-{{ allergy.allergen.replace(' ', '') }}" class="col-12 mb-3">
+    <p><strong>Аллерген: </strong> <u><mark>{{ allergy.allergen }}</mark></u>, 
+    тип: <u><mark>{{ allergy.allergy_type }}</mark></u>, возраст начала: <u><mark>{{ allergy.start_age }}</mark></u>,
+    тип реакции: <u><mark>{{ allergy.reaction_type }}</mark></u>, дата постановки диагноза: <u><mark>{{ allergy.diagnosis_date }}</mark></u>
+    {% if allergy.note %}
+    </br><small>Примечание: <em>{{ allergy.note }}</em></small>
+    {% endif %}
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#allergyModal" id="btn-update-{{ allergy.allergen.replace(' ', '') }}" value="{{ allergy.allergen }}///{{ allergy.allergy_type }}///{{ allergy.start_age }}///{{ allergy.reaction_type }}///{{ allergy.diagnosis_date }}///{{ allergy.note }}" onclick="update_allergy('{{ allergy.allergen }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" id="btn-delete-{{ allergy.allergen.replace(' ', '') }}" onclick="delete_allergy('{{ allergy.allergen }}')">Удалить</button>
+    </div>
+</div>

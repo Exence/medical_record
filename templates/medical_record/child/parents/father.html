@@ -1,0 +1,9 @@
+<div name="div-father-{{ father.id }}" class="col-12 mb-3">
+    <p><strong>Отец: </strong> <u><mark>{{ father.surname }} {{ father.name }} {{ father.patronymic }}, {{ father.birthday_year }} г.р.</mark></u>, образование: <u><mark>{{ father.education }}</mark></u> </br>
+    <strong>тел.: </strong> <u><mark>{{ father.phone_num }}</mark></u>
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" id="btn-update-father">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" id="btn-delete-father" onclick="">Удалить</button>
+    </div>
+</div>

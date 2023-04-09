@@ -1,0 +1,12 @@
+<div class="list-group-item active col-12">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1 px-2">{{ kindergarten.name }}</h5>
+      <ul class="list-group w-100 px-1 py-2">
+        {% set count = namespace(n=1) %}
+        {% for group in kindergarten.groups %}
+            {% include '/medical_record/all/group.html' %}  
+            {% set count.n = count.n + 1 %}                           
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
