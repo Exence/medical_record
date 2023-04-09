@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	<title>Медкарты</title>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h1 class="text-center">Все медкарты</h1>
+
+        <div class="list-group">
+            {% for kindergarten in kindergartens %}
+                {% include '/medical_record/all/kindergarten.html' %}                               
+            {% endfor %}   
+        </div>
+	</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+<div class="accordion-item col-12">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{child.medcard_num}}" aria-expanded="true" aria-controls="collapse{{child.medcard_num}}">
+        {{ child.surname }} {{ child.name }} {{ child.patronymic }} {{ child.birthday }}
+      </button>
+    </h2>
+    <div id="collapse{{child.medcard_num}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+      <div class="accordion-body">
+        {% if child.father_surname %}
+			<strong>Отец: </strong> {{ child.father_surname }} {{ child.father_name }} {{ child.father_patronymic }}, <strong> тел.: </strong>{{ child.father_phone_num }} <br/>
+		{% endif %}
+        {% if child.mother_surname %}
+			<strong>Мать: </strong> {{ child.mother_surname }} {{ child.mother_name }} {{ child.mother_patronymic }}, <strong> тел.: </strong>{{ child.mother_phone_num }}<br/>
+		{% endif %}
+        <a href="/medical_record/child/{{child.medcard_num}}/" class="btn btn-outline-primary mt-2">Перкйти к медкарте</a>
+      </div>
+    </div>
+</div>

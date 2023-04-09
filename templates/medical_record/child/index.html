@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	<title>{{ child.surname }} {{ child.name[0] }}.{{ child.patronymic[0] }}.</title>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h1 class="text-center">{{ child.surname }} {{ child.name }} {{ child.patronymic }}</h1>      
+		<div class="accordion" id="accordionChildMedcard">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="general-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#general-collapse" aria-expanded="true" aria-controls="general-collapse" id="general-button" value="{{ child.medcard_num }}">
+              ОБЩИЕ СВЕДЕНИЯ О РЕБЕНКЕ
+          </button>
+        </h2>
+        <div id="general-collapse" class="accordion-collapse collapse show" aria-labelledby="general-header">
+          <div class="accordion-body">
+            <strong>{{ child.surname }} {{ child.name }} {{ child.patronymic }}</strong> <u><mark>{{ child.birthday.strftime("%d.%m.%Y") }} г.р.</mark></u>, пол: <u><mark>{{ child.sex }}</mark></u>,
+            характеристика образовательного учреждения: <u><mark>{{ child.edu_type }}</mark></u>,
+            дом. адрес (или адрес интернатного учреждения): <u><mark>{{ child.address }}</mark></u>, обслуживающая поликлиника: <u><mark>{{ child.clinic }}</mark></u>,
+            месяц, год поступления: <u><mark>{{ child.entering_date.strftime("%b %Y") }}</mark></u></br>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a href="/medical_record/child/update/general/{{child.medcard_num}}/" class="btn btn-outline-primary mt-2 btn-sm">Редактировать</a>
+            </div>            
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="allergy-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#allergy-collapse" aria-expanded="false" aria-controls="allergy-collapse">
+              АЛЛЕРГИЯ
+          </button>
+        </h2>
+        <div id="allergy-collapse" class="accordion-collapse collapse" aria-labelledby="allergy-header">
+          <div class="accordion-body" >
+            <div id="allergy-block">
+              {% for allergy in allergyes %}
+                {% include '/medical_record/child/allergy/allergy.html' %}                               
+              {% endfor %} 
+            </div>                    
+              <button type="button" class="btn btn-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#allergyModal" id="create-allergy-btn" onclick="add_allergy()">
+                  Добавить запись
+              </button>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="anamnes-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#anamnes-collapse" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+              АНАМНЕСТИЧЕСКИЕ СВЕДЕНИЯ
+          </button>
+        </h2>
+        <div id="anamnes-collapse" class="accordion-collapse collapse" aria-labelledby="anamnes-header">
+          <div class="accordion-body">
+            {% if father %}
+              {% include '/medical_record/child/parents/father.html' %} 
+              {% else %}
+              <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" id="btn-update-father">Добавить сведения об отце</button>
+            {% endif %}
+            {% if mother %}
+              {% include '/medical_record/child/parents/mother.html' %} 
+              {% else %}
+              <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" id="btn-update-mother">Добавить сведения о матери</button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+	</div>
+
+  <!-- Allergy modal -->
+  <div class="modal fade" id="allergyModal" tabindex="-1" aria-labelledby="allergyModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+          <h5 class="modal-title" id="allergyModalLabel">Добавление данных об аллергии</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="col-md-12">
+                  <label for="allergen-modal" class="form-label">Аллерген</label>
+                  <input type="text" class="form-control only-letters-modal" id="allergen-modal" placeholder="Пыльца трав" required>
+              </div>
+              <div class="col-md-4">
+                  <label for="allergyType-modal" class="form-label">Тип аллергии</label>
+                  <select class="form-select" id="allergyType-modal" required>
+                    <option selected>Вакцинальная</option>
+                    <option>Лекарственная</option>
+                    <option>Аллергические заболевания</option>
+                  </select>
+              </div>
+              <div class="col-md-4">
+                  <label for="allergyStartAge-modal" class="form-label">Возраст начала</label>
+                  <input type="text" class="form-control only-digits-modal" id="allergyStartAge-modal" placeholder="3" required>
+              </div>
+              <div class="col-md-12">
+                  <label for="allergyReactionType-modal" class="form-label">Тип реакции</label>
+                  <input type="text" class="form-control only-letters-modal" id="allergyReactionType-modal" placeholder="Аллергическая реакция I типа" required>
+              </div> 
+              <div class="form-group" >
+                  <label for="allergyDiagnosisDate-modal" class="form-label">Дата постановки диагноза</label>
+                  <div class="col-md-4">
+                      <input type="date" class="form-control" id="allergyDiagnosisDate-modal">
+                  </div>                    
+                  <div class="invalid-feedback" required>
+                      Пожалуйста, введите дату постановки диагноза.
+                  </div>
+              </div>
+              <div class="col-12">
+                  <label for="allergyNote-modal" class="form-label">Примечание</label>
+                  <textarea class="form-control" name="note" id="allergyNote-modal" rows="3"></textarea>
+              </div>
+              
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="allergy_close_modal">Отмена</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="allergy_modal_commit">Сохранить</button>
+          </div>
+      </div>
+      </div>
+  </div>
+
+  <!-- Parents modal -->
+  <div class="modal fade" id="parentModal" tabindex="-1" aria-labelledby="parentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="parentModalLabel">Добавление данных</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-md-12">
+                <label for="surname-modal" class="form-label">Фамилия</label>
+                <input type="text" class="form-control only-letters-modal" id="surname-modal" placeholder="Иванов" required>
+            </div>
+            <div class="col-md-12">
+                <label for="name-modal" class="form-label">Имя</label>
+                <input type="text" class="form-control only-letters-modal" id="name-modal" placeholder="Иван" required>
+            </div>
+            <div class="col-md-12">
+                <label for="patronymic-modal" class="form-label">Отчество</label>
+                <input type="text" class="form-control only-letters-modal" id="patronymic-modal " placeholder="Иванович" required>
+            </div>
+            <div class="col-md-4">
+                <label for="birthday_year" class="form-label">Год рождения</label>
+                <input type="text" class="form-control only-digits-modal" id="birthday_year" placeholder="ГГГГ" required>
+            </div>
+            <div class="col-md-4">
+                <label for="education" class="form-label">Образование</label>
+                <select class="form-select" id="education-modal" required>
+                  <option selected>б/обр.</option>
+                  <option>н/ср.</option>
+                  <option>ср.</option>
+                  <option>ср.-спец.</option>
+                  <option>н/высш.</option>
+                  <option>высш.</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="phone" class="form-label">Номер телефона</label>
+                <div class="input-group has-validation">
+                    <span class="input-group-text" id="inputGroupPrepend">+7</span>                        
+                    <input type="tel" class="form-control only-digits-modal" id="phone-modal" placeholder="1234567890" required>
+                </div>                    
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="modal-commit">Сохранить</button>
+        </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- Delete modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Удалить</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Вы действительно хотите УДАЛИТЬ указанные сведения?
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="delete_close_modal">Отмена</button>
+          <button type="button" class="btn btn-warning" data-bs-dismiss="modal" id="delete_modal_commit">Да, удалить</button>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', path='js/ajax.js') }}"></script>
+    <script src="{{ url_for('static', path='js/edit_medcard.js') }}"></script>
+{% endblock %}

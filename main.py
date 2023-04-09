@@ -1,10 +1,14 @@
+import uvicorn
+import locale
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-import uvicorn
+
 from settings import settings
 from api import router
 
 
+locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
 app = FastAPI(
     redoc_url=None,
     )

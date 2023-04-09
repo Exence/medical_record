@@ -15,7 +15,10 @@ from models.user import (
     CreateUserForm,
 )
 
-from services.user import UserService
+from services.user import (
+    AuthService,
+    UserService,
+    )
 
 
 router = APIRouter(
@@ -53,4 +56,13 @@ def show_all_users(request: Request, service: UserService = Depends()):
     users = service.get_all_users()
     return templates.TemplateResponse(
         "/admins/users/all/index.html", {"request": request, "users": users}
+    )
+
+@router.get('/cabinet')
+def show_all_users(request: Request, 
+                   service: AuthService = Depends(),
+                   access_token: str | None = Cookie(default=None)):
+    current_user = service.validate_token(access_token)
+    return templates.TemplateResponse(
+        "/cabinet/index.html", {"request": request, "user": current_user}
     )

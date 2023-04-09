@@ -25,9 +25,9 @@ class ChildBase(BaseModel):
     address: str = Field(..., max_length=250)
     clinic: str = Field(..., max_length=200)
     edu_type: str = Field(...,max_length=25)
-    entering_date: str = Field(...)
-    father_id: int
-    mother_id: int
+    entering_date: date = Field(...)
+    father_id: int = Field(default=None)
+    mother_id: int = Field(default=None)
     family_characteristics: str = Field(...)
     family_microclimate: str = Field(...)
     rest_and_class_opportunities: str = Field(...)
@@ -153,3 +153,22 @@ class CreateChildForm(BaseModel):
             rest_and_class_opportunities = rest_and_class_opportunities,
             case_history = case_history
         )
+
+
+class ChildShow(BaseModel):   
+    medcard_num: int
+    surname: str
+    name: str
+    patronymic: str
+    kindergarten_name: str 
+    birthday: date
+    group_num: int
+    father_surname: str | None
+    father_name: str | None
+    father_patronymic: str | None
+    father_phone_num: int | None
+    mother_surname: str | None
+    mother_name: str | None
+    mother_patronymic: str | None
+    mother_phone_num: int | None  
+        

@@ -16,7 +16,7 @@ from services.serialization import serialization_user
 from settings import settings
 from database import (
     get_connection,
-    execute_insert_query,
+    execute_data_query,
     execute_read_query_first,
     execute_read_query_all,
 )
@@ -47,10 +47,12 @@ class UserService():
                 kindergarten_num = execute_read_query_first(self.connection, query)[0]
 
             user = [(form_data.login, form_data.surname, form_data.name, form_data.patronymic, form_data.password, form_data.access_level, kindergarten_num)]
+            print(user)
             insert_query = (
                 f"INSERT INTO users (login, surname, name, patronymic, password_hash, access_level, kindergarten_num) VALUES %s"
             )
-            execute_insert_query(self.connection, insert_query, user)
+            execute_data_query(self.connection, insert_query, user)
+            self.connection.commit()
             return True
         except:
             return False

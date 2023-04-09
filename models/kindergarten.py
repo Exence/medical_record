@@ -2,6 +2,8 @@ from pydantic import (
     BaseModel,
     Field,
 )
+from typing import List
+from models.child import ChildShow
 
 
 class KindergartenBase(BaseModel):
@@ -14,3 +16,7 @@ class Kindergarten(KindergartenBase):
 
 class KindergartenCreate(KindergartenBase):
     pass
+
+
+class KindergartenWithChildrens(KindergartenBase):
+    groups: list = [[], [], [], [], [], []]
