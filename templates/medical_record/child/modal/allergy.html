@@ -1,0 +1,50 @@
+<div class="modal fade" id="allergyModal" tabindex="-1" aria-labelledby="allergyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="allergyModalLabel">Добавление данных об аллергии</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-md-12">
+                <label for="allergen-modal" class="form-label">Аллерген</label>
+                <input type="text" class="form-control only-letters-modal" id="allergen-modal" placeholder="Пыльца трав" required>
+            </div>
+            <div class="col-md-4">
+                <label for="allergyType-modal" class="form-label">Тип аллергии</label>
+                <select class="form-select" id="allergyType-modal" required>
+                  <option selected>Вакцинальная</option>
+                  <option>Лекарственная</option>
+                  <option>Аллергические заболевания</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="allergyStartAge-modal" class="form-label">Возраст начала</label>
+                <input type="text" class="form-control only-digits-modal" id="allergyStartAge-modal" placeholder="3" required>
+            </div>
+            <div class="col-md-12">
+                <label for="allergyReactionType-modal" class="form-label">Тип реакции</label>
+                <input type="text" class="form-control only-letters-modal" id="allergyReactionType-modal" placeholder="Аллергическая реакция I типа" required>
+            </div> 
+            <div class="form-group" >
+                <label for="allergyDiagnosisDate-modal" class="form-label">Дата постановки диагноза</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="allergyDiagnosisDate-modal">
+                </div>                    
+                <div class="invalid-feedback" required>
+                    Пожалуйста, введите дату постановки диагноза.
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="allergyNote-modal" class="form-label">Примечание</label>
+                <textarea class="form-control" name="note" id="allergyNote-modal" rows="3"></textarea>
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="allergy-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="allergy-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

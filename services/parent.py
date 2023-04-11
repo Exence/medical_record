@@ -19,6 +19,8 @@ def select_parent_id(cursor: Any, parent: ParentCreate) -> int:
     return cursor.fetchone()[0]
 
 def get_parent_by_id(connection: Any, parent_id: int) -> Parent:
+    if not parent_id:
+        return None
     query = f"""SELECT * FROM parents WHERE id = {parent_id}"""
     parent = execute_read_query_first(connection, query)
     return Parent(

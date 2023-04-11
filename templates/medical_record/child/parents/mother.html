@@ -3,7 +3,7 @@
     <strong>тел.: </strong> <u><mark>{{ mother.phone_num }}</mark></u>
     </p>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" id="btn-update-mother">Редактировать</button>
-        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" id="btn-delete-mother" onclick="">Удалить</button>
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" name="update-mother-btn" value="{{ mother.id }}///{{ mother.surname }}///{{ mother.name }}///{{ mother.patronymic }}///{{ mother.birthday_year }}///{{ mother.education }}///{{ mother.phone_num }}" onclick="mother_update_btn_click()">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-mother-btn" value="{{ mother.id }}" onclick="delete_parent('mother')">Удалить</button>
     </div>
 </div>

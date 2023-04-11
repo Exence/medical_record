@@ -1,0 +1,7 @@
+<div name="div-class-{{ class.classes_type.replace(' ', '') }}-{{ class.age }}" class="col-12 mb-3">
+    <p><strong>{{ class.classes_type }}</strong> в возрасте: <u><mark>{{ class.age }}</mark></u> по <u><mark>{{ class.hours_on_week }}</mark></u> ч/нед.</p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#classModal" name="update-class-{{ class.classes_type.replace(' ', '') }}-{{ class.age }}-btn" onclick="update_class('{{ class.classes_type }}', '{{ class.age }}', '{{ class.hours_on_week }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-class-{{ class.classes_type.replace(' ', '') }}-{{ class.age }}-btn" onclick="delete_class('{{ class.classes_type }}', '{{ class.age }}')">Удалить</button>
+    </div>
+</div>

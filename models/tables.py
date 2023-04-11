@@ -40,40 +40,6 @@ class MedicalCertificateCreate(MedicalCertificateBase):
         return value
 
 
-class AllergyBase(BaseModel):
-    medcard_num: int = Field(...)
-    allergen: str = Field(...)
-    allergy_type: str = Field(...)
-    start_age: int = Field(...)
-    reaction_type: str = Field(...)
-    diagnosis_date: date = Field(...)
-    note: str
-
-class Allergy(AllergyBase, OrmModel):
-    pass
-
-class AllergyCreate(AllergyBase):
-    @validator("allergy_type")
-    def validate_allergy_type(cls, value):
-        if not value in ['Вакцинальная',  'Лекарственная',  'Аллергические заболевания']:
-            raise HTTPException(
-                status_code=422, detail="Allergy type should be in ['Вакцинальная',  'Лекарственная',  'Аллергические заболевания']"
-            )
-        return value
-
-
-class ExtraClassBase(BaseModel):
-    medcard_num: int = Field(...)
-    classes_type: str = Field(...)
-    age: int = Field(...,gt=0, lt=8)
-    hours_on_week: int = Field(...,gt=0, lt=40)
-
-class ExtraClass(ExtraClassBase, OrmModel):
-    pass
-
-class ExtraClassCreate(ExtraClassBase):
-    pass
-
 
 class HospitalizationBase(BaseModel):
     medcard_num: int = Field(...)
