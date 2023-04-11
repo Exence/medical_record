@@ -1,0 +1,29 @@
+<div class="modal fade" id="classModal" tabindex="-1" aria-labelledby="classModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="classModalLabel">Добавление данных</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-md-12">
+                <label for="class-type-modal" class="form-label">Тип занятий</label>
+                <input type="text" class="form-control only-letters-modal" id="class-type-modal" placeholder="Музыка, Спорт(указать какой)" required>
+            </div>
+            <div class="col-md-4">
+                <label for="class-age-modal" class="form-label">Возраст</label>
+                <input type="text" class="form-control only-digits-modal" id="class-age-modal" placeholder="3" required>
+            </div>
+            <div class="col-md-4">
+                <label for="class-hours-modal" class="form-label">Часов в неделю</label>
+                <input type="text" class="form-control only-digits-modal" id="class-hours-modal" placeholder="ЧЧ" required>
+            </div>  
+                    
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="class-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="class-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+  </div>

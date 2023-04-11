@@ -12,6 +12,7 @@ from typing import (
     )
 
 from models.allergyes import Allergy
+from models.extra_classes import ExtraClass
 from models.child import (
     CreateChildForm,
     Child,
@@ -28,6 +29,7 @@ from services.serialization import (
     serialization_child,
     serialization_child_to_create,
     serialization_child_to_show,
+    serrialization_extra_class,
     serialization_parent_to_create,
     )
 
@@ -76,6 +78,40 @@ def create_medcard_tranzaction(connection: Any, father: ParentCreate, mother: Pa
         print ("Ошибка в транзакции. Отмена всех остальных операций транзакции", error)
         connection.rollback()
         return False
+    finally:
+        if cursor:
+            cursor.close()
+    
+def create_parent_tranzaction(connection: Any, parent: dict) -> bool:
+    try:
+        cursor = connection.cursor()
+        query = f"""INSERT INTO parents (surname, name, patronymic, birthday_year, education, phone_num)
+                    VALUES (%(surname)s, %(name)s, %(patronymic)s, %(birthday_year)s, %(education)s, %(phone_num)s)"""  
+        cursor.execute(query, parent)
+        query = f"""SELECT id FROM parents 
+            WHERE   surname = '{parent["surname"]}' AND 
+                    name = '{parent["name"]}' AND 
+                    patronymic = '{parent["patronymic"]}' AND 
+                    birthday_year = {parent["birthday_year"]} AND 
+                    education = '{parent["education"]}' AND 
+                    phone_num = {parent["phone_num"]}
+            """
+        cursor.execute(query)
+        parent_id = cursor.fetchone()[0]
+        query = f"""UPDATE childrens SET {parent["parent_type"]}_id = {parent_id} WHERE medcard_num = {parent["medcard_num"]}"""
+        cursor.execute(query)
+
+        connection.commit()
+        return parent_id
+        
+    except (Exception, psycopg2.DatabaseError) as error :
+        print ("Ошибка в транзакции. Отмена всех остальных операций транзакции", error)
+        connection.rollback()
+        return None
+    
+    finally:
+        if cursor:
+            cursor.close()
     
 
 class MedicalRecordService():
@@ -121,6 +157,8 @@ class MedicalRecordService():
 
         return serialization_child(selected_child)
     
+
+
     def get_allergyes_by_medcard_num(self, medcard_num: int) -> list[Allergy]:
         query = f"""SELECT  * FROM allergyes WHERE medcard_num = {medcard_num} ORDER BY start_age"""
         selected_allergyes = execute_read_query_all(self.connection, query)
@@ -134,7 +172,6 @@ class MedicalRecordService():
         query = f"INSERT INTO allergyes (medcard_num, allergen, allergy_type, start_age, reaction_type, diagnosis_date, note) VALUES %s"
         allergy_data = serialization_allergy_to_create(medcard_num, allergy)
         execute_data_query(self.connection, query, allergy_data)
-        print(allergy_data)
 
     def update_allergy(self, allergy: dict):
         query = f"""UPDATE allergyes SET    allergen = %(allergen)s, 
@@ -151,3 +188,52 @@ class MedicalRecordService():
         execute_data_query(self.connection, query, allergy)
 
 
+    def add_parent(self, parent: dict):
+        return create_parent_tranzaction(self.connection, parent)
+    
+    
+    def update_parent(self, parent: dict):
+        query = f"""UPDATE parents SET  surname = %(surname)s,
+                                        name = %(name)s,
+                                        patronymic = %(patronymic)s,
+                                        birthday_year = %(birthday_year)s,
+                                        education = %(education)s,
+                                        phone_num = %(phone_num)s
+                    WHERE id = %(id)s"""
+        execute_data_query(self.connection, query, parent)
+
+    def delete_parent(self, parent_data: dict):
+        query = f"DELETE FROM parents WHERE id = %(id)s"
+        execute_data_query(self.connection, query, parent_data)
+
+
+
+    def get_extra_classes_by_medcard_num(self, medcard_num: int) -> list[ExtraClass]:
+        query = f"""SELECT  * FROM extra_classes WHERE medcard_num = {medcard_num} ORDER BY age"""
+        selected_estra_classes = execute_read_query_all(self.connection, query)
+        estra_classes = []
+        for estra_class in selected_estra_classes:
+            estra_classes.append(serrialization_extra_class(estra_class))
+        
+        return estra_classes
+
+
+    def add_new_extra_class(self, extra_class: dict):
+        query = f"INSERT INTO extra_classes (medcard_num, classes_type, age, hours_on_week) VALUES (%(medcard_num)s, %(classes_type)s, %(age)s, %(hours_on_week)s)"
+        execute_data_query(self.connection, query, extra_class)
+
+    def update_extra_class(self, extra_class: dict):
+        query = f"""UPDATE extra_classes SET    classes_type = %(classes_type)s,
+                                                age = %(age)s,
+                                                hours_on_week = %(hours_on_week)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            classes_type = %(old_classes_type)s AND
+                            age = %(old_age)s"""
+        execute_data_query(self.connection, query, extra_class)
+
+    def delete_extra_class(self, extra_class: dict):
+        print(extra_class)
+        query = f"""DELETE FROM extra_classes WHERE medcard_num = %(medcard_num)s AND
+                                                    classes_type = %(classes_type)s AND
+                                                    age = %(age)s"""
+        execute_data_query(self.connection, query, extra_class)

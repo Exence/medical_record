@@ -11,6 +11,7 @@ from models.child import (
     ChildCreate,
     ChildShow
     )
+from models.extra_classes import ExtraClass
 from models.user import (
     User,
 )
@@ -128,3 +129,11 @@ def serialization_allergy_to_create(medcard_num: int, allergy: dict):
                 allergy["note"],
                 
         )]
+
+def serrialization_extra_class(extra_class_data: tuple) -> ExtraClass:
+        return ExtraClass(
+                medcard_num=extra_class_data[0],
+                classes_type=extra_class_data[1],
+                age=extra_class_data[2],
+                hours_on_week=extra_class_data[3]
+        )

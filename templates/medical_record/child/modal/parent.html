@@ -1,0 +1,51 @@
+<div class="modal fade" id="parentModal" tabindex="-1" aria-labelledby="parentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="parentModalLabel">Добавление данных</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-md-12">
+                <label for="surname-modal" class="form-label">Фамилия</label>
+                <input type="text" class="form-control only-letters-modal" id="surname-modal" placeholder="Иванов" required>
+            </div>
+            <div class="col-md-12">
+                <label for="name-modal" class="form-label">Имя</label>
+                <input type="text" class="form-control only-letters-modal" id="name-modal" placeholder="Иван" required>
+            </div>
+            <div class="col-md-12">
+                <label for="patronymic-modal" class="form-label">Отчество</label>
+                <input type="text" class="form-control only-letters-modal" id="patronymic-modal" placeholder="Иванович" required>
+            </div>
+            <div class="col-md-4">
+                <label for="birthday_year" class="form-label">Год рождения</label>
+                <input type="text" class="form-control only-digits-modal" id="birthday_year" placeholder="ГГГГ" required>
+            </div>
+            <div class="col-md-4">
+                <label for="education-modal" class="form-label">Образование</label>
+                <select class="form-select" id="education-modal" required>
+                  <option selected>б/обр.</option>
+                  <option>н/ср.</option>
+                  <option>ср.</option>
+                  <option>ср.-спец.</option>
+                  <option>н/высш.</option>
+                  <option>высш.</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="phone" class="form-label">Номер телефона</label>
+                <div class="input-group has-validation">
+                    <span class="input-group-text" id="inputGroupPrepend">+7</span>                        
+                    <input type="tel" class="form-control only-digits-modal" id="phone-modal" placeholder="1234567890" required>
+                </div>                    
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="parent-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="parent-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+  </div>
+  
