@@ -22,7 +22,7 @@ from database import (
 )
 from models.auth import Token
 from models.user import User
-from services.serialization import serialization_user
+from services.serialization import SerializationService
 
 from typing import Any
 
@@ -100,7 +100,7 @@ class AuthService():
         if not query_user:
             raise exception
         
-        user = serialization_user(self.connection, query_user)
+        user = SerializationService.serialization_user(self.connection, query_user)
        
         if not self.verify_password(password, user.password_hash):
             raise exception

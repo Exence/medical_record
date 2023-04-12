@@ -80,13 +80,33 @@
               <small><i>*Для внесения изменений в данный блок нажмите на кнопку "Редактировать" в разделе "ОБЩИЕ СВЕДЕНИЯ О РЕБЕНКЕ"</i></small></p> 
             </div>
             <div class="col-12">
-              <label for="extra_classes" class="form-label"><strong>Дополнительные занятия:</strong></label>
+              <h5 class="text-center my-4"><strong>ДОПОЛНИТЕЛЬНЫЕ ЗАНЯТИЯ:</strong></h3>
               <div id="extra-classes-main-div">
                   {% for class in extra_classes %}
                     {% include '/medical_record/child/extra_classes/class.html' %} 
                   {% endfor%}          
               </div> 
               <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#classModal" name="add-class-btn" onclick="class_add_set_info()">Добавить сведения о дополнительных занятиях</button>               
+            </div>
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>ПЕРЕНЕСЕННЫЕ ЗАБОЛЕВАНИЯ:</strong></h3>
+              <div id="past-illness-main-div">
+                  {% for past_illness in past_illnesses %}
+                    {% include '/medical_record/child/past_illness/past_illness.html' %} 
+                  {% endfor%}          
+              </div> 
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#pastIllnessModal" name="add-past-illness-btn" onclick="past_illness_add_set_info()">Добавить сведения о перенесенном заболевании</button>
+            </div>
+
+
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>ПРОПУСК ЗАНЯТИЙ ПО БОЛЕЗНИ:</strong></h3>
+              <div id="medical-certificates-main-div">
+                  {% for medical_certificate in medical_certificates %}
+                    {% include '/medical_record/child/medical_certificate/medical_certificate.html' %} 
+                  {% endfor%}          
+              </div> 
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#medicalCertificateModal" name="add-medical-certificate-btn" onclick="medical_certificate_add_set_info()">Добавить медицинскую справку</button>
             </div>
           </div>
         </div>
@@ -103,6 +123,12 @@
 
   <!-- Extra classes modal -->
   {% include '/medical_record/child/modal/class.html' %} 
+
+  <!-- Past illness modal -->
+  {% include '/medical_record/child/modal/past_illness.html' %} 
+
+  <!-- Medical certificates modal -->
+  {% include '/medical_record/child/modal/medical_certificate.html' %} 
 
   <!-- Delete modal -->
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

@@ -1,0 +1,7 @@
+<div name="div-past-illness-{{ past_illness.diagnosis.replace(' ', '') }}-{{ past_illness.start_date }}" class="col-12 mb-3">
+    <p><strong>{{ past_illness.diagnosis }}</strong> с <u><mark>{{ past_illness.start_date.strftime("%d.%m.%Y") }}</mark></u> по <u><mark>{{ past_illness.end_date.strftime("%d.%m.%Y") }}</mark></u> </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#pastIllnessModal" name="update-past-illness-{{ past_illness.diagnosis.replace(' ', '') }}-{{ past_illness.start_date }}-btn" onclick="update_past_illness('{{ past_illness.diagnosis }}', '{{ past_illness.start_date }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-past-illness-{{ past_illness.diagnosis.replace(' ', '') }}-{{ past_illness.cert_date }}-btn" onclick="delete_past_illness('{{ past_illness.diagnosis }}', '{{ past_illness.start_date }}')">Удалить</button>
+    </div>
+</div>

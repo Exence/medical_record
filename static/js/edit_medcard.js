@@ -21,13 +21,34 @@ const parent_phone_inpt = document.querySelector('#phone-modal');
 const parent_close_modal_btn = document.querySelector('#parent-close-modal');
 const parent_commit_modal_btn = document.querySelector('#parent-commit-modal');
 
-/* EXTRA CLASSES CONST*/
+/* EXTRA CLASSES CONST */
 const class_modal_header = document.querySelector('#classModalLabel');
 const class_type_modal_inpt = document.querySelector('#class-type-modal');
 const class_age_modal_inpt = document.querySelector('#class-age-modal');
 const class_hours_modal_inpt = document.querySelector('#class-hours-modal');
 const class_close_modal_btn = document.querySelector('#class-close-modal');
 const class_commit_modal_btn = document.querySelector('#class-commit-modal');
+
+/* PAST ILLNESSES CONST */
+const past_illness_modal_header = document.querySelector('#pastIllnessModalLabel');
+const past_illness_diagnosis_modal_inpt = document.querySelector('#pastIllnessDisease-modal');
+const past_illness_start_date_modal_dtpkr = document.querySelector('#pastIllnessStartDate-modal');
+const past_illness_end_date_modal_dtpkr = document.querySelector('#pastIllnessEndDate-modal');
+const past_illness_close_modal_btn = document.querySelector('#pastIllness-close-modal');
+const past_illness_commit_modal_btn = document.querySelector('#pastIllness-commit-modal');
+
+/* MEDICAL CERTIFICATES CONST */
+const medical_certificate_modal_header = document.querySelector('#medicalCertificateModalLabel');
+const medical_certificate_disease_modal_inpt = document.querySelector('#medicalCertificateDisease-modal');
+const medical_certificate_start_date_modal_dtpkr = document.querySelector('#medicalCertificateStartDate-modal');
+const medical_certificate_end_date_modal_dtpkr = document.querySelector('#medicalCertificateEndDate-modal');
+const medical_certificate_infection_contact_modal_chk = document.querySelector('#medicalCertificateInfectionContact-modal');
+const medical_certificate_sport_exemption_date_modal_dpkr = document.querySelector('#medicalCertificateSportExemptionDate-modal');
+const medical_certificate_vac_exemption_date_modal_dpkr = document.querySelector('#medicalCertificateVacExemptionDate-modal');
+const medical_certificate_doctor_modal_inpt = document.querySelector('#medicalCertificateDoctor-modal');
+const medical_certificate_cert_date_modal_dtpkr = document.querySelector('#medicalCertificateCertDate-modal');
+const medical_certificate_close_modal_btn = document.querySelector('#medicalCertificate-close-modal');
+const medical_certificate_commit_modal_btn = document.querySelector('#medicalCertificate-commit-modal');
 
 /* DELETE WINDOW CONST*/
 const delete_modal_header = document.querySelector('#deleteModalLabel');
@@ -318,9 +339,9 @@ function delete_parent(parent_type){
 function class_add_set_info(){
     class_modal_header.innerHTML = "Добавление сведений о доп. занятиях";
     class_commit_modal_btn.value = 'add';
-    class_type_modal_inpt.value = "Музыка";
-    class_age_modal_inpt.value = "3";
-    class_hours_modal_inpt.value = "5";    
+    class_type_modal_inpt.value = "";
+    class_age_modal_inpt.value = "";
+    class_hours_modal_inpt.value = "";    
 }
 
 function update_class(class_type, class_age, class_hours){
@@ -394,6 +415,252 @@ class_commit_modal_btn.addEventListener('click', () =>{
             break;
     }
 })
+
+
+/* PAST ILLNESS */
+function past_illness_add_set_info(){
+
+    past_illness_modal_header.innerHTML = "Добавление сведений о перенесенном заболевании";
+    past_illness_diagnosis_modal_inpt.value = "Ветряная оспа";
+    past_illness_start_date_modal_dtpkr.value = "2022-01-01";
+    past_illness_end_date_modal_dtpkr.value = "2022-01-21";
+    past_illness_commit_modal_btn.value = 'add'; 
+}
+
+function update_past_illness(disease, start_date){
+    var past_illness = {
+        "medcard_num": medcard_num,
+        "diagnosis": disease,
+        "start_date": start_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/past_illness/get",
+        data: JSON.stringify({"json_data": past_illness}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            past_illness_modal_header.innerHTML = "Редактирование сведений о перенесенном заболевании";
+            past_illness_commit_modal_btn.value = 'update';
+            past_illness_close_modal_btn.value = past_illness.diagnosis + '///' + past_illness.start_date;
+            past_illness_diagnosis_modal_inpt.value = past_illness.diagnosis;
+            past_illness_start_date_modal_dtpkr.value = past_illness.start_date;
+            past_illness_end_date_modal_dtpkr.value = data.past_illness.end_date;
+        }
+    });    
+}
+
+function delete_past_illness(diagnosis, start_date){
+    delete_modal_header.innerHTML = 'Удалить сведения о перенесенном заболевании';
+    close_delete_modal_btn.value = diagnosis + '///' + start_date;
+    delete_commit_modal_btn.value = 'delete_past_illness'
+}
+
+past_illness_commit_modal_btn.addEventListener('click', () =>{
+    var past_illness = {
+        "medcard_num": medcard_num,
+        "diagnosis": past_illness_diagnosis_modal_inpt.value,
+        "start_date": past_illness_start_date_modal_dtpkr.value,
+        "end_date": past_illness_end_date_modal_dtpkr.value
+    }
+    switch (past_illness_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/past_illness/add",
+                data: JSON.stringify({"json_data": past_illness}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    let past_illness_div = document.querySelector('#past-illness-main-div')
+                    past_illness_div.innerHTML += '<div name="div-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.start_date + '" class="col-12 mb-3">\
+                    <p><strong>' + past_illness.diagnosis  + '</strong> с <u><mark>' + past_illness.start_date + '</mark></u> по <u><mark>' + past_illness.end_date + '</mark></u> </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#pastIllnessModal" name="update-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.start_date + '-btn" onclick="update_past_illness(\'' + past_illness.diagnosis + '\', \'' + past_illness.start_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.cert_date + '-btn" onclick="delete_past_illness(\'' + past_illness.diagnosis + '\', \'' + past_illness.start_date + '\')">Удалить</button>\
+                    </div>\
+                </div>'
+                }
+            });
+            break;
+
+            case 'update':
+                let old_past_illness_data = past_illness_close_modal_btn.value.split('///');
+                past_illness["old_diagnosis"] = old_past_illness_data[0];
+                past_illness["old_start_date"] = old_past_illness_data[1];
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/past_illness/update",
+                    data: JSON.stringify({"json_data": past_illness}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        let past_illness_div = document.getElementsByName('div-past-illness-' + past_illness.old_diagnosis.replace(/ /g, '') + '-' + past_illness.old_start_date)[0]
+                        past_illness_div.innerHTML = '<p><strong>' + past_illness.diagnosis  + '</strong> с <u><mark>' + past_illness.start_date + '</mark></u> по <u><mark>' + past_illness.end_date + '</mark></u> </p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#pastIllnessModal" name="update-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.start_date + '-btn" onclick="update_past_illness(\'' + past_illness.diagnosis + '\', \'' + past_illness.start_date + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.cert_date + '-btn" onclick="delete_past_illness(\'' + past_illness.diagnosis + '\', \'' + past_illness.start_date + '\')">Удалить</button>\
+                        </div>';
+                        past_illness_div.setAttribute('name', 'div-past-illness-' + past_illness.old_diagnosis.replace(/ /g, '') + '-' + past_illness.old_start_date) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
+/* MEDICAL CERTIFICATES */
+function medical_certificate_add_set_info(){
+    medical_certificate_modal_header.innerHTML = 'Добавление медицинской справки';
+    medical_certificate_disease_modal_inpt.value = "ОРВИ";
+    medical_certificate_start_date_modal_dtpkr.value = "2023-01-01";
+    medical_certificate_end_date_modal_dtpkr.value = "2023-01-12";
+    medical_certificate_sport_exemption_date_modal_dpkr.value = null;
+    medical_certificate_vac_exemption_date_modal_dpkr.value = null;
+    medical_certificate_doctor_modal_inpt.value = "Иванов Иван Иванович";
+    medical_certificate_cert_date_modal_dtpkr.value = "2023-01-13"
+    medical_certificate_commit_modal_btn.value = "add";
+}
+
+function update_medical_certificate(disease, cert_date){
+    var medical_certificate = {
+        "medcard_num": medcard_num,
+        "disease": disease,
+        "cert_date": cert_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/medical_certificate/get",
+        data: JSON.stringify({"json_data": medical_certificate}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            medical_certificate_modal_header.innerHTML = 'Редактирование медицинской справки';
+            medical_certificate_disease_modal_inpt.value = data.medical_certificate.disease;
+            medical_certificate_start_date_modal_dtpkr.value = data.medical_certificate.start_date;
+            medical_certificate_end_date_modal_dtpkr.value = data.medical_certificate.end_date;
+            medical_certificate_sport_exemption_date_modal_dpkr.value = data.medical_certificate.sport_exemption_date;
+            medical_certificate_vac_exemption_date_modal_dpkr.value = data.medical_certificate.vac_exemption_date;
+            medical_certificate_doctor_modal_inpt.value = data.medical_certificate.doctor;
+            medical_certificate_cert_date_modal_dtpkr.value = data.medical_certificate.cert_date;
+            if (data.medical_certificate.infection_contact){
+                medical_certificate_infection_contact_modal_chk.checked = true
+            } else {
+                medical_certificate_infection_contact_modal_chk.checked = false
+            }
+            medical_certificate_close_modal_btn.value = data.medical_certificate.disease + '///' + data.medical_certificate.cert_date;
+            medical_certificate_commit_modal_btn.value = "update";
+        }
+    });
+}
+
+medical_certificate_commit_modal_btn.addEventListener('click', () => {
+    var medical_certificate = {
+        "medcard_num": medcard_num,
+        "disease": medical_certificate_disease_modal_inpt.value,
+        "cert_date": medical_certificate_cert_date_modal_dtpkr.value,
+        "start_date": medical_certificate_start_date_modal_dtpkr.value,
+        "end_date": medical_certificate_end_date_modal_dtpkr.value,
+        "sport_exemption_date": medical_certificate_sport_exemption_date_modal_dpkr.value,
+        "vac_exemption_date": medical_certificate_vac_exemption_date_modal_dpkr.value,
+        "doctor": medical_certificate_doctor_modal_inpt.value
+    };
+
+    if (medical_certificate_infection_contact_modal_chk.checked){
+        medical_certificate["infection_contact"] = true;
+    } else {
+        medical_certificate["infection_contact"] = false;
+    }
+    switch (medical_certificate_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/medical_certificate/add",
+                data: JSON.stringify({"json_data": medical_certificate}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    let medical_certificates_div = document.querySelector('#medical-certificates-main-div')
+                    let innerHTML = '<div name="div-medical-certificate-' + medical_certificate.disease.replace(/ /g,'') + '-' + medical_certificate.cert_date + '" class="col-12 mb-3">\
+                    <p>С <u><mark>' + medical_certificate.start_date + '</mark></u> по <u><mark>' + medical_certificate.end_date + '</mark></u> перенес: <strong>' + medical_certificate.disease  + '</strong> </br>\
+                    В контакте с инфекционными больными <u><mark>';
+                    if (!medical_certificate.infection_contact){
+                        innerHTML += 'не';
+                    };
+                    innerHTML += 'был </mark></u></br>'
+                    if (medical_certificate.sport_exemption_date){
+                        innerHTML += 'Освобождение от занятий по физкультуре до: <u><mark>' + medical_certificate.sport_exemption_date + '</mark></u> </br>';
+                    };
+                    if (medical_certificate.vac_exemption_date){
+                         innerHTML += 'Освобождение от профилактических прививок до: <u><mark>' + medical_certificate.vac_exemption_date + '</mark></u> </br>';
+                    };
+                        innerHTML += 'Справка от <u><mark>' + medical_certificate.cert_date + '</mark></u>, врач: <u><mark>' + medical_certificate.doctor + '</mark></u></p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#medicalCertificateModal" name="update-medical-certificate-' + medical_certificate.disease.replace(/ /g, '') + '-' + medical_certificate.cert_date + '-btn" onclick="update_medical_certificate(\'' + medical_certificate.disease + '\', \'' + medical_certificate.cert_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-medical-certificate-' + medical_certificate.disease.replace(/ /g, '') + '-' + medical_certificate.cert_date + '-btn" onclick="delete_medical_certificate(\'' + medical_certificate.disease + '\', \'' + medical_certificate.cert_date + '\')">Удалить</button>\
+                    </div>\
+                    </div>';
+                    
+                    medical_certificates_div.innerHTML += innerHTML;
+                }
+            });
+            break;
+
+            case 'update':
+                old_data = medical_certificate_close_modal_btn.value.split('///')
+                medical_certificate["old_disease"] = old_data[0];
+                medical_certificate["old_cert_date"] = old_data[1];
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/medical_certificate/update",
+                    data: JSON.stringify({"json_data": medical_certificate}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        let medical_certificates_div = document.getElementsByName('div-medical-certificate-' + medical_certificate.old_disease.replace(/ /g,'') + '-' + medical_certificate.old_cert_date)[0]
+                        let innerHTML = '<p>С <u><mark>' + medical_certificate.start_date + '</mark></u> по <u><mark>' + medical_certificate.end_date + '</mark></u> перенес: <strong>' + medical_certificate.disease  + '</strong> </br>\
+                        В контакте с инфекционными больными <u><mark>';
+                        if (!medical_certificate.infection_contact){
+                            innerHTML += 'не';
+                        };
+                        innerHTML += 'был </mark></u></br>'
+                        if (medical_certificate.sport_exemption_date){
+                            innerHTML += 'Освобождение от занятий по физкультуре до: <u><mark>' + medical_certificate.sport_exemption_date + '</mark></u> </br>';
+                        };
+                        if (medical_certificate.vac_exemption_date){
+                             innerHTML += 'Освобождение от профилактических прививок до: <u><mark>' + medical_certificate.vac_exemption_date + '</mark></u> </br>';
+                        };
+                            innerHTML += 'Справка от <u><mark>' + medical_certificate.cert_date + '</mark></u>, врач: <u><mark>' + medical_certificate.doctor + '</mark></u></p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#medicalCertificateModal" name="update-medical-certificate-' + medical_certificate.disease.replace(/ /g, '') + '-' + medical_certificate.cert_date + '-btn" onclick="update_medical_certificate(\'' + medical_certificate.disease + '\', \'' + medical_certificate.cert_date + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-medical-certificate-' + medical_certificate.disease.replace(/ /g, '') + '-' + medical_certificate.cert_date + '-btn" onclick="delete_medical_certificate(\'' + medical_certificate.disease + '\', \'' + medical_certificate.cert_date + '\')">Удалить</button>\
+                        </div>';
+                        
+                        medical_certificates_div.innerHTML = innerHTML;
+                        medical_certificates_div.setAttribute('name', 'div-medical-certificate-' + medical_certificate.disease.replace(/ /g,'') + '-' + medical_certificate.cert_date)
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+function delete_medical_certificate(disease, cert_date){
+    delete_modal_header.innerHTML = 'Удалить медицинскую справку';
+    close_delete_modal_btn.value = disease + '///' + cert_date;
+    delete_commit_modal_btn.value = 'delete_medical_certificate'
+}
 
 
 
@@ -472,7 +739,52 @@ delete_commit_modal_btn.addEventListener('click', () => {
             });
             
             break;
-    
+
+            case 'delete_past_illness':
+                past_illness_data = close_delete_modal_btn.value.split('///')
+                past_illness = {
+                    "medcard_num": medcard_num,
+                    "diagnosis": past_illness_data[0],
+                    "start_date": past_illness_data[1]
+                }
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/past_illness/delete",
+                    data: JSON.stringify({"json_data": past_illness}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        var past_illness_div = document.getElementsByName('div-past-illness-' + past_illness.diagnosis.replace(/ /g,'') + '-' + past_illness.start_date)[0];
+                        past_illness_div.remove();
+                    }
+                });
+                
+                break;
+            
+
+        case 'delete_medical_certificate':
+            medical_certificate_data = close_delete_modal_btn.value.split('///')
+            medical_certificate = {
+                "medcard_num": medcard_num,
+                "disease": medical_certificate_data[0],
+                "cert_date": medical_certificate_data[1]
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/medical_certificate/delete",
+                data: JSON.stringify({"json_data": medical_certificate}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var medical_certificate_div = document.getElementsByName('div-medical-certificate-' + medical_certificate.disease.replace(/ /g,'') + '-' + medical_certificate.cert_date)[0];
+                    medical_certificate_div.remove();
+                }
+            });
+            
+            break;
+            
         default:
             break;
     }
