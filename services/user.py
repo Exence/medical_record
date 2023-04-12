@@ -11,7 +11,7 @@ from models.user import (
 )
 
 from services.auth import AuthService
-from services.serialization import serialization_user
+from services.serialization import SerializationService
 
 from settings import settings
 from database import (
@@ -62,5 +62,5 @@ class UserService():
         selected_users = execute_read_query_all(self.connection, query)
         users = []
         for user in selected_users:
-            users.append(serialization_user(self.connection, user))
+            users.append(SerializationService.serialization_user(self.connection, user))
         return users

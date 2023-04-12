@@ -58,13 +58,17 @@ def get_child_medcard(medcard_num: int, request: Request, service: MedicalRecord
     father = get_parent_by_id(service.connection, child.father_id)
     mother = get_parent_by_id(service.connection, child.mother_id)
     extra_classes = service.get_extra_classes_by_medcard_num(medcard_num)
+    past_illnesses = service.get_past_illnesses_by_medcard_num(medcard_num)
+    medical_certificates = service.get_medical_certificates_by_medcard_num(medcard_num)
     return templates.TemplateResponse(
         "/medical_record/child/index.html", {"request": request, 
                                              "child": child, 
                                              "allergyes": allergyes, 
                                              "father": father,
                                              "mother": mother,
-                                             "extra_classes": extra_classes}
+                                             "extra_classes": extra_classes,
+                                             "past_illnesses": past_illnesses,
+                                             "medical_certificates": medical_certificates}
     )
 
 
@@ -116,3 +120,48 @@ async def update_extra_class(extra_class_data: JsonForm,  service: MedicalRecord
 async def delete_extra_class(extra_class_data: JsonForm,  service: MedicalRecordService = Depends()):
     extra_class = extra_class_data.json_data
     service.delete_extra_class(extra_class)
+
+
+@router.post('/child/{medcard_num}/past_illness/get')
+async def get_past_illness(past_illness_data: JsonForm,  service: MedicalRecordService = Depends()):
+    past_illness = past_illness_data.json_data
+    past_illness = service.get_past_illness_by_pk(past_illness)
+    return {"past_illness": past_illness}
+
+@router.post('/child/{medcard_num}/past_illness/add')
+async def add_extra_class(past_illness_data: JsonForm,  service: MedicalRecordService = Depends()):
+    past_illness = past_illness_data.json_data
+    service.add_new_past_illness(past_illness)
+
+@router.post('/child/{medcard_num}/past_illness/update')
+async def update_past_illness(past_illness_data: JsonForm,  service: MedicalRecordService = Depends()):
+    past_illness = past_illness_data.json_data
+    service.update_past_illness(past_illness)
+
+@router.post('/child/{medcard_num}/past_illness/delete')
+async def delete_past_illness(past_illness_data: JsonForm,  service: MedicalRecordService = Depends()):
+    past_illness = past_illness_data.json_data
+    service.delete_past_illness(past_illness)
+
+
+
+@router.post('/child/{medcard_num}/medical_certificate/get')
+async def get_medical_certificate(medical_certificate_data: JsonForm,  service: MedicalRecordService = Depends()):
+    medical_certificate = medical_certificate_data.json_data
+    medical_certificate = service.get_medical_certificate_by_pk(medical_certificate)
+    return {"medical_certificate": medical_certificate}
+
+@router.post('/child/{medcard_num}/medical_certificate/add')
+async def add_medical_certificate(medical_certificate_data: JsonForm,  service: MedicalRecordService = Depends()):
+    medical_certificate = medical_certificate_data.json_data
+    service.add_new_medical_certificate(medical_certificate)
+
+@router.post('/child/{medcard_num}/medical_certificate/update')
+async def update_medical_certificate(medical_certificate_data: JsonForm,  service: MedicalRecordService = Depends()):
+    medical_certificate = medical_certificate_data.json_data
+    service.update_medical_certificate(medical_certificate)
+
+@router.post('/child/{medcard_num}/medical_certificate/delete')
+async def delete_medical_certificate(medical_certificate_data: JsonForm,  service: MedicalRecordService = Depends()):
+    medical_certificate = medical_certificate_data.json_data
+    service.delete_medical_certificate(medical_certificate)

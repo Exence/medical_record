@@ -1,0 +1,21 @@
+<div name="div-medical-certificate-{{ medical_certificate.disease.replace(' ', '') }}-{{ medical_certificate.cert_date }}" class="col-12 mb-3">
+    <p>С <u><mark>{{ medical_certificate.start_date.strftime("%d.%m.%Y") }}</mark></u> по <u><mark>{{ medical_certificate.end_date.strftime("%d.%m.%Y") }}</mark></u> перенес: <strong>{{ medical_certificate.disease  }}</strong> </br>
+    В контакте с инфекционными больными <u><mark>
+        {% if not medical_certificate.infection_contact %}
+            небыл
+        {% else %}
+            был
+        {% endif %}
+    </mark></u></br>
+    {% if medical_certificate.sport_exemption_date %}
+        Освобождение от занятий по физкультуре до: <u><mark>{{ medical_certificate.sport_exemption_date.strftime("%d.%m.%Y") }}</mark></u> </br>
+    {% endif %}
+    {% if medical_certificate.vac_exemption_date %}
+        Освобождение от профилактических прививок до: <u><mark>{{ medical_certificate.vac_exemption_date.strftime("%d.%m.%Y") }}</mark></u> </br>
+    {% endif %}
+        Справка от <u><mark>{{ medical_certificate.cert_date.strftime("%d.%m.%Y") }}</mark></u>, врач: <u><mark>{{ medical_certificate.doctor }}</mark></u></p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#medicalCertificateModal" name="update-medical-certificate-{{ medical_certificate.disease.replace(' ', '') }}-{{ medical_certificate.cert_date }}-btn" onclick="update_medical_certificate('{{ medical_certificate.disease }}', '{{ medical_certificate.cert_date }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-medical-certificate-{{ medical_certificate.disease.replace(' ', '') }}-{{ medical_certificate.cert_date }}-btn" onclick="delete_medical_certificate('{{ medical_certificate.disease }}', '{{ medical_certificate.cert_date }}')">Удалить</button>
+    </div>
+</div>
