@@ -90,14 +90,31 @@
             </div>
             <div class="col-12">
               <h5 class="text-center my-4"><strong>ПЕРЕНЕСЕННЫЕ ЗАБОЛЕВАНИЯ:</strong></h3>
-              <div id="past-illness-main-div">
+              <div id="past-illnesses-main-div">
                   {% for past_illness in past_illnesses %}
                     {% include '/medical_record/child/past_illness/past_illness.html' %} 
-                  {% endfor%}          
+                  {% endfor %}          
               </div> 
               <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#pastIllnessModal" name="add-past-illness-btn" onclick="past_illness_add_set_info()">Добавить сведения о перенесенном заболевании</button>
             </div>
-
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>СВЕДЕНИЯ О ГОСПИТАЛИЗАЦИИ (ВКЛЮЧАЯ ТРАВМЫ, ОПЕРАЦИИ):</strong></h3>
+              <div id="hospitalizations-main-div">
+                  {% for hospitalization in hospitalizations %}
+                    {% include '/medical_record/child/hospitalization/hospitalization.html' %} 
+                  {% endfor %}          
+              </div> 
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#hospitalizationModal" name="add-past-illness-btn" onclick="hospitalization_add_set_info()">Добавить сведения о госпитализации</button>
+            </div>
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>СВЕДЕНИЯ О САНАТОРНО-КУРОРТНОМ (И ПРИРАВНЕННОМ К НЕМУ) ЛЕЧЕНИИ:</strong></h3>
+              <div id="spa-treatments-main-div">
+                  {% for spa_treatment in spa_treatments %}
+                    {% include '/medical_record/child/spa_treatment/spa_treatment.html' %} 
+                  {% endfor %}          
+              </div> 
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#spaTreatmentModal" name="add-past-illness-btn" onclick="spa_treatment_add_set_info()">Добавить сведения о санаторно-курортном лечении</button>
+            </div>          
 
             <div class="col-12">
               <h5 class="text-center my-4"><strong>ПРОПУСК ЗАНЯТИЙ ПО БОЛЕЗНИ:</strong></h3>
@@ -111,7 +128,57 @@
           </div>
         </div>
       </div>
-
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="dispensary-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dispensary-collapse" aria-expanded="false" aria-controls="dispensary-collapse">
+            СВЕДЕНИЯ О ДИСПАНСЕРНОМ НАБЛЮДЕНИИ
+          </button>
+        </h2>
+        <div id="dispensary-collapse" class="accordion-collapse collapse" aria-labelledby="dispensary-header">
+          <div class="accordion-body" >
+            <div id="dispensary-main-div">
+              {% for dispensary in dispensaryes %}
+                {% include '/medical_record/child/dispensary/dispensary.html' %}                               
+              {% endfor %} 
+            </div>                    
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" id="add-dispensary-btn" onclick="dispensary_add_set_info()">
+                  Добавить сведения о диспансерном наблюдении
+              </button>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="lpm-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#lpm-collapse" aria-expanded="false" aria-controls="lpm-collapse">
+            ОБЯЗАТЕЛЬНЫЕ ЛЕЧЕБНО-ПРОФИЛАКТИЧЕСКИЕ МЕРОПРИЯТИЯ
+          </button>
+        </h2>
+        <div id="lpm-collapse" class="accordion-collapse collapse" aria-labelledby="lpm-header">
+          <div class="accordion-body" >
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>ДЕГЕЛЬМИНТИЗАЦИЯ:</strong></h3>
+              <div id="deworming-main-div">
+                {% for deworming in dewormings %}
+                  {% include '/medical_record/child/deworming/deworming.html' %}                               
+                {% endfor %}
+              </div>
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dewormingModal" id="add-deworming-btn" onclick="deworming_add_set_info()">
+                  Добавить сведения о дегельминтизации
+              </button>
+            </div> 
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>САНАЦИЯ ПОЛОСТИ РТА:</strong></h3>
+              <div id="oral-sanation-main-div">
+                {% for oral_sanation in oral_sanations %}
+                  {% include '/medical_record/child/oral_sanation/oral_sanation.html' %}                               
+                {% endfor %}
+              </div>
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#oralSanationModal" id="add-oral-sanation-btn" onclick="oral_sanation_add_set_info()">
+                  Добавить сведения о санации полости рта
+              </button>
+            </div>   
+          </div>
+        </div>
     </div>
 	</div>
 
@@ -125,10 +192,31 @@
   {% include '/medical_record/child/modal/class.html' %} 
 
   <!-- Past illness modal -->
-  {% include '/medical_record/child/modal/past_illness.html' %} 
+  {% include '/medical_record/child/modal/past_illness.html' %}
+
+  <!-- Hospitalization modal -->
+  {% include '/medical_record/child/modal/hospitalization.html' %}
+
+  <!-- Spa treatment modal -->
+  {% include '/medical_record/child/modal/spa_treatment.html' %}
 
   <!-- Medical certificates modal -->
-  {% include '/medical_record/child/modal/medical_certificate.html' %} 
+  {% include '/medical_record/child/modal/medical_certificate.html' %}
+
+  <!-- Dispensary modal -->
+  {% include '/medical_record/child/modal/dispensary.html' %}
+
+  <!-- Visit specialist control modal -->
+  {% include '/medical_record/child/modal/visit_specialist_control.html' %}
+
+  <!-- Visit specialist control offcanvas -->
+  {% include '/medical_record/child/offcanvas/visit_specialist_control.html' %}
+
+  <!-- Deworming modal -->
+  {% include '/medical_record/child/modal/deworming.html' %}
+
+  <!-- Oral sanation modal -->
+  {% include '/medical_record/child/modal/oral_sanation.html' %}
 
   <!-- Delete modal -->
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

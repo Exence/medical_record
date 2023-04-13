@@ -1,0 +1,31 @@
+<div class="modal fade" id="visitSpecialistControlModal" tabindex="-1" aria-labelledby="visitSpecialistControlModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="visitSpecialistControlModalLabel">Контроль посещения специалиста</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" >
+                <label for="dispensaryStartDate-modal" class="form-label">Назначено</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="visitSpecialistControlAssignedDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите назначенную дату посещения специалиста.
+                </div>
+            </div>
+            <div class="form-group" >
+                <label for="dispensaryEndDate-modal" class="form-label">Явка</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="visitSpecialistControlFactDate-modal">
+                </div>                   
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="visit-specialist-control-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="visit-specialist-control-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

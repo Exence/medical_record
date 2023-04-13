@@ -1,0 +1,29 @@
+<div class="modal fade" id="dewormingModal" tabindex="-1" aria-labelledby="dewormingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="dewormingModalLabel">Сведения о дегельминтизации</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" >
+                <label for="dewormingDate-modal" class="form-label">Дата проведения дегельминтизации</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="dewormingDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите дату проведения дегельминтизации.
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label for="dispensaryResult-modal" class="form-label">Результат</label>
+                <textarea class="form-control" id="dispensaryResult-modal" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="deworming-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="deworming-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

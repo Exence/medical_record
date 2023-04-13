@@ -1,0 +1,42 @@
+<div class="modal fade" id="hospitalizationModal" tabindex="-1" aria-labelledby="hospitalizationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="hospitalizationModalLabel">Сведения о госпитализации</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" >
+                <label for="hospitalizationStartDate-modal" class="form-label">С</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="hospitalizationStartDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите дату начала заболевания.
+                </div>
+            </div>
+            <div class="form-group" >
+                <label for="hospitalizationEndDate-modal" class="form-label">По</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="hospitalizationEndDate-modal" required>
+                </div>   
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите дату окончания заболевания.
+                </div>                 
+            </div>
+            <div class="col-12">
+                <label for="hospitalizationDiagnosis-modal" class="form-label">Диагноз, вид вмешательства</label>
+                <textarea class="form-control" id="hospitalizationDiagnosis-modal" rows="5"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="hospitalizationFounding-modal" class="form-label">Учреждение</label>
+                <input type="text" class="form-control only-letters-modal" id="hospitalizationFounding-modal" placeholder="Городской клинический госпиталь" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="hospitalization-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="hospitalization-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

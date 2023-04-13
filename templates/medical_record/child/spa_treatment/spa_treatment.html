@@ -1,0 +1,16 @@
+<div name="div-spa-treatment-{{ spa_treatment.start_date }}" class="col-12 mb-3">
+    <p>С <u><mark>{{ spa_treatment.start_date.strftime("%d.%m.%Y") }}</mark></u> по 
+        {% if spa_treatment.end_date %}
+         <u><mark>{{ spa_treatment.end_date.strftime("%d.%m.%Y") }}</mark></u> 
+        {% else %} <u><mark>настоящее время</mark></u> 
+        {% endif %}
+        <br>
+        <strong>Диагноз, вид вмешательства: </strong><u><mark>{{ spa_treatment.diagnosis }}</mark></u> <br>
+        <strong>Специализация учреждения: </strong><u><mark>{{ spa_treatment.founding_specialization }}</mark></u><br>
+        <strong>Климатическая зона учреждения: </strong><u><mark>{{ spa_treatment.climatic_zone }}</mark></u>
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#spaTreatmentModal" name="update-spa-treatment-{{ spa_treatment.start_date }}-btn" onclick="update_spa_treatment('{{ spa_treatment.start_date }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-spa-treatment-{{ spa_treatment.start_date }}-btn" onclick="delete_spa_treatment('{{ spa_treatment.start_date }}')">Удалить</button>
+    </div>
+</div>

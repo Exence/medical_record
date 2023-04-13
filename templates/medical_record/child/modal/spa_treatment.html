@@ -1,0 +1,49 @@
+<div class="modal fade" id="spaTreatmentModal" tabindex="-1" aria-labelledby="spaTreatmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="spaTreatmentModalLabel">Сведения о санаторно-курортном лечении</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" >
+                <label for="spaTreatmentStartDate-modal" class="form-label">С</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="spaTreatmentStartDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите дату начала лечения.
+                </div>
+            </div>
+            <div class="form-group" >
+                <label for="spaTreatmentEndDate-modal" class="form-label">По</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="spaTreatmentEndDate-modal">
+                </div>                   
+            </div>
+            <div class="col-12">
+                <label for="spaTreatmentDiagnosis-modal" class="form-label">Диагноз, вид вмешательства</label>
+                <textarea class="form-control" id="spaTreatmentDiagnosis-modal" rows="5"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="spaTreatmentFoundingSpecialization-modal" class="form-label">Профиль учреждения</label>
+                <input type="text" class="form-control only-letters-modal" id="spaTreatmentFoundingSpecialization-modal" placeholder="Городской клинический госпиталь" required>
+            </div>
+            <div class="col-md-12">
+                <label for="spaTreatmentClimaticZone-modal" class="form-label">Климатическая зона учреждения</label>
+                <select class="form-select" id="spaTreatmentClimaticZone-modal" required>
+                  <option selected>Тропическая (Юг)</option>
+                  <option>Субтропическая (Запад и Северо-Запад)</option>
+                  <option>Умеренная (Южные районы Сибири и часть Дальнего Востока)</option>
+                  <option>Полярная (Якутия, северная Сибирь, северные районы Дальнего Востока)</option>
+                  <option>Особая (район Чукотки и Заполярье)</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="spaTreatment-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="spaTreatment-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

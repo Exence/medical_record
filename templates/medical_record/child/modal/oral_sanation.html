@@ -1,0 +1,33 @@
+<div class="modal fade" id="oralSanationModal" tabindex="-1" aria-labelledby="oralSanationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="oralSanationModalLabel">Сведения о санации полости рта</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" >
+                <label for="oralSanationDate-modal" class="form-label">Дата проведения санации полости рта</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="oralSanationDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите дату проведения санации полости рта.
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label for="oralSanationDentalResult-modal" class="form-label">Данные осмотра стоматологом</label>
+                <textarea class="form-control" id="oralSanationDentalResult-modal" rows="5"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="oralSanationResult-modal" class="form-label">Результаты санации</label>
+                <textarea class="form-control" id="oralSanationResult-modal" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="oral-sanation-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="oral-sanation-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>
