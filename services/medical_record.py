@@ -11,15 +11,21 @@ from typing import (
     )
 
 from models.allergyes import Allergy
-from models.extra_classes import ExtraClass
 from models.child import (
     CreateChildForm,
     Child,
 )
+from models.deworming import Deworming
+from models.dispensary import Dispensary
+from models.extra_classes import ExtraClass
+from models.hospitalization import Hospitalization
 from models.kindergarten import KindergartenWithChildrens
 from models.medical_certificate import MedicalCertificate
+from models.oral_sanation import OralSanation
 from models.parent import ParentCreate
 from models.past_illness import PastIllness
+from models.spa_treatment import SpaTreatment
+from models.visit_specialist_control import VisitSpecialistControl
 
 from services.auth import AuthService
 from services.kindergarten import get_kindergarten_num_by_name
@@ -255,7 +261,6 @@ class MedicalRecordService():
         execute_data_query(self.connection, query, past_illness)
     
     def update_past_illness(self, past_illness: dict):
-        print(past_illness)
         query = f"""UPDATE  past_illnesses SET  start_date = %(start_date)s, 
                                                 end_date = %(end_date)s, 
                                                 diagnosis = %(diagnosis)s
@@ -269,6 +274,89 @@ class MedicalRecordService():
                                                     start_date = %(start_date)s AND
                                                     diagnosis = %(diagnosis)s"""
         execute_data_query(self.connection, query, past_illness)
+
+
+    def get_hospitalizations_by_medcard_num(self, medcard_num: int) -> list[Hospitalization]:
+        query = f"""SELECT  * FROM hospitalizations WHERE medcard_num = {medcard_num} ORDER BY start_date"""
+        selected_hospitalizations = execute_read_query_all(self.connection, query)
+        hospitalizations = []
+        for hospitalization in selected_hospitalizations:
+            hospitalizations.append(SerializationService.serialization_hospitalization(hospitalization))
+        return hospitalizations
+    
+    def get_hospitalization_by_pk(self, hospitalization_data: dict) -> Hospitalization:
+        query = f"""SELECT * FROM hospitalizations WHERE medcard_num = '{hospitalization_data["medcard_num"]}' AND
+                                                         start_date = '{hospitalization_data["start_date"]}'"""
+        hospitalization = execute_read_query_first(self.connection, query)
+
+        return SerializationService.serialization_hospitalization(hospitalization)
+
+    def add_new_hospitalization(self, hospitalization: dict):
+        if not hospitalization["end_date"]:
+            hospitalization["end_date"] = None
+
+        query = f"""INSERT INTO hospitalizations (medcard_num, start_date, end_date, diagnosis, founding) 
+                         VALUES (%(medcard_num)s, %(start_date)s, %(end_date)s, %(diagnosis)s, %(founding)s)"""
+        execute_data_query(self.connection, query, hospitalization)
+    
+    def update_hospitalization(self, hospitalization: dict):
+        if not hospitalization["end_date"]:
+            hospitalization["end_date"] = None
+
+        query = f"""UPDATE  hospitalizations SET start_date = %(start_date)s, 
+                                                 end_date = %(end_date)s, 
+                                                 diagnosis = %(diagnosis)s,
+                                                 founding = %(founding)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            start_date = %(old_start_date)s"""
+        execute_data_query(self.connection, query, hospitalization)
+
+    def delete_hospitalization(self, hospitalization: dict):
+        query = f"""DELETE FROM hospitalizations WHERE  medcard_num = %(medcard_num)s AND
+                                                        start_date = %(start_date)s"""
+        execute_data_query(self.connection, query, hospitalization)
+
+
+    def get_spa_treatments_by_medcard_num(self, medcard_num: int) -> list[SpaTreatment]:
+            query = f"""SELECT  * FROM spa_treatments WHERE medcard_num = {medcard_num} ORDER BY start_date"""
+            selected_spa_treatments = execute_read_query_all(self.connection, query)
+            spa_treatments = []
+            for spa_treatment in selected_spa_treatments:
+                spa_treatments.append(SerializationService.serialization_spa_treatment(spa_treatment))
+            return spa_treatments
+    
+    def get_spa_treatment_by_pk(self, spa_treatment_data: dict) -> SpaTreatment:
+        query = f"""SELECT * FROM spa_treatments WHERE medcard_num = '{spa_treatment_data["medcard_num"]}' AND
+                                                         start_date = '{spa_treatment_data["start_date"]}'"""
+        spa_treatment = execute_read_query_first(self.connection, query)
+
+        return SerializationService.serialization_spa_treatment(spa_treatment)
+
+    def add_new_spa_treatment(self, spa_treatment: dict):
+        if not spa_treatment["end_date"]:
+            spa_treatment["end_date"] = None
+
+        query = f"""INSERT INTO spa_treatments (medcard_num, start_date, end_date, diagnosis, founding_specialization, climatic_zone) 
+                         VALUES (%(medcard_num)s, %(start_date)s, %(end_date)s, %(diagnosis)s, %(founding_specialization)s, %(climatic_zone)s)"""
+        execute_data_query(self.connection, query, spa_treatment)
+    
+    def update_spa_treatment(self, spa_treatment: dict):
+        if not spa_treatment["end_date"]:
+            spa_treatment["end_date"] = None
+
+        query = f"""UPDATE  spa_treatments SET start_date = %(start_date)s, 
+                                                 end_date = %(end_date)s, 
+                                                 diagnosis = %(diagnosis)s,
+                                                 founding_specialization = %(founding_specialization)s,
+                                                 climatic_zone = %(climatic_zone)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            start_date = %(old_start_date)s"""
+        execute_data_query(self.connection, query, spa_treatment)
+
+    def delete_spa_treatment(self, spa_treatment: dict):
+        query = f"""DELETE FROM spa_treatments WHERE  medcard_num = %(medcard_num)s AND
+                                                        start_date = %(start_date)s"""
+        execute_data_query(self.connection, query, spa_treatment)
 
 
     def get_medical_certificates_by_medcard_num(self, medcard_num: int) -> list[MedicalCertificate]:
@@ -321,3 +409,154 @@ class MedicalRecordService():
                                                             disease = %(disease)s AND
                                                             cert_date = %(cert_date)s"""
         execute_data_query(self.connection, query, medical_certificate)
+
+
+    def get_dispensaryes_by_medcard_num(self, medcard_num: int) -> list[Dispensary]:
+            query = f"""SELECT  * FROM dispensaryes WHERE medcard_num = {medcard_num} ORDER BY start_date"""
+            selected_dispensaryes = execute_read_query_all(self.connection, query)
+            dispensaryes = []
+            for dispensary in selected_dispensaryes:
+                dispensaryes.append(SerializationService.serialization_dispensary(dispensary))
+            return dispensaryes
+    
+    def get_dispensary_by_pk(self, dispensary_data: dict) -> Dispensary:
+        query = f"""SELECT * FROM dispensaryes WHERE medcard_num = '{dispensary_data["medcard_num"]}' AND
+                                                         start_date = '{dispensary_data["start_date"]}'"""
+        dispensary = execute_read_query_first(self.connection, query)
+
+        return SerializationService.serialization_dispensary(dispensary)
+
+    def add_new_dispensary(self, dispensary: dict):
+        if not dispensary["end_date"]:
+            dispensary["end_date"] = None
+
+        query = f"""INSERT INTO dispensaryes (medcard_num, start_date, end_date, diagnosis, specialist, end_reason) 
+                         VALUES (%(medcard_num)s, %(start_date)s, %(end_date)s, %(diagnosis)s, %(specialist)s, %(end_reason)s)"""
+        execute_data_query(self.connection, query, dispensary)
+    
+    def update_dispensary(self, dispensary: dict):
+        if not dispensary["end_date"]:
+            dispensary["end_date"] = None
+
+        query = f"""UPDATE  dispensaryes SET start_date = %(start_date)s, 
+                                                 end_date = %(end_date)s, 
+                                                 diagnosis = %(diagnosis)s,
+                                                 specialist = %(specialist)s,
+                                                 end_reason = %(end_reason)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            start_date = %(old_start_date)s"""
+        execute_data_query(self.connection, query, dispensary)
+
+    def delete_dispensary(self, dispensary: dict):
+        query = f"""DELETE FROM dispensaryes WHERE  medcard_num = %(medcard_num)s AND
+                                                        start_date = %(start_date)s"""
+        execute_data_query(self.connection, query, dispensary)
+
+
+    def get_visit_specialist_controls_by_dispensary(self, visit_specialist_control_data: dict) -> list[VisitSpecialistControl]:
+            query = f"""SELECT  * FROM visit_specialist_controls WHERE medcard_num = '{visit_specialist_control_data["medcard_num"]}' AND
+                                                                       start_dispanser_date =  '{visit_specialist_control_data["start_dispanser_date"]}'
+                        ORDER BY assigned_date"""
+            selected_visit_specialist_controls = execute_read_query_all(self.connection, query)
+            visit_specialist_controls = []
+            for visit_specialist_control in selected_visit_specialist_controls:
+                visit_specialist_controls.append(SerializationService.serialization_visit_specialist_control(visit_specialist_control))
+            return visit_specialist_controls
+    
+    def get_visit_specialist_control_by_pk(self, visit_specialist_control_data: dict) -> VisitSpecialistControl:
+        query = f"""SELECT  * FROM visit_specialist_controls WHERE medcard_num = '{visit_specialist_control_data["medcard_num"]}' AND
+                                                                   start_dispanser_date =  '{visit_specialist_control_data["start_dispanser_date"]}' AND
+                                                                   assigned_date = '{visit_specialist_control_data["assigned_date"]}'"""
+        visit_specialist_control = execute_read_query_first(self.connection, query)
+
+        return SerializationService.serialization_visit_specialist_control(visit_specialist_control)
+
+    def add_new_visit_specialist_control(self, visit_specialist_control: dict):
+        if not visit_specialist_control["fact_date"]:
+            visit_specialist_control["fact_date"] = None
+
+        query = f"""INSERT INTO visit_specialist_controls (medcard_num, start_dispanser_date, assigned_date, fact_date) 
+                         VALUES (%(medcard_num)s, %(start_dispanser_date)s, %(assigned_date)s, %(fact_date)s)"""
+        execute_data_query(self.connection, query, visit_specialist_control)
+    
+    def update_visit_specialist_control(self, visit_specialist_control: dict):
+        if not visit_specialist_control["fact_date"]:
+            visit_specialist_control["fact_date"] = None
+
+        query = f"""UPDATE  visit_specialist_controls SET assigned_date = %(assigned_date)s, 
+                                                 fact_date = %(fact_date)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            start_dispanser_date = %(start_dispanser_date)s AND
+                            assigned_date = %(old_assigned_date)s"""
+        execute_data_query(self.connection, query, visit_specialist_control)
+
+    def delete_visit_specialist_control(self, visit_specialist_control: dict):
+        query = f"""DELETE FROM visit_specialist_controls WHERE  medcard_num = %(medcard_num)s AND
+                                                                 start_dispanser_date = %(start_dispanser_date)s AND
+                                                                 assigned_date = %(assigned_date)s"""
+        execute_data_query(self.connection, query, visit_specialist_control)
+
+
+    def get_dewormings_by_medcard_num(self, medcard_num: int) -> list[Deworming]:
+            query = f"""SELECT  * FROM dewormings WHERE medcard_num = {medcard_num} ORDER BY deworming_date"""
+            selected_dewormings = execute_read_query_all(self.connection, query)
+            dewormings = []
+            for deworming in selected_dewormings:
+                dewormings.append(SerializationService.serialization_deworming(deworming))
+            return dewormings
+    
+    def get_deworming_by_pk(self, deworming_data: dict) -> Deworming:
+        query = f"""SELECT * FROM dewormings WHERE medcard_num = '{deworming_data["medcard_num"]}' AND
+                                                         deworming_date = '{deworming_data["deworming_date"]}'"""
+        deworming = execute_read_query_first(self.connection, query)
+        return SerializationService.serialization_deworming(deworming)
+
+    def add_new_deworming(self, deworming: dict):
+        query = f"""INSERT INTO dewormings (medcard_num, deworming_date, result) 
+                         VALUES (%(medcard_num)s, %(deworming_date)s, %(result)s)"""
+        execute_data_query(self.connection, query, deworming)
+    
+    def update_deworming(self, deworming: dict):
+        query = f"""UPDATE  dewormings SET deworming_date = %(deworming_date)s, 
+                                           result = %(result)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            deworming_date = %(old_deworming_date)s"""
+        execute_data_query(self.connection, query, deworming)
+
+    def delete_deworming(self, deworming: dict):
+        query = f"""DELETE FROM dewormings WHERE  medcard_num = %(medcard_num)s AND
+                                                  deworming_date = %(deworming_date)s"""
+        execute_data_query(self.connection, query, deworming)
+
+
+    def get_oral_sanations_by_medcard_num(self, medcard_num: int) -> list[OralSanation]:
+            query = f"""SELECT  * FROM oral_sanations WHERE medcard_num = {medcard_num} ORDER BY sanation_date"""
+            selected_oral_sanations = execute_read_query_all(self.connection, query)
+            oral_sanations = []
+            for oral_sanation in selected_oral_sanations:
+                oral_sanations.append(SerializationService.serialization_oral_sanation(oral_sanation))
+            return oral_sanations
+    
+    def get_oral_sanation_by_pk(self, oral_sanation_data: dict) -> OralSanation:
+        query = f"""SELECT * FROM oral_sanations WHERE medcard_num = '{oral_sanation_data["medcard_num"]}' AND
+                                                       sanation_date = '{oral_sanation_data["sanation_date"]}'"""
+        oral_sanation = execute_read_query_first(self.connection, query)
+        return SerializationService.serialization_oral_sanation(oral_sanation)
+
+    def add_new_oral_sanation(self, oral_sanation: dict):
+        query = f"""INSERT INTO oral_sanations (medcard_num, sanation_date, dental_result, sanation_result) 
+                         VALUES (%(medcard_num)s, %(sanation_date)s, %(dental_result)s, %(sanation_result)s)"""
+        execute_data_query(self.connection, query, oral_sanation)
+    
+    def update_oral_sanation(self, oral_sanation: dict):
+        query = f"""UPDATE  oral_sanations SET sanation_date = %(sanation_date)s, 
+                                               dental_result = %(dental_result)s,
+                                               sanation_result = %(sanation_result)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            sanation_date = %(old_sanation_date)s"""
+        execute_data_query(self.connection, query, oral_sanation)
+
+    def delete_oral_sanation(self, oral_sanation: dict):
+        query = f"""DELETE FROM oral_sanations WHERE  medcard_num = %(medcard_num)s AND
+                                                  sanation_date = %(sanation_date)s"""
+        execute_data_query(self.connection, query, oral_sanation)

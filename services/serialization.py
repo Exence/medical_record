@@ -11,15 +11,21 @@ from models.child import (
     ChildCreate,
     ChildShow
     )
+from models.deworming import Deworming
+from models.dispensary import Dispensary
 from models.extra_classes import ExtraClass
+from models.hospitalization import Hospitalization
 from models.medical_certificate import MedicalCertificate
+from models.oral_sanation import OralSanation
 from models.parent import (
         ParentCreate,
 )
 from models.past_illness import PastIllness
+from models.spa_treatment import SpaTreatment
 from models.user import (
     User,
 )
+from models.visit_specialist_control import VisitSpecialistControl
 
 from services.kindergarten import get_kindergarten_name_by_num
 
@@ -27,7 +33,7 @@ from services.kindergarten import get_kindergarten_name_by_num
 class SerializationService():
 
         @classmethod
-        def serialization_user(connection: Any, user_data: tuple) -> User:
+        def serialization_user(cls, connection: Any, user_data: tuple) -> User:
                 cursor = connection.cursor()
                 kindergarten_name = get_kindergarten_name_by_num(cursor, user_data[6])
                 cursor.close()
@@ -44,7 +50,7 @@ class SerializationService():
                 )
 
         @classmethod
-        def serialization_parent_to_create(parent_data: tuple) -> ParentCreate:
+        def serialization_parent_to_create(cls, parent_data: tuple) -> ParentCreate:
                 return ParentCreate(
                         surname=parent_data[0],
                         name=parent_data[1],
@@ -158,6 +164,27 @@ class SerializationService():
                         end_date=past_illness_data[2],
                         diagnosis=past_illness_data[3]
                 )
+        
+        @classmethod
+        def serialization_hospitalization(cls, hospitalization_data: tuple) -> Hospitalization:
+                return Hospitalization(
+                        medcard_num=hospitalization_data[0],
+                        start_date=hospitalization_data[1],
+                        end_date=hospitalization_data[2],
+                        diagnosis=hospitalization_data[3],
+                        founding=hospitalization_data[4]
+                )
+
+        @classmethod
+        def serialization_spa_treatment(cls, spa_treatment_data: tuple) -> SpaTreatment:
+                return SpaTreatment(
+                        medcard_num=spa_treatment_data[0],
+                        start_date=spa_treatment_data[1],
+                        end_date=spa_treatment_data[2],
+                        diagnosis=spa_treatment_data[3],
+                        founding_specialization=spa_treatment_data[4],
+                        climatic_zone=spa_treatment_data[5]
+                )
 
         @classmethod
         def serialization_medical_certificate(cls, medical_certificate_data: tuple):
@@ -172,3 +199,41 @@ class SerializationService():
                         vac_exemption_date=medical_certificate_data[7],
                         doctor=medical_certificate_data[8]
                 )
+        
+        @classmethod
+        def serialization_dispensary(cls, dispensary_data: tuple) -> Dispensary:
+                return Dispensary(
+                        medcard_num=dispensary_data[0],
+                        start_date=dispensary_data[1],
+                        diagnosis=dispensary_data[2],
+                        specialist=dispensary_data[3],
+                        end_date=dispensary_data[4],
+                        end_reason=dispensary_data[5]
+                )
+        
+        @classmethod
+        def serialization_visit_specialist_control(cls, visit_data: tuple) -> VisitSpecialistControl:
+                return VisitSpecialistControl(
+                        medcard_num=visit_data[0],
+                        start_dispanser_date=visit_data[1],
+                        assigned_date=visit_data[2],
+                        fact_date=visit_data[3]
+                )
+
+        @classmethod
+        def serialization_deworming(cls, deworming_data: tuple) -> Deworming:
+                return Deworming(
+                        medcard_num=deworming_data[0],
+                        deworming_date=deworming_data[1],
+                        result=deworming_data[2]                        
+                )
+
+        @classmethod
+        def serialization_oral_sanation(cls, oral_sanation_data: tuple) -> OralSanation:
+                return OralSanation(
+                        medcard_num=oral_sanation_data[0],
+                        sanation_date=oral_sanation_data[1],
+                        dental_result=oral_sanation_data[2],
+                        sanation_result=oral_sanation_data[3]
+                )
+

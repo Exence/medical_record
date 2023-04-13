@@ -1,0 +1,43 @@
+<div class="modal fade" id="dispensaryModal" tabindex="-1" aria-labelledby="dispensaryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="dispensaryModalLabel">Сведения о диспансерном наблюдении</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-12">
+                <label for="dispensaryDiagnosis-modal" class="form-label">Диагноз</label>
+                <input type="text" class="form-control only-letters-modal" id="dispensaryDiagnosis-modal" placeholder="Туберкулез" required>
+            </div>
+            <div class="col-12">
+                <label for="dispensarySpecialist-modal" class="form-label">Специалист</label>
+                <input type="text" class="form-control only-letters-modal" id="dispensarySpecialist-modal" placeholder="Фтизиатр" required>
+            </div>
+            <div class="form-group" >
+                <label for="dispensaryStartDate-modal" class="form-label">С</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="dispensaryStartDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите дату начала лечения.
+                </div>
+            </div>
+            <div class="form-group" >
+                <label for="dispensaryEndDate-modal" class="form-label">По</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="dispensaryEndDate-modal">
+                </div>                   
+            </div>            
+            <div class="col-md-12">
+                <label for="dispensaryEndReason-modal" class="form-label">Причина снятия</label>
+                <textarea class="form-control" id="dispensaryEndReason-modal" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="dispensary-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="dispensary-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

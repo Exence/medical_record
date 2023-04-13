@@ -1,0 +1,10 @@
+<div name="div-hospitalization-{{ hospitalization.start_date }}" class="col-12 mb-3">
+    <p>С <u><mark>{{ hospitalization.start_date.strftime("%d.%m.%Y") }}</mark></u> по <u><mark>{{ hospitalization.end_date.strftime("%d.%m.%Y") }}</mark></u> <br>
+        <strong>Диагноз, вид вмешательства: </strong><u><mark>{{ hospitalization.diagnosis }}</mark></u> <br>
+        <strong>Учреждение: </strong><u><mark>{{ hospitalization.founding }}</mark></u>
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#hospitalizationModal" name="update-hospitalization-{{ hospitalization.start_date }}-btn" onclick="update_hospitalization('{{ hospitalization.start_date }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-hospitalization-{{ hospitalization.start_date }}-btn" onclick="delete_hospitalization('{{ hospitalization.start_date }}')">Удалить</button>
+    </div>
+</div>

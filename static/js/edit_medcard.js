@@ -10,6 +10,7 @@ const reaction_type = document.querySelector('#allergyReactionType-modal');
 const diagnosis_date = document.querySelector('#allergyDiagnosisDate-modal');
 const note = document.querySelector('#allergyNote-modal');
 
+/*********************************************************************************************/
 /* PARENTS CONST */
 const parent_modal_header = document.querySelector('#parentModalLabel');
 const parent_surname_inpt = document.querySelector('#surname-modal');
@@ -31,11 +32,30 @@ const class_commit_modal_btn = document.querySelector('#class-commit-modal');
 
 /* PAST ILLNESSES CONST */
 const past_illness_modal_header = document.querySelector('#pastIllnessModalLabel');
-const past_illness_diagnosis_modal_inpt = document.querySelector('#pastIllnessDisease-modal');
+const past_illness_diagnosis_modal_inpt = document.querySelector('#pastIllnessDiagnosis-modal');
 const past_illness_start_date_modal_dtpkr = document.querySelector('#pastIllnessStartDate-modal');
 const past_illness_end_date_modal_dtpkr = document.querySelector('#pastIllnessEndDate-modal');
 const past_illness_close_modal_btn = document.querySelector('#pastIllness-close-modal');
 const past_illness_commit_modal_btn = document.querySelector('#pastIllness-commit-modal');
+
+/* HOSPITALIZATION CONST */
+const hospitalization_modal_header = document.querySelector('#hospitalizationModalLabel');
+const hospitalization_diagnosis_modal_txt = document.querySelector('#hospitalizationDiagnosis-modal');
+const hospitalization_start_date_modal_dtpkr = document.querySelector('#hospitalizationStartDate-modal');
+const hospitalization_end_date_modal_dtpkr = document.querySelector('#hospitalizationEndDate-modal');
+const hospitalization_founding_modal_inpt = document.querySelector('#hospitalizationFounding-modal');
+const hospitalization_close_modal_btn = document.querySelector('#hospitalization-close-modal');
+const hospitalization_commit_modal_btn = document.querySelector('#hospitalization-commit-modal');
+
+/* SPA TREATMENT CONST */
+const spa_treatment_modal_header = document.querySelector('#spaTreatmentModalLabel');
+const spa_treatment_diagnosis_modal_txt = document.querySelector('#spaTreatmentDiagnosis-modal');
+const spa_treatment_start_date_modal_dtpkr = document.querySelector('#spaTreatmentStartDate-modal');
+const spa_treatment_end_date_modal_dtpkr = document.querySelector('#spaTreatmentEndDate-modal');
+const spa_treatment_founding_modal_inpt = document.querySelector('#spaTreatmentFoundingSpecialization-modal');
+const spa_treatment_climatic_zone_modal_slct = document.querySelector('#spaTreatmentClimaticZone-modal');
+const spa_treatment_close_modal_btn = document.querySelector('#spaTreatment-close-modal');
+const spa_treatment_commit_modal_btn = document.querySelector('#spaTreatment-commit-modal');
 
 /* MEDICAL CERTIFICATES CONST */
 const medical_certificate_modal_header = document.querySelector('#medicalCertificateModalLabel');
@@ -49,6 +69,42 @@ const medical_certificate_doctor_modal_inpt = document.querySelector('#medicalCe
 const medical_certificate_cert_date_modal_dtpkr = document.querySelector('#medicalCertificateCertDate-modal');
 const medical_certificate_close_modal_btn = document.querySelector('#medicalCertificate-close-modal');
 const medical_certificate_commit_modal_btn = document.querySelector('#medicalCertificate-commit-modal');
+
+/*********************************************************************************************/
+/* DISPENSARY CONST */
+const dispensary_modal_header = document.querySelector('#dispensaryModalLabel');
+const dispensary_diagnosis_modal_inpt = document.querySelector('#dispensaryDiagnosis-modal');
+const dispensary_specialist_modal_inpt = document.querySelector('#dispensarySpecialist-modal');
+const dispensary_start_date_modal_dtpkr = document.querySelector('#dispensaryStartDate-modal');
+const dispensary_end_date_modal_dtpkr = document.querySelector('#dispensaryEndDate-modal');
+const dispensary_end_reason_modal_txt = document.querySelector('#dispensaryEndReason-modal');
+const dispensary_close_modal_btn = document.querySelector('#dispensary-close-modal');
+const dispensary_commit_modal_btn = document.querySelector('#dispensary-commit-modal');
+
+/* VISIT SPECIALIST CONTROL CONST*/
+const visit_specialist_control_modal_header = document.querySelector('#visitSpecialistControlModalLabel');
+const visit_specialist_control_assigned_date_modal_dtpkr = document.querySelector('#visitSpecialistControlAssignedDate-modal');
+const visit_specialist_control_fact_date_modal_dtpkr = document.querySelector('#visitSpecialistControlFactDate-modal');
+const visit_specialist_control_close_modal_btn = document.querySelector('#visit-specialist-control-close-modal');
+const visit_specialist_control_commit_modal_btn = document.querySelector('#visit-specialist-control-commit-modal');
+const visit_specialist_control_add_btn = document.querySelector('#add-visit-specialist-control-btn');
+
+/*********************************************************************************************/
+/* DEWORMING CONST */
+const deworming_modal_header = document.querySelector('#dewormingModalLabel');
+const deworming_date_modal_dtpkr = document.querySelector('#dewormingDate-modal');
+const deworming_result_modal_txt = document.querySelector('#dispensaryResult-modal');
+const deworming_close_modal_btn = document.querySelector('#deworming-close-modal');
+const deworming_commit_modal_btn = document.querySelector('#deworming-commit-modal');
+
+/* SANATION CONST */
+const oral_sanation_modal_header = document.querySelector('#oralSanationModalLabel');
+const oral_sanation_date_modal_dtpkr = document.querySelector('#oralSanationDate-modal');
+const oral_sanation_dental_result_modal_txt = document.querySelector('#oralSanationDentalResult-modal')
+const oral_sanation_result_modal_txt = document.querySelector('#oralSanationResult-modal');
+const oral_sanation_close_modal_btn = document.querySelector('#oral-sanation-close-modal');
+const oral_sanation_commit_modal_btn = document.querySelector('#oral-sanation-commit-modal');
+
 
 /* DELETE WINDOW CONST*/
 const delete_modal_header = document.querySelector('#deleteModalLabel');
@@ -427,10 +483,10 @@ function past_illness_add_set_info(){
     past_illness_commit_modal_btn.value = 'add'; 
 }
 
-function update_past_illness(disease, start_date){
+function update_past_illness(diagnosis, start_date){
     var past_illness = {
         "medcard_num": medcard_num,
-        "diagnosis": disease,
+        "diagnosis": diagnosis,
         "start_date": start_date
     }
     $.ajax({
@@ -474,12 +530,12 @@ past_illness_commit_modal_btn.addEventListener('click', () =>{
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
-                    let past_illness_div = document.querySelector('#past-illness-main-div')
+                    let past_illness_div = document.querySelector('#past-illnesses-main-div')
                     past_illness_div.innerHTML += '<div name="div-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.start_date + '" class="col-12 mb-3">\
                     <p><strong>' + past_illness.diagnosis  + '</strong> с <u><mark>' + past_illness.start_date + '</mark></u> по <u><mark>' + past_illness.end_date + '</mark></u> </p>\
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
                         <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#pastIllnessModal" name="update-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.start_date + '-btn" onclick="update_past_illness(\'' + past_illness.diagnosis + '\', \'' + past_illness.start_date + '\')">Редактировать</button>\
-                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.cert_date + '-btn" onclick="delete_past_illness(\'' + past_illness.diagnosis + '\', \'' + past_illness.start_date + '\')">Удалить</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.start_date + '-btn" onclick="delete_past_illness(\'' + past_illness.diagnosis + '\', \'' + past_illness.start_date + '\')">Удалить</button>\
                     </div>\
                 </div>'
                 }
@@ -502,9 +558,9 @@ past_illness_commit_modal_btn.addEventListener('click', () =>{
                         past_illness_div.innerHTML = '<p><strong>' + past_illness.diagnosis  + '</strong> с <u><mark>' + past_illness.start_date + '</mark></u> по <u><mark>' + past_illness.end_date + '</mark></u> </p>\
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#pastIllnessModal" name="update-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.start_date + '-btn" onclick="update_past_illness(\'' + past_illness.diagnosis + '\', \'' + past_illness.start_date + '\')">Редактировать</button>\
-                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.cert_date + '-btn" onclick="delete_past_illness(\'' + past_illness.diagnosis + '\', \'' + past_illness.start_date + '\')">Удалить</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.start_date + '-btn" onclick="delete_past_illness(\'' + past_illness.diagnosis + '\', \'' + past_illness.start_date + '\')">Удалить</button>\
                         </div>';
-                        past_illness_div.setAttribute('name', 'div-past-illness-' + past_illness.old_diagnosis.replace(/ /g, '') + '-' + past_illness.old_start_date) 
+                        past_illness_div.setAttribute('name', 'div-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.start_date) 
                     }
                 });
                 break;
@@ -514,6 +570,227 @@ past_illness_commit_modal_btn.addEventListener('click', () =>{
     }
 })
 
+/* HOSPITALIZATION */
+function hospitalization_add_set_info(){
+
+    hospitalization_modal_header.innerHTML = "Добавление сведений о госпитализации";
+    hospitalization_diagnosis_modal_txt.value = "";
+    hospitalization_start_date_modal_dtpkr.value = new Date();
+    hospitalization_end_date_modal_dtpkr.value = new Date();
+    hospitalization_founding_modal_inpt.value = ""
+    hospitalization_commit_modal_btn.value = 'add'; 
+}
+
+function update_hospitalization(start_date){
+    var hospitalization = {
+        "medcard_num": medcard_num,
+        "start_date": start_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/hospitalization/get",
+        data: JSON.stringify({"json_data": hospitalization}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            hospitalization_modal_header.innerHTML = "Редактирование сведений о перенесенном заболевании";
+            hospitalization_commit_modal_btn.value = 'update';
+            hospitalization_close_modal_btn.value = data.hospitalization.start_date;
+            hospitalization_diagnosis_modal_txt.value = data.hospitalization.diagnosis;
+            hospitalization_start_date_modal_dtpkr.value = data.hospitalization.start_date;
+            hospitalization_end_date_modal_dtpkr.value = data.hospitalization.end_date;
+            hospitalization_founding_modal_inpt.value = data.hospitalization.founding;
+        }
+    });    
+}
+
+function delete_hospitalization(start_date){
+    delete_modal_header.innerHTML = 'Удалить сведения о перенесенном заболевании';
+    close_delete_modal_btn.value = start_date;
+    delete_commit_modal_btn.value = 'delete_hospitalization'
+}
+
+hospitalization_commit_modal_btn.addEventListener('click', () =>{
+    var hospitalization = {
+        "medcard_num": medcard_num,
+        "diagnosis": hospitalization_diagnosis_modal_txt.value,
+        "start_date": hospitalization_start_date_modal_dtpkr.value,
+        "end_date": hospitalization_end_date_modal_dtpkr.value,
+        "founding": hospitalization_founding_modal_inpt.value
+    }
+    switch (hospitalization_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/hospitalization/add",
+                data: JSON.stringify({"json_data": hospitalization}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    let hospitalization_div = document.querySelector('#hospitalizations-main-div')
+                    hospitalization_div.innerHTML += '<div name="div-hospitalization-' + hospitalization.start_date + '" class="col-12 mb-3">\
+                    <p>С <u><mark>' + hospitalization.start_date + '</mark></u> по <u><mark>' + hospitalization.end_date + '</mark></u> <br>\
+                    <strong>Диагноз, вид вмешательства: </strong><u><mark>' + hospitalization.diagnosis + '</mark></u> <br>\
+                    <strong>Учреждение: </strong><u><mark>' + hospitalization.founding + '</mark></u></p>\
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                    <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#hospitalizationModal" name="update-hospitalization-' + hospitalization.start_date + '-btn" onclick="update_hospitalization(\'' + hospitalization.start_date + '\')">Редактировать</button>\
+                    <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-hospitalization-' + hospitalization.start_date + '-btn" onclick="delete_hospitalization(\'' + hospitalization.start_date + '\')">Удалить</button>\
+                </div>\
+                </div>'
+                }
+            });
+            break;
+
+            case 'update':
+                hospitalization["old_start_date"] = hospitalization_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/hospitalization/update",
+                    data: JSON.stringify({"json_data": hospitalization}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        let hospitalization_div = document.getElementsByName('div-hospitalization-' + hospitalization.old_start_date)[0]
+                        hospitalization_div.innerHTML = '<p>С <u><mark>' + hospitalization.start_date + '</mark></u> по <u><mark>' + hospitalization.end_date + '</mark></u> <br>\
+                        <strong>Диагноз, вид вмешательства: </strong><u><mark>' + hospitalization.diagnosis + '</mark></u> <br>\
+                        <strong>Учреждение: </strong><u><mark>' + hospitalization.founding + '</mark></u></p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#hospitalizationModal" name="update-hospitalization-' + hospitalization.start_date + '-btn" onclick="update_hospitalization(\'' + hospitalization.start_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-hospitalization-' + hospitalization.start_date + '-btn" onclick="delete_hospitalization(\'' + hospitalization.start_date + '\')">Удалить</button>\
+                    </div>';
+                        hospitalization_div.setAttribute('name', 'div-hospitalization-' + hospitalization.start_date) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+/* SPA TREATMENT */
+function spa_treatment_add_set_info(){
+
+    spa_treatment_modal_header.innerHTML = "Добавление сведений о санаторно-курортном лечении";
+    spa_treatment_diagnosis_modal_txt.value = "";
+    spa_treatment_start_date_modal_dtpkr.value = "2023-01-01";
+    spa_treatment_end_date_modal_dtpkr.value = "2023-01-01";
+    spa_treatment_founding_modal_inpt.value = ""
+    spa_treatment_commit_modal_btn.value = 'add'; 
+}
+
+function update_spa_treatment(start_date){
+    var spa_treatment = {
+        "medcard_num": medcard_num,
+        "start_date": start_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/spa_treatment/get",
+        data: JSON.stringify({"json_data": spa_treatment}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            spa_treatment_modal_header.innerHTML = "Редактирование сведений о перенесенном заболевании";
+            spa_treatment_commit_modal_btn.value = 'update';
+            spa_treatment_close_modal_btn.value = data.spa_treatment.start_date;
+            spa_treatment_diagnosis_modal_txt.value = data.spa_treatment.diagnosis;
+            spa_treatment_start_date_modal_dtpkr.value = data.spa_treatment.start_date;
+            spa_treatment_end_date_modal_dtpkr.value = data.spa_treatment.end_date;
+            spa_treatment_founding_modal_inpt.value = data.spa_treatment.founding_specialization;
+            spa_treatment_climatic_zone_modal_slct.value = data.spa_treatment.climatic_zone;
+        }
+    });    
+}
+
+function delete_spa_treatment(start_date){
+    delete_modal_header.innerHTML = 'Удалить сведения о санаторно-курортном лечении';
+    close_delete_modal_btn.value = start_date;
+    delete_commit_modal_btn.value = 'delete_spa_treatment'
+}
+
+spa_treatment_commit_modal_btn.addEventListener('click', () =>{
+    var spa_treatment = {
+        "medcard_num": medcard_num,
+        "diagnosis": spa_treatment_diagnosis_modal_txt.value,
+        "start_date": spa_treatment_start_date_modal_dtpkr.value,
+        "end_date": spa_treatment_end_date_modal_dtpkr.value,
+        "founding_specialization": spa_treatment_founding_modal_inpt.value,
+        "climatic_zone": spa_treatment_climatic_zone_modal_slct.value
+    }
+    switch (spa_treatment_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/spa_treatment/add",
+                data: JSON.stringify({"json_data": spa_treatment}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    innerHTML = '<div name="div-spa-treatment-' + spa_treatment.start_date + '" class="col-12 mb-3">\
+                    <p>С <u><mark>' + spa_treatment.start_date + '</mark></u> по '
+                    if (spa_treatment.end_date){
+                        innerHTML += '<u><mark>' + spa_treatment.end_date + '</mark></u>'
+                    } else {
+                        innerHTML += '<u><mark>настоящее время</mark></u>'
+                    }
+                    innerHTML += '<br>\
+                    <strong>Диагноз, вид вмешательства: </strong><u><mark>' + spa_treatment.diagnosis + '</mark></u> <br>\
+                    <strong>Специализация учреждения: </strong><u><mark>' + spa_treatment.founding_specialization + '</mark></u><br>\
+                    <strong>Климатическая зона учреждения: </strong><u><mark>' + spa_treatment.climatic_zone + '</mark></u>\
+                </p>\
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                    <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#spaTreatmentModal" name="update-spa-treatment-' + spa_treatment.start_date + '-btn" onclick="update_spa_treatment(\'' + spa_treatment.start_date + '\')">Редактировать</button>\
+                    <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-spa-treatment-' + spa_treatment.start_date + '-btn" onclick="delete_spa_treatment(\'' + spa_treatment.start_date + '\')">Удалить</button>\
+                </div>\
+                </div>'
+                    let spa_treatment_div = document.querySelector('#spa-treatments-main-div')
+                    spa_treatment_div.innerHTML += innerHTML
+                }
+            });
+            break;
+
+            case 'update':
+                spa_treatment["old_start_date"] = spa_treatment_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/spa_treatment/update",
+                    data: JSON.stringify({"json_data": spa_treatment}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        innerHTML = '<p>С <u><mark>' + spa_treatment.start_date + '</mark></u> по '
+                            if (spa_treatment.end_date){
+                                innerHTML += '<u><mark>' + spa_treatment.end_date + '</mark></u>'
+                            } else {
+                                innerHTML += '<u><mark>настоящее время</mark></u>'
+                            }
+                            innerHTML += '<br>\
+                            <strong>Диагноз, вид вмешательства: </strong><u><mark>' + spa_treatment.diagnosis + '</mark></u> <br>\
+                            <strong>Специализация учреждения: </strong><u><mark>' + spa_treatment.founding_specialization + '</mark></u><br>\
+                            <strong>Климатическая зона учреждения: </strong><u><mark>' + spa_treatment.climatic_zone + '</mark></u>\
+                        </p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#spaTreatmentModal" name="update-spa-treatment-' + spa_treatment.start_date + '-btn" onclick="update_spa_treatment(\'' + spa_treatment.start_date + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-spa-treatment-' + spa_treatment.start_date + '-btn" onclick="delete_spa_treatment(\'' + spa_treatment.start_date + '\')">Удалить</button>\
+                        </div>';
+                        let spa_treatment_div = document.getElementsByName('div-spa-treatment-' + spa_treatment.old_start_date)[0]
+                        spa_treatment_div.innerHTML = innerHTML;
+                        spa_treatment_div.setAttribute('name', 'div-spa-treatment-' + spa_treatment.start_date) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
 
 /* MEDICAL CERTIFICATES */
 function medical_certificate_add_set_info(){
@@ -663,6 +940,443 @@ function delete_medical_certificate(disease, cert_date){
 }
 
 
+/* DISPENSARY */
+function dispensary_add_set_info(){
+
+    dispensary_modal_header.innerHTML = "Добавление сведений о санаторно-курортном лечении";
+    dispensary_diagnosis_modal_inpt.value = "";
+    dispensary_specialist_modal_inpt.value = "";
+    dispensary_start_date_modal_dtpkr.value = "2023-01-01";
+    dispensary_end_date_modal_dtpkr.value = "2023-01-01";
+    dispensary_end_reason_modal_txt.value = "";
+    dispensary_commit_modal_btn.value = 'add'; 
+}
+
+function update_dispensary(start_date){
+    var dispensary = {
+        "medcard_num": medcard_num,
+        "start_date": start_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/dispensary/get",
+        data: JSON.stringify({"json_data": dispensary}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            dispensary_modal_header.innerHTML = "Редактирование сведений о перенесенном заболевании";
+            dispensary_commit_modal_btn.value = 'update';
+            dispensary_close_modal_btn.value = data.dispensary.start_date;
+            dispensary_diagnosis_modal_inpt.value = data.dispensary.diagnosis;
+            dispensary_specialist_modal_inpt.value = data.dispensary.specialist;
+            dispensary_start_date_modal_dtpkr.value = data.dispensary.start_date;
+            dispensary_end_date_modal_dtpkr.value = data.dispensary.end_date;
+            dispensary_end_reason_modal_txt.value = data.dispensary.end_reason;
+        }
+    });    
+}
+
+function delete_dispensary(start_date){
+    delete_modal_header.innerHTML = 'Удалить сведения о диспансерном наблюдении';
+    close_delete_modal_btn.value = start_date;
+    delete_commit_modal_btn.value = 'delete_dispensary'
+}
+
+dispensary_commit_modal_btn.addEventListener('click', () =>{
+    var dispensary = {
+        "medcard_num": medcard_num,
+        "diagnosis": dispensary_diagnosis_modal_inpt.value,
+        "start_date": dispensary_start_date_modal_dtpkr.value,
+        "end_date": dispensary_end_date_modal_dtpkr.value,
+        "specialist": dispensary_specialist_modal_inpt.value,
+        "end_reason": dispensary_end_reason_modal_txt.value
+    }
+    switch (dispensary_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/dispensary/add",
+                data: JSON.stringify({"json_data": dispensary}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    innerHTML = '<div name="div-dispensary-' + dispensary.start_date + '" class="col-12 mb-3">\
+                    <p><strong>' + dispensary.diagnosis + '</strong> с <u><mark>' + dispensary.start_date + '</mark></u> по'
+                    if (dispensary.end_date){
+                        innerHTML += '<u><mark>' + dispensary.end_date + '</mark></u>'
+                        if (dispensary.end_reason){
+                                innerHTML += '<br> Причина снятия: <u><mark>' + dispensary.end_reason + '</mark></u>'
+                        }
+                    } else {
+                        innerHTML += '<u><mark>настоящее время</mark></u>'
+                    }
+                    innerHTML += '<br>Специалист: <u><mark>' + dispensary.specialist + '</mark></u>\
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-info mt-2 btn-sm" data-bs-toggle="offcanvas" data-bs-target="#visitSpecialistControlOffcanvas" aria-controls="visitSpecialistControlOffcanvas" onclick="get_visit_specialist_control(\'' + dispensary.start_date + '\')">Контроль посещений специалиста</button>\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" name="update-dispensary-' + dispensary.start_date + '-btn" onclick="update_dispensary(\'' + dispensary.start_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-dispensary-' + dispensary.start_date + '-btn" onclick="delete_dispensary(\'' + dispensary.start_date + '\')">Удалить</button>\
+                    </div>\
+                    </div>'
+                    let dispensary_div = document.querySelector('#dispensary-main-div')
+                    dispensary_div.innerHTML += innerHTML
+                }
+            });
+            break;
+
+            case 'update':
+                dispensary["old_start_date"] = dispensary_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/dispensary/update",
+                    data: JSON.stringify({"json_data": dispensary}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        innerHTML = '<p><strong>' + dispensary.diagnosis + '</strong> с <u><mark>' + dispensary.start_date + '</mark></u> по'
+                        if (dispensary.end_date){
+                            innerHTML += '<u><mark>' + dispensary.end_date + '</mark></u>'
+                            if (dispensary.end_reason){
+                                    innerHTML += '<br> Причина снятия: <u><mark>' + dispensary.end_reason + '</mark></u>'
+                            }
+                        } else {
+                            innerHTML += '<u><mark>настоящее время</mark></u>'
+                        }
+                        innerHTML += '<br>Специалист: <u><mark>' + dispensary.specialist + '</mark></u>\
+                        </p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-info mt-2 btn-sm" data-bs-toggle="offcanvas" data-bs-target="#visitSpecialistControlOffcanvas" aria-controls="visitSpecialistControlOffcanvas" onclick="get_visit_specialist_control(\'' + dispensary.start_date + '\')">Контроль посещений специалиста</button>\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" name="update-dispensary-' + dispensary.start_date + '-btn" onclick="update_dispensary(\'' + dispensary.start_date + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-dispensary-' + dispensary.start_date + '-btn" onclick="delete_dispensary(\'' + dispensary.start_date + '\')">Удалить</button>\
+                        </div>';
+                        let dispensary_div = document.getElementsByName('div-dispensary-' + dispensary.old_start_date)[0]
+                        dispensary_div.innerHTML = innerHTML;
+                        dispensary_div.setAttribute('name', 'div-dispensary-' + dispensary.start_date) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
+/* VISIT SPECIALIST CONTROL */
+function get_visit_specialist_control(start_dispanser_date){
+    var visit_specialist_control = {
+        "medcard_num": medcard_num,
+        "start_dispanser_date": start_dispanser_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/visit_specialist_control/get_all",
+        data: JSON.stringify({"json_data": visit_specialist_control}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            visit_specialist_control_add_btn.value = start_dispanser_date;
+            let visit_specialist_control_div = document.querySelector('#visit-specialist-control-main-div')
+            innerHTML = ""
+            data.visit_specialist_control.forEach(element => {
+                innerHTML += '<div name="div-visit-specialist-control-'+ element.assigned_date + '" class="col-12 mb-3">\
+                <p>Назначено: <u><mark>' + element.assigned_date + '</u></mark> Явка: <u><mark>'
+                if (element.fact_date) {
+                    innerHTML += element.fact_date
+                }  else {
+                    innerHTML += 'еще не явился'
+                } 
+                innerHTML += '</u></mark> </p>\
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#visitSpecialistControlModal" name="update-visit-specialist-control-' + element.assigned_date + '-btn" onclick="update_visit_specialist_control(\'' + element.assigned_date + '\', \'' + element.fact_date +'\')">Редактировать</button>\
+                <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-visit-specialist-control-' + element.assigned_date + '-btn" onclick="delete_visit_specialist_control(\'' + element.assigned_date + '\')">Удалить</button>\
+                </div>\
+                </div>'
+            });
+            visit_specialist_control_div.innerHTML = innerHTML;
+        }
+    });
+}
+
+function visit_specialist_controls_add_set_info(){
+    visit_specialist_control_modal_header.innerHTML = 'Добавить сведения о посещении специалиста';
+    visit_specialist_control_commit_modal_btn.value = 'add';
+}
+
+function update_visit_specialist_control(assigned_date, fact_date){
+    visit_specialist_control_modal_header.innerHTML = 'Редактировать сведения о посещении специалиста';
+    visit_specialist_control_close_modal_btn.value = assigned_date
+    visit_specialist_control_commit_modal_btn.value = 'update';
+    visit_specialist_control_assigned_date_modal_dtpkr.value = assigned_date;
+    visit_specialist_control_fact_date_modal_dtpkr.value = fact_date;
+}
+
+
+function delete_visit_specialist_control(assigned_date){
+    delete_modal_header.innerHTML = 'Удалить сведения о контроле посещении специалиста';
+    close_delete_modal_btn.value = assigned_date;
+    delete_commit_modal_btn.value = 'delete_visit_specialist_control'
+}
+
+visit_specialist_control_commit_modal_btn.addEventListener('click', () => {
+    var visit_specialist_control = {
+        "medcard_num": medcard_num,
+        "start_dispanser_date": visit_specialist_control_add_btn.value,
+        "assigned_date": visit_specialist_control_assigned_date_modal_dtpkr.value,
+        "fact_date": visit_specialist_control_fact_date_modal_dtpkr.value
+    }
+    switch (visit_specialist_control_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/visit_specialist_control/add",
+                data: JSON.stringify({"json_data": visit_specialist_control}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () =>{
+                    let visit_specialist_control_div = document.querySelector('#visit-specialist-control-main-div');
+                    visit_specialist_control_div.innerHTML += '<div name="div-visit-specialist-control-'+ visit_specialist_control.assigned_date + '" class="col-12 mb-3">\
+                    <p>Назначено: <u><mark>' + visit_specialist_control.assigned_date + '</u></mark> Явка: ' + visit_specialist_control.fact_date + '</u></mark> </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                    <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#visitSpecialistControlModal" name="update-visit-specialist-control-' + visit_specialist_control.assigned_date + '-btn" onclick="update_visit_specialist_control(\'' + visit_specialist_control.start_dispanser_date + '///' + visit_specialist_control.assigned_date + '///' + visit_specialist_control.fact_date +'\')">Редактировать</button>\
+                    <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-visit-specialist-control-' + visit_specialist_control.assigned_date + '-btn" onclick="delete_visit_specialist_control(\'' + visit_specialist_control.start_dispanser_date + '///' + visit_specialist_control.assigned_date + '\')">Удалить</button>\
+                    </div>\
+                    </div>'
+                }
+            });
+            break;
+
+            case 'update':
+                visit_specialist_control["old_assigned_date"] = visit_specialist_control_close_modal_btn.value 
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/visit_specialist_control/update",
+                    data: JSON.stringify({"json_data": visit_specialist_control}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () =>{
+                        let visit_specialist_control_div = document.getElementsByTagName('div-visit-specialist-control-'+ visit_specialist_control.old_assigned_date)[0];
+                        visit_specialist_control_div.innerHTML = '<p>Назначено: <u><mark>' + visit_specialist_control.assigned_date + '</u></mark> Явка: ' + visit_specialist_control.fact_date + '</u></mark> </p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#visitSpecialistControlModal" name="update-visit-specialist-control-' + visit_specialist_control.assigned_date + '-btn" onclick="update_visit_specialist_control(\'' + visit_specialist_control.start_dispanser_date + '///' + visit_specialist_control.assigned_date + '///' + visit_specialist_control.fact_date +'\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-visit-specialist-control-' + visit_specialist_control.assigned_date + '-btn" onclick="delete_visit_specialist_control(\'' + visit_specialist_control.start_dispanser_date + '///' + visit_specialist_control.assigned_date + '\')">Удалить</button>\
+                        </div>'
+                        visit_specialist_control_div.setAttribute('name', 'div-visit-specialist-control-'+ visit_specialist_control.assigned_date)
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
+/* DEWORMING */
+function deworming_add_set_info(){
+
+    deworming_modal_header.innerHTML = "";
+    deworming_date_modal_dtpkr.value = "2023-03-01";
+    deworming_result_modal_txt.value = "";
+    deworming_commit_modal_btn.value = 'add'; 
+}
+
+function update_deworming(deworming_date){
+    var deworming = {
+        "medcard_num": medcard_num,
+        "deworming_date": deworming_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/deworming/get",
+        data: JSON.stringify({"json_data": deworming}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            deworming_modal_header.innerHTML = "Редактирование сведений о дегельминтизации";
+            deworming_commit_modal_btn.value = 'update';
+            deworming_close_modal_btn.value = data.deworming.deworming_date;
+            deworming_date_modal_dtpkr.value = data.deworming.deworming_date;
+            deworming_result_modal_txt.value = data.deworming.result;
+        }
+    });    
+}
+
+function delete_deworming(deworming_date){
+    delete_modal_header.innerHTML = 'Удалить сведения о дегельминтизации';
+    close_delete_modal_btn.value = deworming_date;
+    delete_commit_modal_btn.value = 'delete_deworming'
+}
+
+deworming_commit_modal_btn.addEventListener('click', () =>{
+    var deworming = {
+        "medcard_num": medcard_num,
+        "deworming_date": deworming_date_modal_dtpkr.value,
+        "result": deworming_result_modal_txt.value
+    };
+    switch (deworming_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/deworming/add",
+                data: JSON.stringify({"json_data": deworming}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    innerHTML = '<div name="div-deworming-' + deworming.deworming_date + '" class="col-12 mb-3">\
+                    <p>Дата: <u><mark>' + deworming.deworming_date + '</mark></u> \
+                        Результат: <u><mark>' + deworming.result + '</mark></u> \
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dewormingModal" name="update-deworming-' + deworming.deworming_date + '-btn" onclick="update_deworming(\'' + deworming.deworming_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-deworming-' + deworming.deworming_date + '-btn" onclick="delete_deworming(\'' + deworming.deworming_date + '\')">Удалить</button>\
+                    </div>\
+                    </div>'
+                    let deworming_div = document.querySelector('#deworming-main-div')
+                    deworming_div.innerHTML += innerHTML
+                }
+            });
+            break;
+
+            case 'update':
+                deworming["old_deworming_date"] = deworming_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/deworming/update",
+                    data: JSON.stringify({"json_data": deworming}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        innerHTML = '<p>Дата: <u><mark>' + deworming.deworming_date + '</mark></u> \
+                        Результат: <u><mark>' + deworming.result + '</mark></u> \
+                        </p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dewormingModal" name="update-deworming-' + deworming.deworming_date + '-btn" onclick="update_deworming(\'' + deworming.deworming_date + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-deworming-' + deworming.deworming_date + '-btn" onclick="delete_deworming(\'' + deworming.deworming_date + '\')">Удалить</button>\
+                        </div>';
+                        let deworming_div = document.getElementsByName('div-deworming-' + deworming.old_deworming_date)[0]
+                        deworming_div.innerHTML = innerHTML;
+                        deworming_div.setAttribute('name', 'div-deworming-' + deworming.deworming_date) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
+/* ORAL SANATION */
+function oral_sanation_add_set_info(){
+
+    oral_sanation_modal_header.innerHTML = "Добавление сведений о санации полости рта";
+    oral_sanation_date_modal_dtpkr.value = "2023-03-01";
+    oral_sanation_dental_result_modal_txt.value = "28 гнилых зубов";
+    oral_sanation_result_modal_txt.value = "Вылечены все";
+    oral_sanation_commit_modal_btn.value = 'add'; 
+}
+
+function update_oral_sanation(sanation_date){
+    var oral_sanation = {
+        "medcard_num": medcard_num,
+        "sanation_date": sanation_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/oral_sanation/get",
+        data: JSON.stringify({"json_data": oral_sanation}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            oral_sanation_modal_header.innerHTML = "Редактирование сведений о санации полости рта";
+            oral_sanation_commit_modal_btn.value = 'update';
+            oral_sanation_close_modal_btn.value = data.oral_sanation.sanation_date;
+            oral_sanation_date_modal_dtpkr.value = data.oral_sanation.sanation_date;
+            oral_sanation_dental_result_modal_txt.value = data.oral_sanation.dental_result;
+            oral_sanation_result_modal_txt.value = data.oral_sanation.sanation_result;
+        }
+    });    
+}
+
+function delete_oral_sanation(sanation_date){
+    delete_modal_header.innerHTML = 'Удалить сведения о санации полости рта';
+    close_delete_modal_btn.value = sanation_date;
+    delete_commit_modal_btn.value = 'delete_oral_sanation';
+}
+
+oral_sanation_commit_modal_btn.addEventListener('click', () =>{
+    var oral_sanation = {
+        "medcard_num": medcard_num,
+        "sanation_date": oral_sanation_date_modal_dtpkr.value,
+        "dental_result": oral_sanation_dental_result_modal_txt.value,
+        "sanation_result": oral_sanation_result_modal_txt.value
+    };
+    switch (oral_sanation_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/oral_sanation/add",
+                data: JSON.stringify({"json_data": oral_sanation}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    innerHTML = '<div name="div-oral-sanation-' + oral_sanation.sanation_date + '" class="col-12 mb-3">\
+                    <p>Дата: <u><mark>' + oral_sanation.sanation_date + '</mark></u> <br>\
+                        Данные осмотра стоматологом: <u><mark>' + oral_sanation.dental_result + '</mark></u> <br>\
+                        Результаты санации: <u><mark>' + oral_sanation.sanation_result + '</mark></u>\
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#oralSanationModal" name="update-oral-sanation-' + oral_sanation.sanation_date + '-btn" onclick="update_oral_sanation(\'' + oral_sanation.sanation_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-oral-sanation-' + oral_sanation.sanation_date + '-btn" onclick="delete_oral_sanation(\'' + oral_sanation.sanation_date + '\')">Удалить</button>\
+                    </div>\
+                </div>'
+                    let oral_sanation_div = document.querySelector('#oral-sanation-main-div')
+                    oral_sanation_div.innerHTML += innerHTML
+                }
+            });
+            break;
+
+            case 'update':
+                oral_sanation["old_sanation_date"] = oral_sanation_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/oral_sanation/update",
+                    data: JSON.stringify({"json_data": oral_sanation}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        innerHTML = '<p>Дата: <u><mark>' + oral_sanation.sanation_date + '</mark></u> <br>\
+                        Данные осмотра стоматологом: <u><mark>' + oral_sanation.dental_result + '</mark></u> <br>\
+                        Результаты санации: <u><mark>' + oral_sanation.sanation_result + '</mark></u>\
+                        </p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#oralSanationModal" name="update-oral-sanation-' + oral_sanation.sanation_date + '-btn" onclick="update_oral_sanation(\'' + oral_sanation.sanation_date + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-oral-sanation-' + oral_sanation.sanation_date + '-btn" onclick="delete_oral_sanation(\'' + oral_sanation.sanation_date + '\')">Удалить</button>\
+                        </div>';
+                        let oral_sanation_div = document.getElementsByName('div-oral-sanation-' + oral_sanation.old_sanation_date)[0]
+                        oral_sanation_div.innerHTML = innerHTML;
+                        oral_sanation_div.setAttribute('name', 'div-oral-sanation-' + oral_sanation.sanation_date) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
 
 /* DELETE MODAL WINDOW*/
 delete_commit_modal_btn.addEventListener('click', () => {    
@@ -740,28 +1454,67 @@ delete_commit_modal_btn.addEventListener('click', () => {
             
             break;
 
-            case 'delete_past_illness':
-                past_illness_data = close_delete_modal_btn.value.split('///')
-                past_illness = {
-                    "medcard_num": medcard_num,
-                    "diagnosis": past_illness_data[0],
-                    "start_date": past_illness_data[1]
+        case 'delete_past_illness':
+            past_illness_data = close_delete_modal_btn.value.split('///')
+            past_illness = {
+                "medcard_num": medcard_num,
+                "diagnosis": past_illness_data[0],
+                "start_date": past_illness_data[1]
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/past_illness/delete",
+                data: JSON.stringify({"json_data": past_illness}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var past_illness_div = document.getElementsByName('div-past-illness-' + past_illness.diagnosis.replace(/ /g,'') + '-' + past_illness.start_date)[0];
+                    past_illness_div.remove();
                 }
-                $.ajax({
-                    type: "POST",
-                    async: true,
-                    url: "/medical_record/child/" + medcard_num + "/past_illness/delete",
-                    data: JSON.stringify({"json_data": past_illness}),
-                    contentType: "application/json",
-                    dataType: 'json',
-                    success: () => {
-                        var past_illness_div = document.getElementsByName('div-past-illness-' + past_illness.diagnosis.replace(/ /g,'') + '-' + past_illness.start_date)[0];
-                        past_illness_div.remove();
-                    }
-                });
-                
-                break;
+            });
             
+            break;
+        
+        case 'delete_hospitalization':
+            hospitalization = {
+                "medcard_num": medcard_num,
+                "start_date": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/hospitalization/delete",
+                data: JSON.stringify({"json_data": hospitalization}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var hospitalization_div = document.getElementsByName('div-hospitalization-' + hospitalization.start_date)[0];
+                    hospitalization_div.remove();
+                }
+            });
+            
+            break;
+
+        case 'delete_spa_treatment':
+            spa_treatment = {
+                "medcard_num": medcard_num,
+                "start_date": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/spa_treatment/delete",
+                data: JSON.stringify({"json_data": spa_treatment}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var spa_treatment_div = document.getElementsByName('div-spa-treatment-' + spa_treatment.start_date)[0];
+                    spa_treatment_div.remove();
+                }
+            });
+            
+            break;        
 
         case 'delete_medical_certificate':
             medical_certificate_data = close_delete_modal_btn.value.split('///')
@@ -784,6 +1537,88 @@ delete_commit_modal_btn.addEventListener('click', () => {
             });
             
             break;
+
+        case 'delete_dispensary':
+            dispensary = {
+                "medcard_num": medcard_num,
+                "start_date": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/dispensary/delete",
+                data: JSON.stringify({"json_data": dispensary}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var dispensary_div = document.getElementsByName('div-dispensary-' + dispensary.start_date)[0];
+                    dispensary_div.remove();
+                }
+            });
+            
+            break; 
+        
+        case 'delete_visit_specialist_control':
+            visit_specialist_control = {
+                "medcard_num": medcard_num,
+                "start_dispanser_date": visit_specialist_control_add_btn.value,
+                "assigned_date": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/visit_specialist_control/delete",
+                data: JSON.stringify({"json_data": visit_specialist_control}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var visit_specialist_control_div = document.getElementsByName('div-visit-specialist-control-'+ visit_specialist_control.assigned_date)[0];
+                    visit_specialist_control_div.remove();
+                }
+            });
+            
+            break;     
+         
+        case 'delete_deworming':
+            deworming = {
+                "medcard_num": medcard_num,
+                "deworming_date": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/deworming/delete",
+                data: JSON.stringify({"json_data": deworming}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var deworming_div = document.getElementsByName('div-deworming-' + deworming.deworming_date)[0];
+                    deworming_div.remove();
+                }
+            });
+            
+            break;     
+        
+        case 'delete_oral_sanation':
+            oral_sanation = {
+                "medcard_num": medcard_num,
+                "sanation_date": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/oral_sanation/delete",
+                data: JSON.stringify({"json_data": oral_sanation}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var oral_sanation_div = document.getElementsByName('div-oral-sanation-' + oral_sanation.sanation_date)[0];
+                    oral_sanation_div.remove();
+                }
+            });
+            
+            break;
+            
             
         default:
             break;
