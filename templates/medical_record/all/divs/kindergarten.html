@@ -4,7 +4,7 @@
       <ul class="list-group w-100 px-1 py-2">
         {% set count = namespace(n=1) %}
         {% for group in kindergarten.groups %}
-            {% include '/medical_record/all/group.html' %}  
+            {% include '/medical_record/all/divs/group.html' %}  
             {% set count.n = count.n + 1 %}                           
         {% endfor %}
       </ul>

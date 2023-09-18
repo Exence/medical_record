@@ -1,0 +1,41 @@
+<div class="modal fade" id="omsModal" tabindex="-1" aria-labelledby="omsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="omsModalLabel">Сведения о текущем медицинском наблюдении</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" >
+                <label for="omsExaminationDate-modal" class="form-label">Дата</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="omsExaminationDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите дату проведения осмотра.
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label for="omsExaminationData-modal" class="form-label">Данные осмотра</label>
+                <textarea class="form-control" id="omsExaminationData-modal" rows="5"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="omsDiagnosis-modal" class="form-label">Диагноз</label>
+                <textarea class="form-control" id="omsDiagnosis-modal" rows="5"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="omsPrescription-modal" class="form-label">Назначения</label>
+                <textarea class="form-control" id="omsPrescription-modal" rows="5"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="omsDoctor-modal" class="form-label">Врач</label>
+                <input type="text" class="form-control only-letters-modal" id="omsDoctor-modal" placeholder="Иванов Иван Иванович">
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="oms-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="oms-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

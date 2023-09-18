@@ -1,0 +1,37 @@
+<div class="modal fade" id="tubVacModal" tabindex="-1" aria-labelledby="tubVacModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="tubVacModalLabel">Прививка против туберкулеза (БЦЖ)</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" >
+                <label for="tubVacDate-modal" class="form-label">Дата</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="tubVacDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback">
+                    Пожалуйста, введите дату введения прививки.
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="tubVacSerial-modal" class="form-label">Серия</label>
+                <input type="text" class="form-control only-letters-modal" id="tubVacSerial-modal" placeholder="FF18784" required>
+            </div>
+            <div class="col-md-4">
+                <label for="tubVacDose-modal" class="form-label">Доза</label>
+                <input type="text" class="form-control only-letters-modal" id="tubVacDose-modal" placeholder="15.2" required>
+            </div>
+            <div class="col-md-12">
+                <label for="tubVacDoctor-modal" class="form-label">Врач</label>
+                <input type="text" class="form-control only-letters-modal" id="tubVacDoctor-modal" placeholder="Иванов Иван Иванович">
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="tub-vac-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="tub-vac-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

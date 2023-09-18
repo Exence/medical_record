@@ -13,6 +13,7 @@ def get_connection():
             port=settings.db_port,
         )
         connection.autocommit=False
+        connection.set_client_encoding('UTF-8')
         print("Connection to PostgreSQL DB successful")
         yield connection
     except OperationalError as e:
@@ -40,6 +41,8 @@ def execute_read_query_first(connection, query):
         cursor.close()
         return result
     except OperationalError as e:
+        print(f"The error '{e}' occurred")
+    except Exception as e:
         print(f"The error '{e}' occurred")
 
 def execute_data_query(connection, query, data):

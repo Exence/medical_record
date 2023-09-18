@@ -37,7 +37,7 @@ async def sign_in(
             password=form_data.password
         )
         current_user = service.validate_token(jwt_token.access_token)
-        msg = "Login Succesful"
+        msg = "Успешный вход"
         response = templates.TemplateResponse(
                     "cabinet/index.html", {"request": request, "msg": msg, "user": current_user}
                 )
@@ -46,7 +46,7 @@ async def sign_in(
         )
         return response
     except:
-        error = "Something Wrong while authentication or storing tokens!"
+        error = "Ошибка авторизации! Проверьте правильность логина/пароля!"
         return templates.TemplateResponse(
             "login_page/index.html", {"request": request, "error": error}
         )

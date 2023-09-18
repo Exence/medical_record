@@ -1,0 +1,72 @@
+<div class="modal fade" id="epidVaccinationModal" tabindex="-1" aria-labelledby="epidVaccinationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="epidVaccinationModalLabel">Профилактическая прививка</h5><br>        
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-4">
+                    <label for="epidVaccinationVacName-modal" class="form-label">Прививка</label>
+                    <select class="form-select" id="epidVaccinationVacName-modal" required>
+                    {% for vac_name in epid_vac_names %}
+                        {% include '/medical_record/child/main_divs/vac_name.html' %}
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="epidVaccinationVacType-modal" class="form-label">Тип</label>
+                    <select class="form-select" id="epidVaccinationVacType-modal" required>
+                        <option selected>Вакцинация I</option>
+                        <option>Вакцинация II</option>
+                        <option>Вакцинация III</option>
+                        <option>Ревакцинация I</option>
+                        <option>Ревакцинация II</option>
+                        <option>Ревакцинация III</option>
+                        <option>Ревакцинация IV</option>
+                    </select>
+                </div>
+                <div class="form-group" >
+                    <label for="epidVaccinationDate-modal" class="form-label">Дата</label>
+                    <div class="col-md-4">
+                        <input type="date" class="form-control" id="epidVaccinationDate-modal" required>
+                    </div>                    
+                    <div class="invalid-feedback" >
+                        Пожалуйста, введите дату.
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="epidVaccinationSerial-modal" class="form-label">Серия</label>
+                    <input type="text" class="form-control only-letters-modal" id="epidVaccinationSerial-modal" placeholder="FF18784" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="epidVaccinationDose-modal" class="form-label">Доза</label>
+                    <input type="text" class="form-control only-letters-modal" id="epidVaccinationDose-modal" placeholder="15.2" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="epidVaccinationIntroductionMethod-modal" class="form-label">Способ введения</label>
+                    <select class="form-select" id="epidVaccinationIntroductionMethod-modal" required>
+                    <option selected>Пероральный</option>
+                    <option>Внутрикожный</option>
+                    <option>Внутримышечный</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="epidVaccinationReaction-modal" class="form-label">Реакция</label>
+                    <select class="form-select" id="epidVaccinationReaction-modal" required>
+                    <option selected>Немедленная</option>
+                    <option>Замедленная</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label for="epidVaccinationDoctor-modal" class="form-label">Врач</label>
+                    <input type="text" class="form-control only-letters-modal" id="epidVaccinationDoctor-modal" placeholder="Иванов Иван Иванович">
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="epid-vaccination-close-modal">Отмена</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="epid-vaccination-commit-modal">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -26,8 +26,8 @@ class ChildBase(BaseModel):
     clinic: str = Field(..., max_length=200)
     edu_type: str = Field(...,max_length=25)
     entering_date: date = Field(...)
-    father_id: int = Field(default=None)
-    mother_id: int = Field(default=None)
+    father_id: int | None
+    mother_id: int | None
     family_characteristics: str = Field(...)
     family_microclimate: str = Field(...)
     rest_and_class_opportunities: str = Field(...)
@@ -35,6 +35,7 @@ class ChildBase(BaseModel):
 
 class Child(ChildBase):
     medcard_num: int = Field(...)
+    kindergarten_name: str | None
 
     class Config:
         orm_mode = True
@@ -155,7 +156,7 @@ class CreateChildForm(BaseModel):
         )
 
 
-class ChildShow(BaseModel):   
+class ChildToShow(BaseModel):   
     medcard_num: int
     surname: str
     name: str

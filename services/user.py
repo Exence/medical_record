@@ -47,7 +47,7 @@ class UserService():
                 kindergarten_num = execute_read_query_first(self.connection, query)[0]
 
             user = [(form_data.login, form_data.surname, form_data.name, form_data.patronymic, form_data.password, form_data.access_level, kindergarten_num)]
-            print(user)
+           
             insert_query = (
                 f"INSERT INTO users (login, surname, name, patronymic, password_hash, access_level, kindergarten_num) VALUES %s"
             )

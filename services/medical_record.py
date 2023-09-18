@@ -18,17 +18,27 @@ from models.child import (
 from models.deworming import Deworming
 from models.dispensary import Dispensary
 from models.extra_classes import ExtraClass
+from models.gg_injection import GammaGlobulinInjection
 from models.hospitalization import Hospitalization
 from models.kindergarten import KindergartenWithChildrens
+from models.mantoux_test import MantouxTest
 from models.medical_certificate import MedicalCertificate
+from models.medical_examination import MedicalExamination
+from models.ongoing_medical_supervision import OngoingMedicalSupervision
 from models.oral_sanation import OralSanation
 from models.parent import ParentCreate
 from models.past_illness import PastIllness
+from models.screening import Screening
 from models.spa_treatment import SpaTreatment
+from models.tub_vac import TuberculosisVaccination
+from models.vaccination import Vaccination
 from models.visit_specialist_control import VisitSpecialistControl
 
 from services.auth import AuthService
-from services.kindergarten import get_kindergarten_num_by_name
+from services.kindergarten import (
+    get_kindergarten_num_by_name,
+    get_kindergarten_name_by_num,
+)
 from services.parent import select_parent_id
 from services.serialization import SerializationService
 
@@ -153,9 +163,35 @@ class MedicalRecordService():
     def get_child_by_medcard_num(self, medcard_num: int) -> Child:
         query = f"""SELECT  * FROM childrens WHERE medcard_num = {medcard_num}"""
         selected_child = execute_read_query_first(self.connection, query)
+        child = SerializationService.serialization_child(selected_child)
+        cursor = self.connection.cursor()
+        kindergarten_name = get_kindergarten_name_by_num(cursor, child.kindergarten_num)
+        cursor.close()
+        child.kindergarten_name = kindergarten_name
+        return child
 
-        return SerializationService.serialization_child(selected_child)
     
+    def update_child(self, child: dict):
+        cursor = self.connection.cursor()
+        kindergarten_num = get_kindergarten_num_by_name(cursor, child["kindergarten_name"])
+        cursor.close()
+        query = f"""UPDATE childrens SET surname = %(surname)s,
+                                         name = %(name)s,
+                                         patronymic = %(patronymic)s,
+                                         kindergarten_num = {kindergarten_num},
+                                         birthday = %(birthday)s,
+                                         sex = %(sex)s,
+                                         group_num = %(group_num)s,
+                                         address = %(address)s,
+                                         clinic = %(clinic)s,
+                                         entering_date = %(entering_date)s,
+                                         family_characteristics = %(family_characteristics)s,
+                                         family_microclimate = %(family_microclimate)s,
+                                         rest_and_class_opportunities = %(rest_and_class_opportunities)s,
+                                         case_history = %(case_history)s
+                    WHERE medcard_num = %(medcard_num)s"""
+        execute_data_query(self.connection, query, child)
+        
 
 
     def get_allergyes_by_medcard_num(self, medcard_num: int) -> list[Allergy]:
@@ -231,7 +267,7 @@ class MedicalRecordService():
         execute_data_query(self.connection, query, extra_class)
 
     def delete_extra_class(self, extra_class: dict):
-        print(extra_class)
+        
         query = f"""DELETE FROM extra_classes WHERE medcard_num = %(medcard_num)s AND
                                                     classes_type = %(classes_type)s AND
                                                     age = %(age)s"""
@@ -560,3 +596,417 @@ class MedicalRecordService():
         query = f"""DELETE FROM oral_sanations WHERE  medcard_num = %(medcard_num)s AND
                                                   sanation_date = %(sanation_date)s"""
         execute_data_query(self.connection, query, oral_sanation)
+
+
+    def get_prevaccination_checkups_by_medcard_num(self, medcard_num: int) -> list[OralSanation]:
+            query = f"""SELECT  * FROM prevaccination_checkups_view WHERE medcard_num = {medcard_num}"""
+            selected_prevaccination_checkups = execute_read_query_all(self.connection, query)
+            prevaccination_checkups = []
+            for prevaccination_checkup in selected_prevaccination_checkups:
+                prevaccination_checkups.append(SerializationService.serialization_prevaccination_checkup(prevaccination_checkup))
+            return prevaccination_checkups
+    
+    def get_prevaccination_checkup_by_pk(self, prevaccination_checkup_data: dict) -> OralSanation:
+        query = f"""SELECT * FROM prevaccination_checkups_view WHERE medcard_num = '{prevaccination_checkup_data["medcard_num"]}' AND
+                                                                     examination_date = '{prevaccination_checkup_data["examination_date"]}'"""
+        prevaccination_checkup = execute_read_query_first(self.connection, query)
+        return SerializationService.serialization_prevaccination_checkup(prevaccination_checkup)
+
+    def add_new_prevaccination_checkup(self, prevaccination_checkup: dict):
+        if not prevaccination_checkup["no_vac_date"]:
+            prevaccination_checkup["no_vac_date"] = None
+
+        query = f"""INSERT INTO prevaccination_checkups (medcard_num, examination_date, diagnosis, report, vac_name_id, no_vac_date, doctor) 
+                         VALUES (%(medcard_num)s, %(examination_date)s, %(diagnosis)s, %(report)s, %(vac_name_id)s, %(no_vac_date)s, %(doctor)s)"""
+        execute_data_query(self.connection, query, prevaccination_checkup)
+        return self.get_prevaccination_checkup_by_pk(prevaccination_checkup)
+    
+    def update_prevaccination_checkup(self, prevaccination_checkup: dict):
+        if not prevaccination_checkup["no_vac_date"]:
+            prevaccination_checkup["no_vac_date"] = None
+
+        query = f"""UPDATE  prevaccination_checkups SET examination_date = %(examination_date)s, 
+                                               diagnosis = %(diagnosis)s,
+                                               report = %(report)s,
+                                               vac_name_id = %(vac_name_id)s,
+                                               no_vac_date = %(no_vac_date)s,
+                                               doctor = %(doctor)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            examination_date = %(old_examination_date)s"""
+        execute_data_query(self.connection, query, prevaccination_checkup)
+        return self.get_prevaccination_checkup_by_pk(prevaccination_checkup)
+
+    def delete_prevaccination_checkup(self, prevaccination_checkup: dict):
+        query = f"""DELETE FROM prevaccination_checkups WHERE  medcard_num = %(medcard_num)s AND
+                                                  examination_date = %(examination_date)s"""
+        execute_data_query(self.connection, query, prevaccination_checkup)
+
+
+    def get_prof_vaccinations_by_medcard_num(self, medcard_num: int) -> list[Vaccination]:
+            query = f"""SELECT  * FROM prof_vaccinations WHERE medcard_num = {medcard_num}"""
+            selected_prof_vaccinations = execute_read_query_all(self.connection, query)
+            prof_vaccinations = []
+            for prof_vaccination in selected_prof_vaccinations:
+                prof_vaccinations.append(SerializationService.serialization_vaccination(prof_vaccination))
+            return prof_vaccinations
+    
+    def get_prof_vaccination_by_pk(self, prof_vaccination_data: dict) -> Vaccination:
+        query = f"""SELECT * FROM prof_vaccinations WHERE medcard_num = '{prof_vaccination_data["medcard_num"]}' AND
+                                                          vac_name_id = '{prof_vaccination_data["vac_name_id"]}' AND
+                                                          vac_type = '{prof_vaccination_data["vac_type"]}'"""
+        prof_vaccination = execute_read_query_first(self.connection, query)
+        return SerializationService.serialization_vaccination(prof_vaccination)
+
+    def add_new_vaccination(self, vaccination: dict):
+        query = f"""INSERT INTO vaccinations (medcard_num, vac_name_id, vac_type, vac_date, serial, dose, introduction_method, reaction, doctor) 
+                         VALUES (%(medcard_num)s, %(vac_name_id)s, %(vac_type)s, %(vac_date)s, %(serial)s, %(dose)s, %(introduction_method)s, %(reaction)s, %(doctor)s)"""
+        execute_data_query(self.connection, query, vaccination)
+    
+    def update_vaccination(self, vaccination: dict):
+        query = f"""UPDATE vaccinations SET vac_name_id = %(vac_name_id)s, 
+                                            vac_type = %(vac_type)s,
+                                            vac_date = %(vac_date)s,
+                                            serial = %(serial)s, 
+                                            dose = %(dose)s,
+                                            introduction_method = %(introduction_method)s,
+                                            reaction = %(reaction)s, 
+                                            doctor = %(doctor)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            vac_name_id = %(old_vac_name_id)s AND
+                            vac_type = %(old_vac_type)s"""
+        execute_data_query(self.connection, query, vaccination)
+
+    def delete_vaccination(self, vaccination: dict):
+        query = f"""DELETE FROM vaccinations WHERE  medcard_num = %(medcard_num)s AND
+                                                    vac_name_id = %(vac_name_id)s AND
+                                                    vac_type = %(vac_type)s"""
+        execute_data_query(self.connection, query, vaccination)
+
+
+    def get_epid_vaccinations_by_medcard_num(self, medcard_num: int) -> list[Vaccination]:
+            query = f"""SELECT  * FROM epid_vaccinations WHERE medcard_num = {medcard_num}"""
+            selected_epid_vaccinations = execute_read_query_all(self.connection, query)
+            epid_vaccinations = []
+            for epid_vaccination in selected_epid_vaccinations:
+                epid_vaccinations.append(SerializationService.serialization_vaccination(epid_vaccination))
+            return epid_vaccinations
+    
+    def get_epid_vaccination_by_pk(self, epid_vaccination_data: dict) -> Vaccination:
+        query = f"""SELECT * FROM epid_vaccinations WHERE medcard_num = '{epid_vaccination_data["medcard_num"]}' AND
+                                                          vac_name_id = '{epid_vaccination_data["vac_name_id"]}' AND
+                                                          vac_type = '{epid_vaccination_data["vac_type"]}'"""
+        epid_vaccination = execute_read_query_first(self.connection, query)
+        return SerializationService.serialization_vaccination(epid_vaccination)
+
+
+    def get_gg_injections_by_medcard_num(self, medcard_num: int) -> list[GammaGlobulinInjection]:
+            query = f"""SELECT  * FROM gamma_globulin_injections WHERE medcard_num = {medcard_num}  ORDER BY vac_date"""
+            selected_gg_injections = execute_read_query_all(self.connection, query)
+            gg_injections = []
+            for gg_injection in selected_gg_injections:
+                gg_injections.append(SerializationService.serialization_gg_injection(gg_injection))
+            return gg_injections
+    
+    def get_gg_injection_by_pk(self, gg_injection_data: dict) -> GammaGlobulinInjection:
+        query = f"""SELECT * FROM gamma_globulin_injections WHERE medcard_num = '{gg_injection_data["medcard_num"]}' AND
+                                                                  vac_date = '{gg_injection_data["vac_date"]}'"""
+        gg_injection = execute_read_query_first(self.connection, query)
+        return SerializationService.serialization_gg_injection(gg_injection)
+
+    def add_new_gg_injection(self, gg_injection: dict):
+        query = f"""INSERT INTO gamma_globulin_injections (medcard_num, vac_date, reason, serial, dose, reaction, doctor) 
+                         VALUES (%(medcard_num)s, %(vac_date)s, %(reason)s, %(serial)s, %(dose)s, %(reaction)s, %(doctor)s)"""
+        execute_data_query(self.connection, query, gg_injection)
+    
+    def update_gg_injection(self, gg_injection: dict):
+        query = f"""UPDATE gamma_globulin_injections SET vac_date = %(vac_date)s,
+                                            reason = %(reason)s,
+                                            serial = %(serial)s, 
+                                            dose = %(dose)s,
+                                            reaction = %(reaction)s, 
+                                            doctor = %(doctor)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                        vac_date = %(old_vac_date)s"""
+        execute_data_query(self.connection, query, gg_injection)
+
+    def delete_gg_injection(self, gg_injection: dict):
+        query = f"""DELETE FROM gamma_globulin_injections WHERE  medcard_num = %(medcard_num)s AND
+                                                     vac_date = %(vac_date)s"""
+        execute_data_query(self.connection, query, gg_injection)
+
+    
+    def get_mantoux_tests_by_medcard_num(self, medcard_num: int) -> list[MantouxTest]:
+            query = f"""SELECT  * FROM mantoux_tests WHERE medcard_num = {medcard_num}  ORDER BY check_date"""
+            selected_mantoux_tests = execute_read_query_all(self.connection, query)
+            mantoux_tests = []
+            for mantoux_test in selected_mantoux_tests:
+                mantoux_tests.append(SerializationService.serialization_mantoux_test(mantoux_test))
+            return mantoux_tests
+    
+    def get_mantoux_test_by_pk(self, mantoux_test_data: dict) -> MantouxTest:
+        query = f"""SELECT * FROM mantoux_tests WHERE medcard_num = '{mantoux_test_data["medcard_num"]}' AND
+                                                      check_date = '{mantoux_test_data["check_date"]}'"""
+        mantoux_test = execute_read_query_first(self.connection, query)
+        return SerializationService.serialization_mantoux_test(mantoux_test)
+
+    def add_new_mantoux_test(self, mantoux_test: dict):
+        query = f"""INSERT INTO mantoux_tests (medcard_num, check_date, result) 
+                         VALUES (%(medcard_num)s, %(check_date)s, %(result)s)"""
+        execute_data_query(self.connection, query, mantoux_test)
+    
+    def update_mantoux_test(self, mantoux_test: dict):
+        query = f"""UPDATE mantoux_tests SET check_date = %(check_date)s,
+                                                         result = %(result)s
+                    WHERE medcard_num = %(medcard_num)s AND
+                          check_date = %(old_check_date)s"""
+        execute_data_query(self.connection, query, mantoux_test)
+
+    def delete_mantoux_test(self, mantoux_test: dict):
+        query = f"""DELETE FROM mantoux_tests WHERE  medcard_num = %(medcard_num)s AND
+                                                     check_date = %(check_date)s"""
+        execute_data_query(self.connection, query, mantoux_test)
+
+    def get_tub_vacs_by_medcard_num(self, medcard_num: int) -> list[TuberculosisVaccination]:
+            query = f"""SELECT  * FROM tuberculosis_vaccinations WHERE medcard_num = {medcard_num} ORDER BY vac_date"""
+            selected_tub_vacs = execute_read_query_all(self.connection, query)
+            tub_vacs = []
+            for tub_vac in selected_tub_vacs:
+                tub_vacs.append(SerializationService.serialization_tub_vac(tub_vac))
+            return tub_vacs
+    
+    def get_tub_vac_by_pk(self, tub_vac_data: dict) -> TuberculosisVaccination:
+        query = f"""SELECT * FROM tuberculosis_vaccinations WHERE medcard_num = '{tub_vac_data["medcard_num"]}' AND
+                                                                  vac_date = '{tub_vac_data["vac_date"]}'"""
+        tub_vac = execute_read_query_first(self.connection, query)
+        return SerializationService.serialization_tub_vac(tub_vac)
+
+    def add_new_tub_vac(self, tub_vac: dict):
+        query = f"""INSERT INTO tuberculosis_vaccinations (medcard_num, vac_date, serial, dose, doctor) 
+                         VALUES (%(medcard_num)s, %(vac_date)s, %(serial)s, %(dose)s, %(doctor)s)"""
+        execute_data_query(self.connection, query, tub_vac)
+    
+    def update_tub_vac(self, tub_vac: dict):
+        query = f"""UPDATE tuberculosis_vaccinations SET vac_date = %(vac_date)s,
+                                            serial = %(serial)s, 
+                                            dose = %(dose)s,
+                                            doctor = %(doctor)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            vac_date = %(old_vac_date)s"""
+        execute_data_query(self.connection, query, tub_vac)
+
+    def delete_tub_vac(self, tub_vac: dict):
+        query = f"""DELETE FROM tuberculosis_vaccinations WHERE  medcard_num = %(medcard_num)s AND
+                                                     vac_date = %(vac_date)s"""
+        execute_data_query(self.connection, query, tub_vac)
+
+    def get_medical_examinations_by_medcard_num(self, medcard_num: int) -> list[MedicalExamination]:
+            query = f"""SELECT  * FROM medical_examinations WHERE medcard_num = {medcard_num} ORDER BY examination_date"""
+            selected_medical_examinations = execute_read_query_all(self.connection, query)
+            medical_examinations = []
+            for medical_examination in selected_medical_examinations:
+                medical_examinations.append(SerializationService.serialization_medical_examination(medical_examination))
+            return medical_examinations
+    
+    def get_medical_examination_by_pk(self, medical_examination_data: dict) -> MedicalExamination:
+        query = f"""SELECT * FROM medical_examinations WHERE medcard_num = '{medical_examination_data["medcard_num"]}' AND
+                                                             period = '{medical_examination_data["period"]}'"""
+        medical_examination = execute_read_query_first(self.connection, query)
+        return SerializationService.serialization_medical_examination(medical_examination)
+
+    def add_new_medical_examination(self, medical_examination: dict) -> int:
+        query = f"""INSERT INTO medical_examinations 
+                         VALUES (%(medcard_num)s,
+                                 %(period)s,
+                                 %(examination_date)s,
+                                 NULL,
+                                 %(height)s,
+                                 %(weight)s,
+                                 %(complaints)s,
+                                 %(pediatrician)s,
+                                 %(orthopaedist)s,
+                                 %(ophthalmologist)s,
+                                 %(otolaryngologist)s,
+                                 %(dermatologist)s,
+                                 %(neurologist)s,
+                                 %(speech_therapist)s,
+                                 %(denta_surgeon)s,
+                                 %(psychologist)s,
+                                 %(other_doctors)s,
+                                 %(blood_test)s,
+                                 %(urine_analysis)s,
+                                 %(feces_analysis)s,
+                                 %(general_diagnosis)s,
+                                 %(physical_development)s,
+                                 %(mental_development)s,
+                                 %(health_group)s,
+                                 %(sport_group)s,
+                                 %(med_and_ped_conclusion)s,
+                                 %(recommendations)s
+                                 )"""
+        execute_data_query(self.connection, query, medical_examination)
+        return self.get_medical_examination_by_pk(medical_examination).age
+    
+    def update_medical_examination(self, medical_examination: dict) -> int:
+        query = f"""UPDATE medical_examinations SET period = %(period)s,
+                                                    examination_date = %(examination_date)s,
+                                                    height = %(height)s,
+                                                    weight = %(weight)s,
+                                                    complaints = %(complaints)s,
+                                                    pediatrician = %(pediatrician)s,
+                                                    orthopaedist = %(orthopaedist)s,
+                                                    ophthalmologist = %(ophthalmologist)s,
+                                                    otolaryngologist = %(otolaryngologist)s,
+                                                    dermatologist = %(dermatologist)s,
+                                                    neurologist = %(neurologist)s,
+                                                    speech_therapist = %(speech_therapist)s,
+                                                    denta_surgeon = %(denta_surgeon)s,
+                                                    psychologist = %(psychologist)s,
+                                                    other_doctors = %(other_doctors)s,
+                                                    blood_test = %(blood_test)s,
+                                                    urine_analysis = %(urine_analysis)s,
+                                                    feces_analysis = %(feces_analysis)s,
+                                                    general_diagnosis = %(general_diagnosis)s,
+                                                    physical_development = %(physical_development)s,
+                                                    mental_development = %(mental_development)s,
+                                                    health_group = %(health_group)s,
+                                                    sport_group = %(sport_group)s,
+                                                    med_and_ped_conclusion = %(med_and_ped_conclusion)s,
+                                                    recommendations = %(recommendations)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            period = %(old_period)s"""
+        execute_data_query(self.connection, query, medical_examination)
+        return self.get_medical_examination_by_pk(medical_examination).age
+
+    def delete_medical_examination(self, medical_examination: dict):
+        query = f"""DELETE FROM medical_examinations WHERE  medcard_num = %(medcard_num)s AND
+                                                     period = %(period)s"""
+        execute_data_query(self.connection, query, medical_examination)
+
+
+    def get_ongoing_medical_supervisions_by_medcard_num(self, medcard_num: int) -> list[OngoingMedicalSupervision]:
+            query = f"""SELECT  * FROM ongoing_medical_supervisions WHERE medcard_num = {medcard_num} ORDER BY examination_date"""
+            selected_ongoing_medical_supervisions = execute_read_query_all(self.connection, query)
+            ongoing_medical_supervisions = []
+            for ongoing_medical_supervision in selected_ongoing_medical_supervisions:
+                ongoing_medical_supervisions.append(SerializationService.serialization_ongoing_medical_supervision(ongoing_medical_supervision))
+            return ongoing_medical_supervisions
+    
+    def get_ongoing_medical_supervision_by_pk(self, ongoing_medical_supervision_data: dict) -> OngoingMedicalSupervision:
+        query = f"""SELECT * FROM ongoing_medical_supervisions WHERE medcard_num = '{ongoing_medical_supervision_data["medcard_num"]}' AND
+                                                                  examination_date = '{ongoing_medical_supervision_data["examination_date"]}'"""
+        ongoing_medical_supervision = execute_read_query_first(self.connection, query)
+        return SerializationService.serialization_ongoing_medical_supervision(ongoing_medical_supervision)
+
+    def add_new_ongoing_medical_supervision(self, ongoing_medical_supervision: dict):
+        query = f"""INSERT INTO ongoing_medical_supervisions (medcard_num, examination_date, examination_data, diagnosis, prescription, doctor) 
+                         VALUES (%(medcard_num)s, %(examination_date)s, %(examination_data)s, %(diagnosis)s, %(prescription)s, %(doctor)s)"""
+        execute_data_query(self.connection, query, ongoing_medical_supervision)
+    
+    def update_ongoing_medical_supervision(self, ongoing_medical_supervision: dict):
+        query = f"""UPDATE ongoing_medical_supervisions SET examination_date = %(examination_date)s,
+                                            examination_data = %(examination_data)s, 
+                                            diagnosis = %(diagnosis)s,
+                                            prescription = %(prescription)s,
+                                            doctor = %(doctor)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            examination_date = %(old_examination_date)s"""
+        execute_data_query(self.connection, query, ongoing_medical_supervision)
+
+    def delete_ongoing_medical_supervision(self, ongoing_medical_supervision: dict):
+        query = f"""DELETE FROM ongoing_medical_supervisions WHERE  medcard_num = %(medcard_num)s AND
+                                                     examination_date = %(examination_date)s"""
+        execute_data_query(self.connection, query, ongoing_medical_supervision)
+
+
+    def get_screenings_by_medcard_num(self, medcard_num: int) -> list[Screening]:
+            query = f"""SELECT  * FROM screenings WHERE medcard_num = {medcard_num} ORDER BY age"""
+            selected_screenings = execute_read_query_all(self.connection, query)
+            screenings = []
+            for screening in selected_screenings:
+                screenings.append(SerializationService.serialization_screening(screening))
+            return screenings
+    
+    def get_screening_by_pk(self, screening_data: dict) -> Screening:
+        query = f"""SELECT * FROM screenings WHERE medcard_num = '{screening_data["medcard_num"]}' AND
+                                                                  age = '{screening_data["age"]}'"""
+        screening = execute_read_query_first(self.connection, query)
+        return SerializationService.serialization_screening(screening)
+
+    def add_new_screening(self, screening: dict):
+        for key in ["physical_development", "blood_pressures", "carriage", "foot_condition", "sight_od", "sight_os", "visual_acuity","malinovsky_test", "binocular_vision", "hearing_acuteness", "dynammetry_left", "dynammetry_right", "physical_fitness", "protein_in_urine", "glucose_in_urine", "biological_age", "kern_test"]:
+            if not screening[key]:
+                screening[key] = None
+            
+        query = f"""INSERT INTO screenings 
+                         VALUES (%(medcard_num)s, 
+                                 %(age)s,
+                                 %(questionnaire_test)s,
+                                 %(height)s,
+                                 %(weight)s,
+                                 %(physical_development)s, 
+                                 %(blood_pressures)s,
+                                 %(carriage)s,
+                                 %(foot_condition)s,
+                                 %(sight_od)s,
+                                 %(sight_os)s, 
+                                 %(visual_acuity)s,
+                                 %(malinovsky_test)s,
+                                 %(binocular_vision)s,
+                                 %(hearing_acuteness)s,
+                                 %(dynammetry_left)s, 
+                                 %(dynammetry_right)s,
+                                 %(physical_fitness)s,
+                                 %(protein_in_urine)s,
+                                 %(glucose_in_urine)s,
+                                 %(biological_age)s, 
+                                 %(speech_defects)s,
+                                 %(kern_test)s,
+                                 %(neurotic_disorders)s,
+                                 %(thinking_and_speech_disorders)s,
+                                 %(motor_development_disorders)s, 
+                                 %(attention_and_memory_disorders)s,
+                                 %(social_contacts_disorders)s,
+                                 NULL)"""
+        execute_data_query(self.connection, query, screening)
+    
+    def update_screening(self, screening: dict):
+        for key in ["physical_development", "blood_pressures", "carriage", "foot_condition", "sight_od", "sight_os", "visual_acuity","malinovsky_test", "binocular_vision", "hearing_acuteness", "dynammetry_left", "dynammetry_right", "physical_fitness", "protein_in_urine", "glucose_in_urine", "biological_age", "kern_test"]:
+            if not screening[key]:
+                screening[key] = None
+
+        query = f"""UPDATE screenings SET    age = %(age)s,
+                                            questionnaire_test = %(questionnaire_test)s,
+                                            height = %(height)s,
+                                            weight = %(weight)s,
+                                            physical_development = %(physical_development)s, 
+                                            blood_pressures = %(blood_pressures)s,
+                                            carriage = %(carriage)s,
+                                            foot_condition = %(foot_condition)s,
+                                            sight_od = %(sight_od)s,
+                                            sight_os = %(sight_os)s, 
+                                            visual_acuity = %(visual_acuity)s,
+                                            malinovsky_test = %(malinovsky_test)s,
+                                            binocular_vision = %(binocular_vision)s,
+                                            hearing_acuteness = %(hearing_acuteness)s,
+                                            dynammetry_left = %(dynammetry_left)s, 
+                                            dynammetry_right = %(dynammetry_right)s,
+                                            physical_fitness = %(physical_fitness)s,
+                                            protein_in_urine = %(protein_in_urine)s,
+                                            glucose_in_urine = %(glucose_in_urine)s,
+                                            biological_age = %(biological_age)s, 
+                                            speech_defects = %(speech_defects)s,
+                                            kern_test = %(kern_test)s,
+                                            neurotic_disorders = %(neurotic_disorders)s,
+                                            thinking_and_speech_disorders = %(thinking_and_speech_disorders)s,
+                                            motor_development_disorders = %(motor_development_disorders)s, 
+                                            attention_and_memory_disorders = %(attention_and_memory_disorders)s,
+                                            social_contacts_disorders = %(social_contacts_disorders)s
+                    WHERE   medcard_num = %(medcard_num)s AND
+                            age = %(old_age)s"""
+        execute_data_query(self.connection, query, screening)
+
+    def delete_screening(self, screening: dict):
+        query = f"""DELETE FROM screenings WHERE medcard_num = %(medcard_num)s AND
+                                                age = %(age)s"""
+        execute_data_query(self.connection, query, screening)
+

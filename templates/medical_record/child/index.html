@@ -8,7 +8,7 @@
 	<div class="container">
     <a href="/medical_record/all" type="button" class="btn btn-outline-primary btn-sm" >Назад к медкартам</a>
 		<h1 class="text-center">{{ child.surname }} {{ child.name }} {{ child.patronymic }}</h1>      
-		<div class="accordion" id="accordionChildMedcard">
+		<div class="accordion mb-4" id="accordionChildMedcard">
       <div class="accordion-item">
         <h2 class="accordion-header" id="general-header">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#general-collapse" aria-expanded="true" aria-controls="general-collapse" id="general-button" value="{{ child.medcard_num }}">
@@ -17,13 +17,18 @@
         </h2>
         <div id="general-collapse" class="accordion-collapse collapse show" aria-labelledby="general-header">
           <div class="accordion-body">
-            <strong>{{ child.surname }} {{ child.name }} {{ child.patronymic }}</strong> <u><mark>{{ child.birthday.strftime("%d.%m.%Y") }} г.р.</mark></u>, пол: <u><mark>{{ child.sex }}</mark></u>,
-            характеристика образовательного учреждения: <u><mark>{{ child.edu_type }}</mark></u>,
-            дом. адрес (или адрес интернатного учреждения): <u><mark>{{ child.address }}</mark></u>, обслуживающая поликлиника: <u><mark>{{ child.clinic }}</mark></u>,
-            месяц, год поступления: <u><mark>{{ child.entering_date.strftime("%b %Y") }}</mark></u></br>
+            <div id="general-main-div">
+              <strong>{{ child.surname }} {{ child.name }} {{ child.patronymic }}</strong> <u><mark>{{ child.birthday.strftime("%d.%m.%Y") }} г.р.</mark></u>, пол: <u><mark>{{ child.sex }}</mark></u>,
+              характеристика образовательного учреждения: <u><mark>{{ child.edu_type }}</mark></u>,
+              дом. адрес (или адрес интернатного учреждения): <u><mark>{{ child.address }}</mark></u>, обслуживающая поликлиника: <u><mark>{{ child.clinic }}</mark></u>,
+              месяц, год поступления: <u><mark>{{ child.entering_date.strftime("%b %Y") }}</mark></u>
+            </div>
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <a href="/medical_record/child/update/general/{{child.medcard_num}}/" class="btn btn-outline-primary mt-2 btn-sm">Редактировать</a>
-            </div>            
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm  " data-bs-toggle="modal" data-bs-target="#childModal" id="update-child-btn" value="{{ child.medcard_num }}"  onclick="update_child()">
+                Редактировать
+              </button>
+            </div>
+            
           </div>
         </div>
       </div>
@@ -37,7 +42,7 @@
           <div class="accordion-body" >
             <div id="allergy-block">
               {% for allergy in allergyes %}
-                {% include '/medical_record/child/allergy/allergy.html' %}                               
+                {% include '/medical_record/child/main_divs/allergy.html' %}                               
               {% endfor %} 
             </div>                    
               <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#allergyModal" id="add-allergy-btn" onclick="add_allergy()">
@@ -56,25 +61,25 @@
           <div class="accordion-body">
             <div name="father-main-div">
               {% if father %}
-                {% include '/medical_record/child/parents/father.html' %} 
+                {% include '/medical_record/child/main_divs/father.html' %} 
               {% else %}
                 <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" name="add-father-btn" onclick="father_add_btn_click()">Добавить сведения об отце</button>
               {% endif %}
             </div>
             <div name="mother-main-div">
               {% if mother %}
-                {% include '/medical_record/child/parents/mother.html' %} 
+                {% include '/medical_record/child/main_divs/mother.html' %} 
               {% else %}
                 <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" name="add-mother-btn" onclick="mother_add_btn_click()">Добавить сведения о матери</button>
               {% endif %}
             </div>
-            <div>
+            <div id="anamnes-main-div">
               <p>Характеристика семьи: <u><mark>{{ child.family_characteristics }}</mark></u>, микроклимат в семье: <u><mark>{{ child.family_microclimate }}</mark></u>, 
               наличие у ребенка места для отдыха и занятий: <u><mark>{{ child.rest_and_class_opportunities }}</mark></u>. </br>
               {% if child.case_history %}
               <div class="col-12">
                 <label for="case_history" class="form-label"><strong>Семейный анамнез:</strong></label>
-                <p id="case_history">{{ child.case_history }}</p>
+                <p>{{ child.case_history }}</p>
               </div>
               {% endif %}
               <small><i>*Для внесения изменений в данный блок нажмите на кнопку "Редактировать" в разделе "ОБЩИЕ СВЕДЕНИЯ О РЕБЕНКЕ"</i></small></p> 
@@ -83,7 +88,7 @@
               <h5 class="text-center my-4"><strong>ДОПОЛНИТЕЛЬНЫЕ ЗАНЯТИЯ:</strong></h3>
               <div id="extra-classes-main-div">
                   {% for class in extra_classes %}
-                    {% include '/medical_record/child/extra_classes/class.html' %} 
+                    {% include '/medical_record/child/main_divs/class.html' %} 
                   {% endfor%}          
               </div> 
               <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#classModal" name="add-class-btn" onclick="class_add_set_info()">Добавить сведения о дополнительных занятиях</button>               
@@ -92,7 +97,7 @@
               <h5 class="text-center my-4"><strong>ПЕРЕНЕСЕННЫЕ ЗАБОЛЕВАНИЯ:</strong></h3>
               <div id="past-illnesses-main-div">
                   {% for past_illness in past_illnesses %}
-                    {% include '/medical_record/child/past_illness/past_illness.html' %} 
+                    {% include '/medical_record/child/main_divs/past_illness.html' %} 
                   {% endfor %}          
               </div> 
               <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#pastIllnessModal" name="add-past-illness-btn" onclick="past_illness_add_set_info()">Добавить сведения о перенесенном заболевании</button>
@@ -101,7 +106,7 @@
               <h5 class="text-center my-4"><strong>СВЕДЕНИЯ О ГОСПИТАЛИЗАЦИИ (ВКЛЮЧАЯ ТРАВМЫ, ОПЕРАЦИИ):</strong></h3>
               <div id="hospitalizations-main-div">
                   {% for hospitalization in hospitalizations %}
-                    {% include '/medical_record/child/hospitalization/hospitalization.html' %} 
+                    {% include '/medical_record/child/main_divs/hospitalization.html' %} 
                   {% endfor %}          
               </div> 
               <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#hospitalizationModal" name="add-past-illness-btn" onclick="hospitalization_add_set_info()">Добавить сведения о госпитализации</button>
@@ -110,7 +115,7 @@
               <h5 class="text-center my-4"><strong>СВЕДЕНИЯ О САНАТОРНО-КУРОРТНОМ (И ПРИРАВНЕННОМ К НЕМУ) ЛЕЧЕНИИ:</strong></h3>
               <div id="spa-treatments-main-div">
                   {% for spa_treatment in spa_treatments %}
-                    {% include '/medical_record/child/spa_treatment/spa_treatment.html' %} 
+                    {% include '/medical_record/child/main_divs/spa_treatment.html' %} 
                   {% endfor %}          
               </div> 
               <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#spaTreatmentModal" name="add-past-illness-btn" onclick="spa_treatment_add_set_info()">Добавить сведения о санаторно-курортном лечении</button>
@@ -120,7 +125,7 @@
               <h5 class="text-center my-4"><strong>ПРОПУСК ЗАНЯТИЙ ПО БОЛЕЗНИ:</strong></h3>
               <div id="medical-certificates-main-div">
                   {% for medical_certificate in medical_certificates %}
-                    {% include '/medical_record/child/medical_certificate/medical_certificate.html' %} 
+                    {% include '/medical_record/child/main_divs/medical_certificate.html' %} 
                   {% endfor%}          
               </div> 
               <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#medicalCertificateModal" name="add-medical-certificate-btn" onclick="medical_certificate_add_set_info()">Добавить медицинскую справку</button>
@@ -138,7 +143,7 @@
           <div class="accordion-body" >
             <div id="dispensary-main-div">
               {% for dispensary in dispensaryes %}
-                {% include '/medical_record/child/dispensary/dispensary.html' %}                               
+                {% include '/medical_record/child/main_divs/dispensary.html' %}                               
               {% endfor %} 
             </div>                    
               <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" id="add-dispensary-btn" onclick="dispensary_add_set_info()">
@@ -159,7 +164,7 @@
               <h5 class="text-center my-4"><strong>ДЕГЕЛЬМИНТИЗАЦИЯ:</strong></h3>
               <div id="deworming-main-div">
                 {% for deworming in dewormings %}
-                  {% include '/medical_record/child/deworming/deworming.html' %}                               
+                  {% include '/medical_record/child/main_divs/deworming.html' %}                               
                 {% endfor %}
               </div>
               <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dewormingModal" id="add-deworming-btn" onclick="deworming_add_set_info()">
@@ -170,7 +175,7 @@
               <h5 class="text-center my-4"><strong>САНАЦИЯ ПОЛОСТИ РТА:</strong></h3>
               <div id="oral-sanation-main-div">
                 {% for oral_sanation in oral_sanations %}
-                  {% include '/medical_record/child/oral_sanation/oral_sanation.html' %}                               
+                  {% include '/medical_record/child/main_divs/oral_sanation.html' %}                               
                 {% endfor %}
               </div>
               <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#oralSanationModal" id="add-oral-sanation-btn" onclick="oral_sanation_add_set_info()">
@@ -179,8 +184,145 @@
             </div>   
           </div>
         </div>
-    </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="immunity-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#immunity-collapse" aria-expanded="false" aria-controls="immunity-collapse">
+            ИММУНОПРОФИЛАКТИЧЕСКИЕ МЕРОПРИЯТИЯ
+          </button>
+        </h2>
+        <div id="immunity-collapse" class="accordion-collapse collapse" aria-labelledby="immunity-header">
+          <div class="accordion-body" >
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>ОСМОТР ПЕРЕД ПРОФИЛАКТИЧЕСКИМИ ПРИВИВКАМИ:</strong></h3>
+              <div id="prevaccination-checkup-main-div">
+                {% for prevaccination_checkup in prevaccination_checkups %}
+                  {% include '/medical_record/child/main_divs/prevaccination_checkup.html' %}                               
+                {% endfor %}
+              </div>
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#prevaccinationCheckupModal" id="add-prevaccination-checkup-btn" onclick="prevaccination_checkup_add_set_info()">
+                  Добавить сведения об осмотре перед профилактическими прививками
+              </button>
+            </div> 
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>ПРОФИЛАКТИЧЕСКИЕ ПРИВИВКИ:</strong></h3>
+              <div id="prof-vaccination-main-div">
+                {% for prof_vaccination in prof_vaccinations %}
+                  {% include '/medical_record/child/main_divs/prof_vaccination.html' %}                               
+                {% endfor %}
+              </div>
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#profVaccinationModal" id="add-prof-vaccination-btn" onclick="prof_vaccination_add_set_info()">
+                  Добавить сведения о профилактической прививке
+              </button>
+            </div>
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>ПРИВИВКИ ПО ЭПИДПОКАЗАНИЯМ:</strong></h3>
+              <div id="epid-vaccination-main-div">
+                {% for epid_vaccination in epid_vaccinations %}
+                  {% include '/medical_record/child/main_divs/epid_vaccination.html' %}                               
+                {% endfor %}
+              </div>
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#epidVaccinationModal" id="add-epid-vaccination-btn" onclick="epid_vaccination_add_set_info()">
+                  Добавить сведения о прививке по эпид. показаниям
+              </button>
+            </div>
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>ВВЕДЕНИЕ ГАММА-ГЛОБУЛИНА (ПО ПОКАЗАНИЯМ):</strong></h3>
+              <div id="gg-injection-main-div">
+                {% for gg_injection in gg_injections %}
+                  {% include '/medical_record/child/main_divs/gg_injection.html' %}                               
+                {% endfor %}
+              </div>
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#ggInjectionModal" id="add-gg-injection-btn" onclick="gg_injection_add_set_info()">
+                  Добавить сведения о введении гамма-глобулина
+              </button>
+            </div>
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>РЕАКЦИЯ МАНТУ:</strong></h3>
+              <div id="mantoux-test-main-div">
+                {% for mantoux_test in mantoux_tests %}
+                  {% include '/medical_record/child/main_divs/mantoux_test.html' %}                               
+                {% endfor %}
+              </div>
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#mantouxTestModal" id="add-mantoux-test-btn" onclick="mantoux_test_add_set_info()">
+                  Добавить сведения о реакции Манту
+              </button>
+            </div>
+            <div class="col-12">
+              <h5 class="text-center my-4"><strong>ПРИВИВКА ПРОТИВ ТУБЕРКУЛЕЗА (БЦЖ):</strong></h3>
+              <div id="tub-vac-main-div">
+                {% for tub_vac in tub_vacs %}
+                  {% include '/medical_record/child/main_divs/tub_vac.html' %}                               
+                {% endfor %}
+              </div>
+              <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#tubVacModal" id="add-tub-vac-btn" onclick="tub_vac_add_set_info()">
+                  Добавить сведения о прививке против туберкулеза (БЦЖ)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="medical-examination-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#medical-examination-collapse" aria-expanded="false" aria-controls="medical-examination-collapse">
+            ДАННЫЕ ПЛАНОВЫХ ПРОФИЛАКТИЧЕСКИХ МЕДИЦИНСКИХ ОСМОТРОВ
+          </button>
+        </h2>
+        <div id="medical-examination-collapse" class="accordion-collapse collapse" aria-labelledby="medical-examination-header">
+          <div class="accordion-body" >              
+            <div id="medical-examination-main-div">
+              {% for medical_examination in medical_examinations %}
+                {% include '/medical_record/child/main_divs/medical_examination.html' %}                               
+              {% endfor %}
+            </div>
+            <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#medicalExaminationModal" id="add-medical-examination-btn" onclick="medical_examination_add_set_info()">
+                Добавить сведения о плановом медицинском осмотре
+            </button>            
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="ongoing-medical-supervision-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ongoing-medical-supervision-collapse" aria-expanded="false" aria-controls="ongoing-medical-supervision-collapse">
+            ДАННЫЕ ТЕКУЩЕГО МЕДИЦИНСКОГО НАБЛЮДЕНИЯ
+          </button>
+        </h2>
+        <div id="ongoing-medical-supervision-collapse" class="accordion-collapse collapse" aria-labelledby="ongoing-medical-supervision-header">
+          <div class="accordion-body" >              
+            <div id="ongoing-medical-supervision-main-div">
+              {% for ongoing_medical_supervision in ongoing_medical_supervisions %}
+                {% include '/medical_record/child/main_divs/ongoing_medical_supervision.html' %}                               
+              {% endfor %}
+            </div>
+            <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#omsModal" id="add-ongoing-medical-supervision-btn" onclick="ongoing_medical_supervision_add_set_info()">
+                Добавить сведения о текущем медицинском наблюдении
+            </button>            
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="screening-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#screening-collapse" aria-expanded="false" aria-controls="screening-collapse">
+            СКРИНИНГ-ПРОГРАММА БАЗОВАЯ ДОШКОЛЬНЫЙ ЭТАП
+          </button>
+        </h2>
+        <div id="screening-collapse" class="accordion-collapse collapse" aria-labelledby="screening-header">
+          <div class="accordion-body" >              
+            <div id="screening-main-div">
+              {% for screening in screenings %}
+                {% include '/medical_record/child/main_divs/screening.html' %}                               
+              {% endfor %}
+            </div>
+            <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" id="add-screening-btn" onclick="screening_add_set_info()">
+                Добавить скрининг
+            </button>            
+          </div>
+        </div>
+      </div>
 	</div>
+
+  <!-- Child modal -->
+  {% include '/medical_record/child/modal/child.html' %} 
 
   <!-- Allergy modal -->
   {% include '/medical_record/child/modal/allergy.html' %} 
@@ -218,6 +360,33 @@
   <!-- Oral sanation modal -->
   {% include '/medical_record/child/modal/oral_sanation.html' %}
 
+  <!-- Prevaccination checkup modal -->
+  {% include '/medical_record/child/modal/prevaccination_checkup.html' %}
+
+  <!-- Prof vaccination modal -->
+  {% include '/medical_record/child/modal/prof_vaccination.html' %}
+
+  <!-- Epid vaccination modal -->
+  {% include '/medical_record/child/modal/epid_vaccination.html' %}
+
+  <!-- GG injection modal -->
+  {% include '/medical_record/child/modal/gg_injection.html' %}
+
+  <!-- Mantoux test modal -->
+  {% include '/medical_record/child/modal/mantoux_test.html' %}
+
+  <!-- Mantoux test modal -->
+  {% include '/medical_record/child/modal/tub_vac.html' %}
+
+  <!-- Medical examination modal -->
+  {% include '/medical_record/child/modal/medical_examination.html' %}
+  
+  <!-- Ongoing medical supervision modal -->
+  {% include '/medical_record/child/modal/ongoing_medical_supervision.html' %}
+
+  <!-- Screening modal -->
+  {% include '/medical_record/child/modal/screening.html' %}
+  
   <!-- Delete modal -->
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -240,6 +409,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', path='js/ajax.js') }}"></script>
     <script src="{{ url_for('static', path='js/edit_medcard.js') }}"></script>
 {% endblock %}

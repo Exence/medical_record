@@ -1,0 +1,182 @@
+<div class="modal fade" id="screeningModal" tabindex="-1" aria-labelledby="screeningModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="screeningModalLabel">Скрининг</h5><br>        
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-6">
+                    <label for="screeningAge-modal" class="form-label">Возраст</label>
+                    <select class="form-select" id="screeningAge-modal" required>
+                        <option selected>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningQuestionnaireTest-modal" class="form-label">Анкетный тест</label>
+                    <select class="form-select" id="screeningQuestionnaireTest-modal" required>
+                        <option selected>Норма</option>
+                        <option>Отклонение</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningHeight-modal" class="form-label">Рост, см</label>
+                    <input type="text" class="form-control only-digits-modal" id="screeningHeight-modal" placeholder="150" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningWeight-modal" class="form-label">Масса, кг</label>
+                    <input type="text" class="form-control only-digits-modal" id="screeningWeight-modal" placeholder="45.80" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningPhysicalDevelopment-modal" class="form-label">Возраст</label>
+                    <select class="form-select" id="screeningPhysicalDevelopment-modal" >
+                        <option selected></option>
+                        <option>Нормальное</option>
+                        <option>Низкий рост</option>
+                        <option>Дефицит массы</option>
+                        <option>Избыток массы</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningBloodPressures-modal" class="form-label">АД, мм.рт.ст.</label>
+                    <input type="text" class="form-control" id="screeningBloodPressures-modal" placeholder="120/80" >
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningCarriage-modal" class="form-label">Осанка</label>
+                    <select class="form-select" id="screeningCarriage-modal" >
+                        <option selected></option>
+                        <option>Нормальная</option>
+                        <option>Незначительные отклонения</option>
+                        <option>Значительные нарушения</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningFooCondition-modal" class="form-label">Состояние стопы</label>
+                    <select class="form-select" id="screeningFooCondition-modal" >
+                        <option selected></option>
+                        <option>Нормальная</option>
+                        <option>Уплощена</option>
+                        <option>Плоская</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningSightOd-modal" class="form-label">Зрение, OD</label>
+                    <input type="text" class="form-control" id="screeningSightOd-modal" placeholder="1.0" >
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningSightOs-modal" class="form-label">Зрение, OS</label>
+                    <input type="text" class="form-control" id="screeningSightOs-modal" placeholder="1.0" >
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningVisualAcuity-modal" class="form-label">Острота зрения</label>
+                    <select class="form-select" id="screeningVisualAcuity-modal" >
+                        <option selected></option>
+                        <option>Нормальная</option>
+                        <option>Снижена</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningMalinovskyTest-modal" class="form-label">Тест Малиновского</label>
+                    <select class="form-select" id="screeningMalinovskyTest-modal" >
+                        <option selected></option>
+                        <option>Нормальная</option>
+                        <option>Предмиопия</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningBinocularVision t-modal" class="form-label">Бинокулярное зрение</label>
+                    <select class="form-select" id="screeningBinocularVision-modal" >
+                        <option selected></option>
+                        <option>Норма</option>
+                        <option>Нарушение</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningHearingAcuteness-modal" class="form-label">Острота слуха</label>
+                    <select class="form-select" id="screeningHearingAcuteness-modal" >
+                        <option selected></option>
+                        <option>Норма</option>
+                        <option>Снижена</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningDynammetryRight-modal" class="form-label">Динамометрия(Правая рука)</label>
+                    <input type="text" class="form-control" id="screeningDynammetryRight-modal" placeholder="30.3" >
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningDynammetryLeft-modal" class="form-label">Динамометрия(Левая рука)</label>
+                    <input type="text" class="form-control" id="screeningDynammetryLeft-modal" placeholder="30.3" >
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningPhysicalFitness-modal" class="form-label">Физическая подготовленность</label>
+                    <select class="form-select" id="screeningPhysicalFitness-modal" >
+                        <option selected></option>
+                        <option>Норма</option>
+                        <option>Снижена</option>
+                        <option>Повышена</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningProteinInUrine-modal" class="form-label">Определение белка в моче</label>
+                    <select class="form-select" id="screeningProteinInUrine-modal" >
+                        <option selected></option>
+                        <option>Норма</option>
+                        <option>Следы белка</option>
+                        <option>Белок в моче</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningGlucoseInUrine-modal" class="form-label">Определение глюкозы в моче</label>
+                    <select class="form-select" id="screeningGlucoseInUrine-modal" >
+                        <option selected></option>
+                        <option>Норма</option>
+                        <option>Глюкоза в моче</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningBiologicalAge-modal" class="form-label">Биологический возраст</label>
+                    <select class="form-select" id="screeningBiologicalAge-modal" >
+                        <option selected></option>
+                        <option>Соответствует</option>
+                        <option>Опережает</option>
+                        <option>Отстает</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="screeningKernTest-modal" class="form-label">Тест Керна-Йерасика</label>
+                    <input type="text" class="form-control" id="screeningKernTest-modal" placeholder="24" >
+                </div>
+                <div class="form-check form-switch my-4">
+                    <input class="form-check-input" type="checkbox" id="screeningSpeechDefects-modal">
+                    <label class="form-check-label" for="screeningSpeechDefects-modal">Дефекты речи</label>
+                </div>
+                <div class="form-check form-switch my-4">
+                    <input class="form-check-input" type="checkbox" id="screeningNeuroticDisorders-modal">
+                    <label class="form-check-label" for="screeningNeuroticDisorders-modal">Невротические расстройства</label>
+                </div>
+                <div class="form-check form-switch my-4">
+                    <input class="form-check-input" type="checkbox" id="screeningThinkingAndSpeechDisorders-modal">
+                    <label class="form-check-label" for="screeningThinkingAndSpeechDisorders-modal">Отклонения в мышлении и речи</label>
+                </div>
+                <div class="form-check form-switch my-4">
+                    <input class="form-check-input" type="checkbox" id="screeningMotorDevelopmentDisorders-modal">
+                    <label class="form-check-label" for="screeningMotorDevelopmentDisorders-modal">Отклонения моторного развития</label>
+                </div>
+                <div class="form-check form-switch my-4">
+                    <input class="form-check-input" type="checkbox" id="screeningAttentionAndMemoryDisorders-modal">
+                    <label class="form-check-label" for="screeningAttentionAndMemoryDisorders-modal">Отклонения внимания и памяти</label>
+                </div>
+                <div class="form-check form-switch my-4">
+                    <input class="form-check-input" type="checkbox" id="screeningSocialContactsDisorders-modal">
+                    <label class="form-check-label" for="screeningSocialContactsDisorders-modal">Отклонения в социальных контактах</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="screening-close-modal">Отмена</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="screening-commit-modal">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>

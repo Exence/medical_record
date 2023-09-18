@@ -1,0 +1,11 @@
+<div name="div-gg-injection-{{ gg_injection.vac_date }}" class="col-12 mb-3">
+    <p>Дата: <u><mark>{{ gg_injection.vac_date.strftime("%d.%m.%Y") }}</mark></u> <br>
+        Причина: <u><mark>{{ gg_injection.reason }}</mark></u> <br>
+        Серия: <u><mark>{{ gg_injection.serial }}</mark></u>, доза: <u><mark>{{ gg_injection.dose }}</mark></u>, реакция: <u><mark>{{ gg_injection.reaction }}</mark></u><br>
+        Врач: <u><mark>{{ gg_injection.doctor }}</mark></u>
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#ggInjectionModal" name="update-gg-injection-{{ gg_injection.vac_date }}-btn" onclick="update_gg_injection('{{ gg_injection.vac_date }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-gg-injection-{{ gg_injection.vac_date }}-btn" onclick="delete_gg_injection('{{ gg_injection.vac_date }}')">Удалить</button>
+    </div>
+</div>

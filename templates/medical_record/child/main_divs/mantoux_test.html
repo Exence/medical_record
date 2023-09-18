@@ -1,0 +1,9 @@
+<div name="div-mantoux-test-{{ mantoux_test.check_date }}" class="col-12 mb-3">
+    <p>Дата: <u><mark>{{ mantoux_test.check_date.strftime("%d.%m.%Y") }}</mark></u> <br>
+        Результат: <u><mark>{{ mantoux_test.result  }}</mark></u>
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#mantouxTestModal" name="update-mantoux-test-{{ mantoux_test.check_date }}-btn" onclick="update_mantoux_test('{{ mantoux_test.check_date }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-mantoux-test-{{ mantoux_test.check_date }}-btn" onclick="delete_mantoux_test('{{ mantoux_test.check_date }}')">Удалить</button>
+    </div>
+</div>

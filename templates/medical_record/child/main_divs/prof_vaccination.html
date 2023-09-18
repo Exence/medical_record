@@ -1,0 +1,11 @@
+<div name="div-prof-vaccination-{{ prof_vaccination.vac_name_id }}-{{ prof_vaccination.vac_type.replace(' ','') }}" class="col-12 mb-3">
+    <p><strong>{{ prof_vaccination.vac_name }}</strong> <strong>{{ prof_vaccination.vac_type }}</strong> Дата: <u><mark>{{ prof_vaccination.vac_date.strftime("%d.%m.%Y") }}</mark></u>, 
+        серия: <u><mark>{{ prof_vaccination.serial }}</mark></u>, доза: <u><mark>{{ prof_vaccination.dose }}</mark></u>, 
+        способ введения: <u><mark>{{ prof_vaccination.introduction_method }}</mark></u>, реакция: <u><mark>{{ prof_vaccination.reaction }}</mark></u><br>
+        Врач: <u><mark>{{ prof_vaccination.doctor }}</mark></u>
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#profVaccinationModal" name="update-prof-vaccination-{{ prof_vaccination.vac_name_id }}-{{ prof_vaccination.vac_type.replace(' ','') }}-btn" onclick="update_prof_vaccination('{{ prof_vaccination.vac_name_id }}', '{{ prof_vaccination.vac_type}}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-prof-vaccination-{{ prof_vaccination.vac_name_id }}-{{ prof_vaccination.vac_type.replace(' ','') }}-btn" onclick="delete_prof_vaccination('{{ prof_vaccination.vac_name_id }}', '{{ prof_vaccination.vac_type}}')">Удалить</button>
+    </div>
+</div>

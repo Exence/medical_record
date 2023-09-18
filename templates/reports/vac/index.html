@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	<title>Отчет по прививкам</title>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h1 class="text-center">Отчет по прививкам</h1>
+        <h3 class="text-center">Прививка: <u><mark>{{ vaccination.vac_name }}</mark></u> <u><mark>{{ vaccination.vac_type }}</mark></u></h3>
+        <div class="tub-diagnostic-header">
+             <p>
+                <strong>Всего привито: </strong> <u><mark>{{ vaccination.absolute }}</mark></u><br>
+             </p> 
+        </div>
+        {% set count = namespace(n=10) %}
+        {% if vaccinated_childrens %}
+            <div class="col-12 me-auto">
+                <h3 class="text-center">Список привитых детей:</h3>        
+                <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                    {% for child in vaccinated_childrens %}
+                        {% include '/medical_record/all/divs/child.html' %}                                
+                    {% endfor %}
+                </div>
+            </div>            
+        {% endif %}
+	</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+<div name="div-screening-{{ screening.age }}" class="col-12 mb-3">
+    <p>Возраст: <u><mark>{{ screening.age }}</mark></u>, Анкетный тест: <u><mark>{{ screening.questionnaire_test }}</mark></u>, 
+        рост, см: <u><mark>{{ screening.height }}</mark></u>, масса, кг: <u><mark>{{ screening.weight }}</mark></u>, 
+        {% if screening.physical_development %}
+            Физическое развитие: <u><mark>{{ screening.physical_development }}</mark></u>, 
+        {% endif %}
+        {% if screening.blood_pressures %}
+            АД, мм.рт.ст.: <u><mark>{{ screening.blood_pressures }}</mark></u>, 
+        {% endif %}
+        {% if screening.carriage %}
+            Осанка: <u><mark>{{ screening.carriage }}</mark></u>, 
+        {% endif %}
+        {% if screening.foot_condition %}
+            Состояние стопы: <u><mark>{{ screening.foot_condition }}</mark></u>, 
+        {% endif %}
+        {% if screening.sight_od %}
+            Зрение, ОД: <u><mark>{{ screening.sight_od }}</mark></u>, 
+        {% endif %}
+        {% if screening.sight_os %}
+            Зрение, OS: <u><mark>{{ screening.sight_os }}</mark></u>, 
+        {% endif %}
+        {% if screening.visual_acuity %}
+            Острота зрения: <u><mark>{{ screening.visual_acuity }}</mark></u>, 
+        {% endif %}
+        {% if screening.malinovsky_test %}
+            Тест Малиновского: <u><mark>{{ screening.malinovsky_test }}</mark></u>, 
+        {% endif %}
+        {% if screening.binocular_vision %}
+            Бинокулярное зрение: <u><mark>{{ screening.binocular_vision }}</mark></u>, 
+        {% endif %}
+        {% if screening.hearing_acuteness %}
+            Острота слуха: <u><mark>{{ screening.hearing_acuteness }}</mark></u>, 
+        {% endif %}
+        {% if screening.dynammetry_left %}
+            Динамометрия (Правая рука): <u><mark>{{ screening.dynammetry_left }}</mark></u>, 
+        {% endif %}
+        {% if screening.dynammetry_right %}
+            Динамометрия (Левая рука): <u><mark>{{ screening.dynammetry_right }}</mark></u>, 
+        {% endif %}
+        {% if screening.physical_fitness %}
+            Физическая подготовленность: <u><mark>{{ screening.physical_fitness }}</mark></u>, 
+        {% endif %}
+        {% if screening.protein_in_urine %}
+            Определение белка в моче: <u><mark>{{ screening.protein_in_urine }}</mark></u>, 
+        {% endif %}
+        {% if screening.glucose_in_urine %}
+            Определение глюкозы в моче: <u><mark>{{ screening.glucose_in_urine }}</mark></u>
+        {% endif %}
+        <br>
+        {% if screening.biological_age or  screening.speech_defects or screening.kern_test or screening.neurotic_disorders or screening.thinking_and_speech or screening.motor_development or screening.attention_and_memory or screening.social_contacts %}
+            <strong>Расширенная скрининг-программа</strong><br>        
+            {% if screening.biological_age %}
+                Биологический возраст: <u><mark>{{ screening.biological_age }}</mark></u>, 
+            {% endif %}
+            {% if screening.kern_test %}
+                Тест Керна-Иерасика: <u><mark>{{ screening.kern_test }}</mark></u>, 
+            {% endif %}
+            {% if screening.speech_defects %}
+                Дефекты речи: <u><mark>Отклонение</mark></u>, 
+            {% endif %}
+            {% if screening.neurotic_disorders %}
+                Выявление невротических расстройств:  <u><mark>Отклонение</mark></u>, 
+            {% endif %}
+            {% if screening.thinking_and_speech_disorders %}
+                Мышление и речь: <u><mark>Отклонение</mark></u>,  
+            {% endif %}
+            {% if screening.motor_development_disorders %}
+                Моторное развитие: <u><mark>Отклонение</mark></u>, 
+            {% endif %}
+            {% if screening.attention_and_memory_disorders %}
+                Внимание и память: <u><mark>Отклонение</mark></u>, 
+            {% endif %}
+            {% if screening.social_contacts_disorders %}
+                Социальные контакты: <u><mark>Отклонение</mark></u>
+            {% endif %}
+        {% endif %}    
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-{{ screening.age }}-btn" onclick="update_screening('{{ screening.age }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-screening-{{ screening.age }}-btn" onclick="delete_screening('{{ screening.age }}')">Удалить</button>
+    </div>
+</div>

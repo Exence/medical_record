@@ -14,7 +14,7 @@ class AllergyBase(BaseModel):
     start_age: int = Field(...)
     reaction_type: str = Field(...)
     diagnosis_date: date = Field(...)
-    note: str = Field(default="")
+    note: str | None
 
 class Allergy(AllergyBase):
     class Config:
