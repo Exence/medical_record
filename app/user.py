@@ -7,13 +7,8 @@ from fastapi import (
     Request,
 )
 from fastapi.templating import Jinja2Templates
-from typing import Annotated
 
-from models.user import (
-    User,
-    UserCreate,
-    CreateUserForm,
-)
+from models.user import CreateUserForm
 
 from services.user import (
     AuthService,
