@@ -69,7 +69,7 @@ class SerializationService():
                         birthday_year=parent_data[3],
                         education=parent_data[4],
                         phone_num=parent_data[5])
-                        
+
         @classmethod
         def serialization_child(cls, child_data: tuple) -> Child:
                 return Child(
@@ -175,7 +175,7 @@ class SerializationService():
                         end_date=past_illness_data[2],
                         diagnosis=past_illness_data[3]
                 )
-        
+
         @classmethod
         def serialization_hospitalization(cls, hospitalization_data: tuple) -> Hospitalization:
                 return Hospitalization(
@@ -210,7 +210,7 @@ class SerializationService():
                         vac_exemption_date=medical_certificate_data[7],
                         doctor=medical_certificate_data[8]
                 )
-        
+
         @classmethod
         def serialization_dispensary(cls, dispensary_data: tuple) -> Dispensary:
                 return Dispensary(
@@ -221,7 +221,7 @@ class SerializationService():
                         end_date=dispensary_data[4],
                         end_reason=dispensary_data[5]
                 )
-        
+
         @classmethod
         def serialization_visit_specialist_control(cls, visit_data: tuple) -> VisitSpecialistControl:
                 return VisitSpecialistControl(

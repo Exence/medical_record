@@ -3,7 +3,7 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
-from services.medical_record import MedicalRecordService
+from services.prevaccination_checkup import PrevaccinationCheckupService
 
 
 router = APIRouter(
@@ -12,22 +12,26 @@ router = APIRouter(
 )
 
 @router.post('/get')
-async def get_prevaccination_checkup(prevaccination_checkup_data: JsonForm,  service: MedicalRecordService = Depends()):
+async def get_prevaccination_checkup(prevaccination_checkup_data: JsonForm,  
+                                     service: PrevaccinationCheckupService = Depends()):
     prevaccination_checkup = prevaccination_checkup_data.json_data
     prevaccination_checkup = service.get_prevaccination_checkup_by_pk(prevaccination_checkup)
     return {"prevaccination_checkup": prevaccination_checkup}
 
 @router.post('/add')
-async def add_extra_class(prevaccination_checkup_data: JsonForm,  service: MedicalRecordService = Depends()):
+async def add_extra_class(prevaccination_checkup_data: JsonForm,  
+                          service: PrevaccinationCheckupService = Depends()):
     prevaccination_checkup = prevaccination_checkup_data.json_data
     return service.add_new_prevaccination_checkup(prevaccination_checkup)
 
 @router.post('/update')
-async def update_prevaccination_checkup(prevaccination_checkup_data: JsonForm,  service: MedicalRecordService = Depends()):
+async def update_prevaccination_checkup(prevaccination_checkup_data: JsonForm,  
+                                        service: PrevaccinationCheckupService = Depends()):
     prevaccination_checkup = prevaccination_checkup_data.json_data
     return service.update_prevaccination_checkup(prevaccination_checkup)
 
 @router.post('/delete')
-async def delete_prevaccination_checkup(prevaccination_checkup_data: JsonForm,  service: MedicalRecordService = Depends()):
+async def delete_prevaccination_checkup(prevaccination_checkup_data: JsonForm,  
+                                        service: PrevaccinationCheckupService = Depends()):
     prevaccination_checkup = prevaccination_checkup_data.json_data
     service.delete_prevaccination_checkup(prevaccination_checkup)

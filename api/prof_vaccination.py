@@ -3,7 +3,7 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
-from services.medical_record import MedicalRecordService
+from services.vaccination import VaccinationService
 
 
 router = APIRouter(
@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 @router.post('/get')
-async def get_prof_vaccination(prof_vaccination_data: JsonForm,  service: MedicalRecordService = Depends()):
+async def get_prof_vaccination(prof_vaccination_data: JsonForm,  service: VaccinationService = Depends()):
     prof_vaccination = prof_vaccination_data.json_data
     prof_vaccination = service.get_prof_vaccination_by_pk(prof_vaccination)
     return prof_vaccination

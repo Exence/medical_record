@@ -54,10 +54,6 @@ def show_all_medcards(request: Request, service: MedicalRecordService = Depends(
         "/medical_record/all/index.html", {"request": request, "kindergartens": kindergartens}
     )
 
-
-
-
-
 @router.post('/child/get')
 async def get_child(child_data: JsonForm,  service: MedicalRecordService = Depends()):
     medcard_num = child_data.json_data["medcard_num"]
@@ -68,4 +64,3 @@ async def get_child(child_data: JsonForm,  service: MedicalRecordService = Depen
 async def update_child(child_data: JsonForm,  service: MedicalRecordService = Depends()):
     child = child_data.json_data
     service.update_child(child)
-
