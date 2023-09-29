@@ -1,0 +1,48 @@
+<div class="modal fade" id="ggInjectionModal" tabindex="-1" aria-labelledby="ggInjectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="ggInjectionModalLabel">Введение гамма-глобулина (по показаниям)</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" >
+                <label for="ggInjectionDate-modal" class="form-label">Дата</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="ggInjectionDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите дату введения гамма-глобулина.
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label for="ggInjectionReason-modal" class="form-label">Причина</label>
+                <textarea class="form-control" id="ggInjectionReason-modal" rows="5"></textarea>
+            </div>
+            <div class="col-md-4">
+                <label for="ggInjectionSerial-modal" class="form-label">Серия</label>
+                <input type="text" class="form-control only-letters-modal" id="ggInjectionSerial-modal" placeholder="FF18784" required>
+            </div>
+            <div class="col-md-4">
+                <label for="ggInjectionDose-modal" class="form-label">Доза</label>
+                <input type="text" class="form-control only-letters-modal" id="ggInjectionDose-modal" placeholder="15.2" required>
+            </div>
+            <div class="col-md-4">
+                <label for="ggInjectionReaction-modal" class="form-label">Реакция</label>
+                <select class="form-select" id="ggInjectionReaction-modal" required>
+                <option selected>Немедленная</option>
+                <option>Замедленная</option>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <label for="ggInjectionDoctor-modal" class="form-label">Врач</label>
+                <input type="text" class="form-control only-letters-modal" id="ggInjectionDoctor-modal" placeholder="Иванов Иван Иванович">
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="gg-injection-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="gg-injection-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+<li class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="col-12 me-auto">
+      <div class="fw-bold">Группа №{{ count.n }}</div>
+      <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+          {% for child in group %}
+                {% include '/medical_record/all/divs/child.html' %}                                
+          {% endfor %}
+      </div>
+    </div>
+</li>

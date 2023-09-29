@@ -1,4 +1,26 @@
-const medcard_num = document.querySelector('#general-button').value;
+const medcard_num = document.querySelector('#update-child-btn').value;
+/* CHILD CONST*/
+const child_surname_modal_inpt = document.querySelector('#surname');
+const child_name_modal_inpt = document.querySelector('#name');
+const child_patronymic_modal_inpt = document.querySelector('#patronymic');
+const child_kindergarten_name_modal_slct = document.querySelector('#kindergarten_name');
+const child_birthday_modal_inpt = document.querySelector('#birthday');
+const child_modal_rd = document.getElementsByName('sex')[0];
+const child_male_modal_rd = document.querySelector('#flexRadioSex1');
+const child_female_modal_rd = document.querySelector('#flexRadioSex2');
+const child_group_num_modal_slct = document.querySelector('#group_num');
+const child_address_modal_inpt = document.querySelector('#address');
+const child_clinic_modal_slct = document.querySelector('#clinic');
+const child_entering_date_modal_dtpk = document.querySelector('#entering_date');
+const child_family_characteristics_modal_slct = document.querySelector('#family_characteristics');
+const child_family_microclimate_modal_slct = document.querySelector('#family_microclimate');
+const child_rest_and_class_opportunities_modal_slct = document.querySelector('#rest_and_class_opportunities');
+const child_case_history_modal_txt = document.querySelector('#case_history');
+const child_close_modal_btn = document.querySelector('#child-close-modal');
+const child_commit_modal_btn = document.querySelector('#child-commit-modal');
+
+
+/*********************************************************************************************/
 /* ALLERGY CONST */
 const allergy_commit_modal_btn = document.querySelector('#allergy-commit-modal');
 const allergy_close_modal_btn = document.querySelector('#allergy-close-modal');
@@ -100,17 +122,241 @@ const deworming_commit_modal_btn = document.querySelector('#deworming-commit-mod
 /* SANATION CONST */
 const oral_sanation_modal_header = document.querySelector('#oralSanationModalLabel');
 const oral_sanation_date_modal_dtpkr = document.querySelector('#oralSanationDate-modal');
-const oral_sanation_dental_result_modal_txt = document.querySelector('#oralSanationDentalResult-modal')
+const oral_sanation_dental_result_modal_txt = document.querySelector('#oralSanationDentalResult-modal');
 const oral_sanation_result_modal_txt = document.querySelector('#oralSanationResult-modal');
 const oral_sanation_close_modal_btn = document.querySelector('#oral-sanation-close-modal');
 const oral_sanation_commit_modal_btn = document.querySelector('#oral-sanation-commit-modal');
 
+/*********************************************************************************************/
+/* PREVACCINATION CHECKUP CONST */
+const prevaccination_checkup_modal_header = document.querySelector('#prevaccinationCheckupModalLabel');
+const prevaccination_checkup_examination_date_modal_dtpkr = document.querySelector('#prevaccinationCheckupExaminationDate-modal');
+const prevaccination_checkup_diagnosis_modal_inpt = document.querySelector('#prevaccinationCheckupDiagnosis-modal');
+const prevaccination_checkup_report_modal_slct = document.querySelector('#prevaccinationCheckupReport-modal');
+const prevaccination_checkup_vac_name_modal_slct = document.querySelector('#prevaccinationCheckupVacName-modal');
+const prevaccination_checkup_no_vac_date_modal_dtpkr = document.querySelector('#prevaccinationCheckupNoVacDate-modal');
+const prevaccination_checkup_doctor_modal_inpt = document.querySelector('#prevaccinationCheckupDoctor-modal');
+const prevaccination_checkup_close_modal_btn = document.querySelector('#prevaccination-checkup-close-modal');
+const prevaccination_checkup_commit_modal_btn = document.querySelector('#prevaccination-checkup-commit-modal');
 
+/* PROF VACCINATIONS CONST */
+const prof_vaccination_modal_header = document.querySelector('#profVaccinationModalLabel');
+const prof_vaccination_vac_name_modal_slct = document.querySelector('#profVaccinationVacName-modal');
+const prof_vaccination_vac_type_modal_slct = document.querySelector('#profVaccinationVacType-modal');
+const prof_vaccination_date_modal_dtpk = document.querySelector('#profVaccinationDate-modal');
+const prof_vaccination_serial_modal_inpt = document.querySelector('#profVaccinationSerial-modal');
+const prof_vaccination_dose_modal_inpt = document.querySelector('#profVaccinationDose-modal');
+const prof_vaccination_introduction_method_modal_slct = document.querySelector('#profVaccinationIntroductionMethod-modal');
+const prof_vaccination_reaction_modal_slct = document.querySelector('#profVaccinationReaction-modal');
+const prof_vaccination_doctor_modal_inpt = document.querySelector('#profVaccinationDoctor-modal');
+const prof_vaccination_close_modal_btn = document.querySelector('#prof-vaccination-close-modal');
+const prof_vaccination_commit_modal_btn = document.querySelector('#prof-vaccination-commit-modal');
+
+/* EPID VACCINATIONS CONST */
+const epid_vaccination_modal_header = document.querySelector('#epidVaccinationModalLabel');
+const epid_vaccination_vac_name_modal_slct = document.querySelector('#epidVaccinationVacName-modal');
+const epid_vaccination_vac_type_modal_slct = document.querySelector('#epidVaccinationVacType-modal');
+const epid_vaccination_date_modal_dtpk = document.querySelector('#epidVaccinationDate-modal');
+const epid_vaccination_serial_modal_inpt = document.querySelector('#epidVaccinationSerial-modal');
+const epid_vaccination_dose_modal_inpt = document.querySelector('#epidVaccinationDose-modal');
+const epid_vaccination_introduction_method_modal_slct = document.querySelector('#epidVaccinationIntroductionMethod-modal');
+const epid_vaccination_reaction_modal_slct = document.querySelector('#epidVaccinationReaction-modal');
+const epid_vaccination_doctor_modal_inpt = document.querySelector('#epidVaccinationDoctor-modal');
+const epid_vaccination_close_modal_btn = document.querySelector('#epid-vaccination-close-modal');
+const epid_vaccination_commit_modal_btn = document.querySelector('#epid-vaccination-commit-modal');
+
+
+/* GG INJECTIONS CONST */
+const gg_injection_modal_header = document.querySelector('#ggInjectionModalLabel');
+const gg_injection_date_modal_dtpk = document.querySelector('#ggInjectionDate-modal');
+const gg_injection_reason_modal_txt = document.querySelector('#ggInjectionReason-modal');
+const gg_injection_serial_modal_inpt = document.querySelector('#ggInjectionSerial-modal');
+const gg_injection_dose_modal_inpt = document.querySelector('#ggInjectionDose-modal');
+const gg_injection_reaction_modal_slct = document.querySelector('#ggInjectionReaction-modal');
+const gg_injection_doctor_modal_inpt = document.querySelector('#ggInjectionDoctor-modal');
+const gg_injection_close_modal_btn = document.querySelector('#gg-injection-close-modal');
+const gg_injection_commit_modal_btn = document.querySelector('#gg-injection-commit-modal');
+
+/* MANTOUX TEST CONST */
+const mantoux_test_modal_header = document.querySelector('#mantouxTestModalLabel');
+const mantoux_test_date_modal_dtpk = document.querySelector('#mantouxTestDate-modal');
+const mantoux_test_result_modal_slct = document.querySelector('#mantouxTestResult-modal');
+const mantoux_test_close_modal_btn = document.querySelector('#mantoux-test-close-modal');
+const mantoux_test_commit_modal_btn = document.querySelector('#mantoux-test-commit-modal');
+
+/* TUB VAC CONST */
+const tub_vac_modal_header = document.querySelector('#tubVacModalLabel');
+const tub_vac_date_modal_dtpk = document.querySelector('#tubVacDate-modal');
+const tub_vac_serial_modal_inpt = document.querySelector('#tubVacSerial-modal');
+const tub_vac_dose_modal_inpt = document.querySelector('#tubVacDose-modal');
+const tub_vac_doctor_modal_inpt = document.querySelector('#tubVacDoctor-modal');
+const tub_vac_close_modal_btn = document.querySelector('#tub-vac-close-modal');
+const tub_vac_commit_modal_btn = document.querySelector('#tub-vac-commit-modal');
+
+/*********************************************************************************************/
+/* MEDICAL EXAMINATION CONST*/
+const medical_examination_modal_header = document.querySelector('#medicalExaminationModalLabel');
+const medical_examination_period_modal_slct = document.querySelector('#medicalExaminationPeriod-modal');
+const medical_examination_date_modal_dtpk = document.querySelector('#medicalExaminationDate-modal');
+const medical_examination_height_modal_inpt = document.querySelector('#medicalExaminationHeight-modal');
+const medical_examination_weight_modal_inpt = document.querySelector('#medicalExaminationWeight-modal');
+const medical_examination_complaints_modal_txt = document.querySelector('#medicalExaminationComplaints-modal');
+const medical_examination_pediatrician_modal_txt = document.querySelector('#medicalExaminationPediatrician-modal');
+const medical_examination_orthopaedist_modal_txt = document.querySelector('#medicalExaminationOrthopaedist-modal');
+const medical_examination_ophthalmologist_modal_txt = document.querySelector('#medicalExaminationOphthalmologist-modal');
+const medical_examination_otolaryngologist_modal_txt = document.querySelector('#medicalExaminationOtolaryngologist-modal');
+const medical_examination_dermatologist_modal_txt = document.querySelector('#medicalExaminationDermatologist-modal');
+const medical_examination_neurologist_modal_txt = document.querySelector('#medicalExaminationNeurologist-modal');
+const medical_examination_speech_therapist_modal_txt = document.querySelector('#medicalExaminationSpeechTherapist-modal');
+const medical_examination_denta_surgeon_modal_txt = document.querySelector('#medicalExaminationDentaSurgeon-modal');
+const medical_examination_psychologist_modal_txt = document.querySelector('#medicalExaminationPsychologist-modal');
+const medical_examination_other_doctors_modal_txt = document.querySelector('#medicalExaminationOtherDoctors-modal');
+const medical_examination_blood_test_modal_txt = document.querySelector('#medicalExaminationBloodTest-modal');
+const medical_examination_urine_analysis_modal_txt = document.querySelector('#medicalExaminationUrineAnalysis-modal');
+const medical_examination_feces_analysis_modal_txt = document.querySelector('#medicalExaminationFecesAnalysis-modal');
+const medical_examination_general_diagnosis_modal_txt = document.querySelector('#medicalExaminationGeneralDiagnosis-modal');
+const medical_examination_physical_development_modal_txt = document.querySelector('#medicalExaminationPhysicalDevelopment-modal');
+const medical_examination_mental_development_modal_txt = document.querySelector('#medicalExaminationMentalDevelopment-modal');
+const medical_examination_health_group_modal_slct = document.querySelector('#medicalExaminationHealthGroup-modal');
+const medical_examination_sport_group_modal_slct = document.querySelector('#medicalExaminationSportGroup-modal');
+const medical_examination_med_and_ped_conclusion_modal_txt = document.querySelector('#medicalExaminationMedAndPedConclusion-modal');
+const medical_examination_recommendations_modal_txt = document.querySelector('#medicalExaminationRecommendations-modal');
+const medical_examination_close_modal_btn = document.querySelector('#medical-examination-close-modal');
+const medical_examination_commit_modal_btn = document.querySelector('#medical-examination-commit-modal');
+
+/*********************************************************************************************/
+/* ONGOING MEDICAL SUPERVISION CONST*/
+const oms_modal_header = document.querySelector('#omsModalLabel');
+const oms_examination_date_modal_dtpk = document.querySelector('#omsExaminationDate-modal');
+const oms_examination_data_modal_txt = document.querySelector('#omsExaminationData-modal');
+const oms_diagnosis_modal_txt = document.querySelector('#omsDiagnosis-modal');
+const oms_prescription_modal_txt = document.querySelector('#omsPrescription-modal');
+const oms_doctor_modal_inpt = document.querySelector('#omsDoctor-modal');
+const oms_close_modal_btn = document.querySelector('#oms-close-modal');
+const oms_commit_modal_btn = document.querySelector('#oms-commit-modal');
+
+/*********************************************************************************************/
+/* SCREENING CONST*/
+const screening_modal_header = document.querySelector('#screeningModalLabel');
+const screening_age_modal_slct = document.querySelector('#screeningAge-modal');
+const screening_questionnaire_test_modal_slct = document.querySelector('#screeningQuestionnaireTest-modal');
+const screening_height_modal_inpt = document.querySelector('#screeningHeight-modal');
+const screening_weight_modal_inpt = document.querySelector('#screeningWeight-modal');
+const screening_physical_development_modal_slct = document.querySelector('#screeningPhysicalDevelopment-modal');
+const screening_blood_pressures_modal_inpt = document.querySelector('#screeningBloodPressures-modal');
+const screening_carriage_modal_slct = document.querySelector('#screeningCarriage-modal');
+const screening_foot_condition_modal_slct = document.querySelector('#screeningFooCondition-modal');
+const screening_sight_od_modal_inpt = document.querySelector('#screeningSightOd-modal');
+const screening_sight_os_modal_inpt = document.querySelector('#screeningSightOs-modal');
+const screening_visual_acuity_modal_slct = document.querySelector('#screeningVisualAcuity-modal');
+const screening_malinovsky_test_modal_slct = document.querySelector('#screeningMalinovskyTest-modal');
+const screening_binocular_vision_modal_slct = document.querySelector('#screeningBinocularVision-modal');
+const screening_hearing_acuteness_modal_slct = document.querySelector('#screeningHearingAcuteness-modal');
+const screening_dynammetry_left_modal_inpt = document.querySelector('#screeningDynammetryRight-modal');
+const screening_dynammetry_right_modal_inpt = document.querySelector('#screeningDynammetryLeft-modal');
+const screening_physical_fitness_modal_slct = document.querySelector('#screeningPhysicalFitness-modal');
+const screening_protein_in_urine_modal_slct = document.querySelector('#screeningProteinInUrine-modal');
+const screening_glucose_in_urine_modal_slct = document.querySelector('#screeningGlucoseInUrine-modal');
+const screening_biological_age_modal_slct = document.querySelector('#screeningBiologicalAge-modal');
+const screening_speech_defects_modal_chck = document.querySelector('#screeningSpeechDefects-modal');
+const screening_kern_test_modal_inpt = document.querySelector('#screeningKernTest-modal');
+const screening_neurotic_disorders_modal_chck = document.querySelector('#screeningNeuroticDisorders-modal');
+const screening_thinking_and_speech_disorders_modal_chck = document.querySelector('#screeningThinkingAndSpeechDisorders-modal');
+const screening_motor_development_disorders_modal_chck = document.querySelector('#screeningMotorDevelopmentDisorders-modal');
+const screening_attention_and_memory_disorders_modal_chck = document.querySelector('#screeningAttentionAndMemoryDisorders-modal');
+const screening_social_contacts_disorders_modal_chck = document.querySelector('#screeningSocialContactsDisorders-modal');
+const screening_close_modal_btn = document.querySelector('#screening-close-modal');
+const screening_commit_modal_btn = document.querySelector('#screening-commit-modal');
+
+/*********************************************************************************************/
 /* DELETE WINDOW CONST*/
 const delete_modal_header = document.querySelector('#deleteModalLabel');
 const delete_commit_modal_btn = document.querySelector('#delete_modal_commit');
 const close_delete_modal_btn = document.querySelector('#delete_close_modal');
 
+
+/* CHILD */
+function update_child(){
+    var child = {
+        "medcard_num": medcard_num
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/get",
+        data: JSON.stringify({"json_data": child}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            child_surname_modal_inpt.value = data.surname;
+            child_name_modal_inpt.value = data.name;
+            child_patronymic_modal_inpt.value = data.patronymic;
+            child_kindergarten_name_modal_slct.value = data.kindergarten_name.trim();
+            child_birthday_modal_inpt.value = data.birthday;
+            if (data.sex === 'М'){
+                child_male_modal_rd.checked = true;
+                child_female_modal_rd.checked = false;
+            } else {
+                child_male_modal_rd.checked = false;
+                child_female_modal_rd.checked = true;
+            }
+            child_group_num_modal_slct.value = data.group_num;
+            child_address_modal_inpt.value = data.address;
+            child_clinic_modal_slct.value = data.clinic.trim();
+            child_entering_date_modal_dtpk.value = data.entering_date;
+            child_family_characteristics_modal_slct.value = data.family_characteristics.trim();
+            child_family_microclimate_modal_slct.value = data.family_microclimate;
+            child_rest_and_class_opportunities_modal_slct.value = data.rest_and_class_opportunities;
+            child_case_history_modal_txt.value = data.case_history;
+        }
+    });  
+}
+
+child_commit_modal_btn.addEventListener('click', () => {
+    var child = {
+        "medcard_num": medcard_num,
+        "surname": child_surname_modal_inpt.value,
+        "name": child_name_modal_inpt.value,
+        "patronymic": child_patronymic_modal_inpt.value,
+        "kindergarten_name": child_kindergarten_name_modal_slct.value,
+        "birthday": child_birthday_modal_inpt.value,
+        "sex": child_modal_rd.value[0],
+        "group_num": child_group_num_modal_slct.value,
+        "address": child_address_modal_inpt.value,
+        "clinic": child_clinic_modal_slct.value,
+        "entering_date": child_entering_date_modal_dtpk.value,
+        "family_characteristics": child_family_characteristics_modal_slct.value,
+        "family_microclimate": child_family_microclimate_modal_slct.value,
+        "rest_and_class_opportunities": child_rest_and_class_opportunities_modal_slct.value,
+        "case_history": child_case_history_modal_txt.value
+    } 
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/update",
+        data: JSON.stringify({"json_data": child}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: () => {
+            let general_div = document.querySelector('#general-main-div');
+            general_div.innerHTML = '<strong>' + child.surname + ' ' + child.name + ' ' + child.patronymic + '</strong> <u><mark>' + child.birthday + ' г.р.</mark></u>, пол: <u><mark>' + child.sex + '</mark></u>,\
+            характеристика образовательного учреждения: <u><mark>ДДУ</mark></u>,\
+            дом. адрес (или адрес интернатного учреждения): <u><mark>' + child.address + '</mark></u>, обслуживающая поликлиника: <u><mark>' + child.clinic + '</mark></u>,\
+            месяц, год поступления: <u><mark>' + child.entering_date + '</mark></u>';
+            let anamnes_div = document.querySelector('#anamnes-main-div');
+            innerHTML = '<p>Характеристика семьи: <u><mark>' + child.family_characteristics + '</mark></u>, микроклимат в семье: <u><mark>' + child.family_microclimate + '</mark></u>, \
+            наличие у ребенка места для отдыха и занятий: <u><mark>' + child.rest_and_class_opportunities + '</mark></u>. </br>';
+            if (child.case_history){
+                innerHTML += '<div class="col-12">\
+                    <label for="case_history" class="form-label"><strong>Семейный анамнез:</strong></label>\
+                    <p>' + child.case_history + '</p>\
+                    </div>'
+            }
+            innerHTML += '<small><i>*Для внесения изменений в данный блок нажмите на кнопку "Редактировать" в разделе "ОБЩИЕ СВЕДЕНИЯ О РЕБЕНКЕ"</i></small></p> ';
+            anamnes_div.innerHTML = innerHTML;
+        }
+    });
+})
 
 /* ALLERGY */
 allergy_commit_modal_btn.addEventListener('click', () => {
@@ -845,16 +1091,11 @@ medical_certificate_commit_modal_btn.addEventListener('click', () => {
         "cert_date": medical_certificate_cert_date_modal_dtpkr.value,
         "start_date": medical_certificate_start_date_modal_dtpkr.value,
         "end_date": medical_certificate_end_date_modal_dtpkr.value,
+        "infection_contact": medical_certificate_infection_contact_modal_chk.checked,
         "sport_exemption_date": medical_certificate_sport_exemption_date_modal_dpkr.value,
         "vac_exemption_date": medical_certificate_vac_exemption_date_modal_dpkr.value,
         "doctor": medical_certificate_doctor_modal_inpt.value
     };
-
-    if (medical_certificate_infection_contact_modal_chk.checked){
-        medical_certificate["infection_contact"] = true;
-    } else {
-        medical_certificate["infection_contact"] = false;
-    }
     switch (medical_certificate_commit_modal_btn.value) {
         case 'add':
             $.ajax({
@@ -1378,11 +1619,1302 @@ oral_sanation_commit_modal_btn.addEventListener('click', () =>{
     }
 })
 
+
+
+/* PREVACCINATION CHECKUP */
+function prevaccination_checkup_add_set_info(){
+
+    prevaccination_checkup_modal_header.innerHTML = "Добавление сведений об осмотре";
+    prevaccination_checkup_examination_date_modal_dtpkr.value = "";
+    prevaccination_checkup_diagnosis_modal_inpt.value = "";
+    prevaccination_checkup_no_vac_date_modal_dtpkr.value = "";
+    prevaccination_checkup_doctor_modal_inpt.value = "";
+    prevaccination_checkup_commit_modal_btn.value = 'add'; 
+}
+
+function update_prevaccination_checkup(examination_date){
+    var prevaccination_checkup = {
+        "medcard_num": medcard_num,
+        "examination_date": examination_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/prevaccination_checkup/get",
+        data: JSON.stringify({"json_data": prevaccination_checkup}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            prevaccination_checkup_modal_header.innerHTML = "Редактирование сведений об осмотре";
+            prevaccination_checkup_commit_modal_btn.value = 'update';
+            prevaccination_checkup_close_modal_btn.value = data.prevaccination_checkup.examination_date;
+            prevaccination_checkup_examination_date_modal_dtpkr.value = data.prevaccination_checkup.examination_date;
+            prevaccination_checkup_diagnosis_modal_inpt.value = data.prevaccination_checkup.diagnosis;
+            prevaccination_checkup_report_modal_slct.value = data.prevaccination_checkup.report;
+            prevaccination_checkup_vac_name_modal_slct.value = data.prevaccination_checkup.vac_name;
+            prevaccination_checkup_no_vac_date_modal_dtpkr.value = data.prevaccination_checkup.no_vac_date;
+            prevaccination_checkup_doctor_modal_inpt.value = data.prevaccination_checkup.doctor;            
+        }
+    });    
+}
+
+function delete_prevaccination_checkup(examination_date){
+    delete_modal_header.innerHTML = 'Удалить сведения об осмотре';
+    close_delete_modal_btn.value = examination_date;
+    delete_commit_modal_btn.value = 'delete_prevaccination_checkup';
+}
+
+prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{    
+    var prevaccination_checkup = {
+        "medcard_num": medcard_num,
+        "examination_date": prevaccination_checkup_examination_date_modal_dtpkr.value,
+        "diagnosis": prevaccination_checkup_diagnosis_modal_inpt.value,
+        "report": prevaccination_checkup_report_modal_slct.value,
+        "vac_name_id": prevaccination_checkup_vac_name_modal_slct[prevaccination_checkup_vac_name_modal_slct.selectedIndex].getAttribute('vac_id'),
+        "no_vac_date": prevaccination_checkup_no_vac_date_modal_dtpkr.value,
+        "doctor":  prevaccination_checkup_doctor_modal_inpt.value
+    };
+    switch (prevaccination_checkup_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/prevaccination_checkup/add",
+                data: JSON.stringify({"json_data": prevaccination_checkup}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: function(prevaccination_checkup_data) {
+                    innerHTML = '<div name="div-prevaccination-checkup-' + prevaccination_checkup.examination_date + '" class="col-12 mb-3">\
+                    <p><strong>' + prevaccination_checkup_data.vac_name + '</strong> Дата осмотра: <u><mark>' + prevaccination_checkup.examination_date + '</mark></u>, Возраст: <u><mark>' + prevaccination_checkup_data.age + '</mark></u>\
+                    Диагноз: <u><mark>' + prevaccination_checkup.diagnosis + '</mark></u>, Заключение: <u><mark>' + prevaccination_checkup.report + '</mark></u> <br>'
+                    if (prevaccination_checkup.no_vac_date){
+                        innerHTML += '<strong>Мед. отвод до: </strong><u><mark>' + prevaccination_checkup.no_vac_date + '</mark></u> <br></br>'
+                    }
+                    innerHTML += 'Врач: <u><mark>' + prevaccination_checkup.doctor + '</mark></u></p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#prevaccinationCheckupModal" name="update-prevaccination-checkup-' + prevaccination_checkup.examination_date + '-btn" onclick="update_prevaccination_checkup(\'' + prevaccination_checkup.examination_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-prevaccination-checkup-' + prevaccination_checkup.examination_date + '-btn" onclick="delete_prevaccination_checkup(\'' + prevaccination_checkup.examination_date + '\')">Удалить</button>\
+                    </div>\
+                    </div>';
+                    let prevaccination_checkup_div = document.querySelector('#prevaccination-checkup-main-div');
+                    prevaccination_checkup_div.innerHTML += innerHTML;
+                }
+            });
+            break;
+
+            case 'update':
+                prevaccination_checkup["old_examination_date"] = prevaccination_checkup_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/prevaccination_checkup/update",
+                    data: JSON.stringify({"json_data": prevaccination_checkup}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function(prevaccination_checkup_data){
+                        innerHTML = '<p><strong>' + prevaccination_checkup_data.vac_name + '</strong> Дата осмотра: <u><mark>' + prevaccination_checkup.examination_date + '</mark></u>, Возраст: <u><mark>' + prevaccination_checkup_data.age + '</mark></u>\
+                        Диагноз: <u><mark>' + prevaccination_checkup.diagnosis + '</mark></u>, Заключение: <u><mark>' + prevaccination_checkup.report + '</mark></u> <br>'
+                        if (prevaccination_checkup.no_vac_date){
+                            innerHTML += '<strong>Мед. отвод до: </strong><u><mark>' + prevaccination_checkup.no_vac_date + '</mark></u> <br></br>'
+                        }
+                        innerHTML += 'Врач: <u><mark>' + prevaccination_checkup.doctor + '</mark></u></p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#prevaccinationCheckupModal" name="update-prevaccination-checkup-' + prevaccination_checkup.examination_date + '-btn" onclick="update_prevaccination_checkup(\'' + prevaccination_checkup.examination_date + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-prevaccination-checkup-' + prevaccination_checkup.examination_date + '-btn" onclick="delete_prevaccination_checkup(\'' + prevaccination_checkup.examination_date + '\')">Удалить</button>\
+                        </div>';
+                        let prevaccination_checkup_div = document.getElementsByName('div-prevaccination-checkup-' + prevaccination_checkup.old_examination_date)[0]
+                        prevaccination_checkup_div.innerHTML = innerHTML;
+                        prevaccination_checkup_div.setAttribute('name', 'div-prevaccination-checkup-' + prevaccination_checkup.examination_date) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
+/* PROF VACCINATION */
+function prof_vaccination_add_set_info(){
+
+    prof_vaccination_modal_header.innerHTML = "Добавление сведений об прививке";
+    prof_vaccination_date_modal_dtpk.value = "2023-04-14";
+    prof_vaccination_serial_modal_inpt.value = "АА2548";
+    prof_vaccination_dose_modal_inpt.value = "15.2";
+    prof_vaccination_doctor_modal_inpt.value = "Иванов Иван Иванович";
+    prof_vaccination_commit_modal_btn.value = 'add'; 
+}
+
+function update_prof_vaccination(vac_name_id, vac_type){
+    var prof_vaccination = {
+        "medcard_num": medcard_num,
+        "vac_name_id": vac_name_id,
+        "vac_type": vac_type
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/prof_vaccination/get",
+        data: JSON.stringify({"json_data": prof_vaccination}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            prof_vaccination_modal_header.innerHTML = "Редактирование сведений об осмотре";
+            prof_vaccination_commit_modal_btn.value = 'update';
+            prof_vaccination_close_modal_btn.value = data.vac_name_id + '///' + data.vac_type;
+            prof_vaccination_vac_name_modal_slct.value = data.vac_name;
+            prof_vaccination_vac_type_modal_slct.value = data.vac_type;
+            prof_vaccination_date_modal_dtpk.value = data.vac_date;
+            prof_vaccination_serial_modal_inpt.value = data.serial;
+            prof_vaccination_dose_modal_inpt.value = data.dose;
+            prof_vaccination_introduction_method_modal_slct.value = data.introduction_method;
+            prof_vaccination_reaction_modal_slct.value = data.reaction;
+            prof_vaccination_doctor_modal_inpt.value = data.doctor;
+        }
+    });    
+}
+
+function delete_prof_vaccination(vac_name_id, vac_type){
+    delete_modal_header.innerHTML = 'Удалить сведения о прививке';
+    close_delete_modal_btn.value = vac_name_id + '///' + vac_type;
+    delete_commit_modal_btn.value = 'delete_prof_vaccination';
+}
+
+prof_vaccination_commit_modal_btn.addEventListener('click', () =>{    
+    var prof_vaccination = {
+        "medcard_num": medcard_num,
+        "vac_name_id": prof_vaccination_vac_name_modal_slct[prof_vaccination_vac_name_modal_slct.selectedIndex].getAttribute('vac_id'),
+        "vac_name": prof_vaccination_vac_name_modal_slct.value,
+        "vac_type": prof_vaccination_vac_type_modal_slct.value,
+        "vac_date": prof_vaccination_date_modal_dtpk.value,
+        "serial":  prof_vaccination_serial_modal_inpt.value,
+        "dose": prof_vaccination_dose_modal_inpt.value,
+        "introduction_method": prof_vaccination_introduction_method_modal_slct.value,
+        "reaction": prof_vaccination_reaction_modal_slct.value,
+        "doctor": prof_vaccination_doctor_modal_inpt.value 
+    };
+    switch (prof_vaccination_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/vaccination/add",
+                data: JSON.stringify({"json_data": prof_vaccination}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    innerHTML = '<div name="div-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,'') + '" class="col-12 mb-3">\
+                    <p><strong>' + prof_vaccination.vac_name + '</strong> <strong>' + prof_vaccination.vac_type + '</strong> Дата: <u><mark>' + prof_vaccination.vac_date + '</mark></u>, \
+                        серия: <u><mark>' + prof_vaccination.serial + '</mark></u>, доза: <u><mark>' + prof_vaccination.dose + '</mark></u>, \
+                        способ введения: <u><mark>' + prof_vaccination.introduction_method + '</mark></u>, реакция: <u><mark>' + prof_vaccination.reaction + '</mark></u><br>\
+                        Врач: <u><mark>' + prof_vaccination.doctor + '</mark></u>\
+                        </p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#profVaccinationModal" name="update-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="update_prof_vaccination(\'' + prof_vaccination.vac_name_id + '\', \'' + prof_vaccination.vac_type + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="delete_prof_vaccination(\'' + prof_vaccination.vac_name_id + '\', \'' + prof_vaccination.vac_type + '\')">Удалить</button>\
+                        </div>\
+                    </div>';
+                    let prof_vaccination_div = document.querySelector('#prof-vaccination-main-div');
+                    prof_vaccination_div.innerHTML += innerHTML;
+                }
+            });
+            break;
+
+            case 'update':
+                let pk_data = prof_vaccination_close_modal_btn.value.split('///');
+                prof_vaccination["old_vac_name_id"] = pk_data[0];
+                prof_vaccination["old_vac_type"] = pk_data[1];
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/vaccination/update",
+                    data: JSON.stringify({"json_data": prof_vaccination}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        innerHTML = '<p><strong>' + prof_vaccination.vac_name + '</strong> <strong>' + prof_vaccination.vac_type + '</strong> Дата: <u><mark>' + prof_vaccination.vac_date + '</mark></u>, \
+                        серия: <u><mark>' + prof_vaccination.serial + '</mark></u>, доза: <u><mark>' + prof_vaccination.dose + '</mark></u>, \
+                        способ введения: <u><mark>' + prof_vaccination.introduction_method + '</mark></u>, реакция: <u><mark>' + prof_vaccination.reaction + '</mark></u><br>\
+                        Врач: <u><mark>' + prof_vaccination.doctor + '</mark></u>\
+                        </p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#profVaccinationModal" name="update-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="update_prof_vaccination(\'' + prof_vaccination.vac_name_id + '\', \'' + prof_vaccination.vac_type + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="delete_prof_vaccination(\'' + prof_vaccination.vac_name_id + '\', \'' + prof_vaccination.vac_type + '\')">Удалить</button>\
+                        </div>';
+                        let prof_vaccination_div = document.getElementsByName('div-prof-vaccination-' + prof_vaccination.old_vac_name_id + '-' + prof_vaccination.old_vac_type.replace(/ /g,''))[0]
+                        prof_vaccination_div.innerHTML = innerHTML;
+                        prof_vaccination_div.setAttribute('name', 'div-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,'')) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
+/* epid VACCINATION */
+function epid_vaccination_add_set_info(){
+
+    epid_vaccination_modal_header.innerHTML = "Добавление сведений об прививке";
+    epid_vaccination_date_modal_dtpk.value = "2023-01-01";
+    epid_vaccination_serial_modal_inpt.value = "";
+    epid_vaccination_dose_modal_inpt.value = "";
+    epid_vaccination_doctor_modal_inpt.value = "";
+    epid_vaccination_commit_modal_btn.value = 'add'; 
+}
+
+function update_epid_vaccination(vac_name_id, vac_type){
+    var epid_vaccination = {
+        "medcard_num": medcard_num,
+        "vac_name_id": vac_name_id,
+        "vac_type": vac_type
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/epid_vaccination/get",
+        data: JSON.stringify({"json_data": epid_vaccination}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            epid_vaccination_modal_header.innerHTML = "Редактирование сведений об осмотре";
+            epid_vaccination_commit_modal_btn.value = 'update';
+            epid_vaccination_close_modal_btn.value = data.vac_name_id + '///' + data.vac_type;
+            epid_vaccination_vac_name_modal_slct.value = data.vac_name;
+            epid_vaccination_vac_type_modal_slct.value = data.vac_type;
+            epid_vaccination_date_modal_dtpk.value = data.vac_date;
+            epid_vaccination_serial_modal_inpt.value = data.serial;
+            epid_vaccination_dose_modal_inpt.value = data.dose;
+            epid_vaccination_introduction_method_modal_slct.value = data.introduction_method;
+            epid_vaccination_reaction_modal_slct.value = data.reaction;
+            epid_vaccination_doctor_modal_inpt.value = data.doctor;
+        }
+    });    
+}
+
+function delete_epid_vaccination(vac_name_id, vac_type){
+    delete_modal_header.innerHTML = 'Удалить сведения о прививке';
+    close_delete_modal_btn.value = vac_name_id + '///' + vac_type;
+    delete_commit_modal_btn.value = 'delete_epid_vaccination';
+}
+
+epid_vaccination_commit_modal_btn.addEventListener('click', () =>{    
+    var epid_vaccination = {
+        "medcard_num": medcard_num,
+        "vac_name_id": epid_vaccination_vac_name_modal_slct[epid_vaccination_vac_name_modal_slct.selectedIndex].getAttribute('vac_id'),
+        "vac_name": epid_vaccination_vac_name_modal_slct.value,
+        "vac_type": epid_vaccination_vac_type_modal_slct.value,
+        "vac_date": epid_vaccination_date_modal_dtpk.value,
+        "serial":  epid_vaccination_serial_modal_inpt.value,
+        "dose": epid_vaccination_dose_modal_inpt.value,
+        "introduction_method": epid_vaccination_introduction_method_modal_slct.value,
+        "reaction": epid_vaccination_reaction_modal_slct.value,
+        "doctor": epid_vaccination_doctor_modal_inpt.value 
+    };
+    switch (epid_vaccination_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/vaccination/add",
+                data: JSON.stringify({"json_data": epid_vaccination}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    innerHTML = '<div name="div-epid-vaccination-' + epid_vaccination.vac_name_id + '-' + epid_vaccination.vac_type.replace(/ /g,'') + '" class="col-12 mb-3">\
+                    <p><strong>' + epid_vaccination.vac_name + '</strong> <strong>' + epid_vaccination.vac_type + '</strong> Дата: <u><mark>' + epid_vaccination.vac_date + '</mark></u>, \
+                        серия: <u><mark>' + epid_vaccination.serial + '</mark></u>, доза: <u><mark>' + epid_vaccination.dose + '</mark></u>, \
+                        способ введения: <u><mark>' + epid_vaccination.introduction_method + '</mark></u>, реакция: <u><mark>' + epid_vaccination.reaction + '</mark></u><br>\
+                        Врач: <u><mark>' + epid_vaccination.doctor + '</mark></u>\
+                        </p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#epidVaccinationModal" name="update-epid-vaccination-' + epid_vaccination.vac_name_id + '-' + epid_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="update_epid_vaccination(\'' + epid_vaccination.vac_name_id + '\', \'' + epid_vaccination.vac_type + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-epid-vaccination-' + epid_vaccination.vac_name_id + '-' + epid_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="delete_epid_vaccination(\'' + epid_vaccination.vac_name_id + '\', \'' + epid_vaccination.vac_type + '\')">Удалить</button>\
+                        </div>\
+                    </div>';
+                    let epid_vaccination_div = document.querySelector('#epid-vaccination-main-div');
+                    epid_vaccination_div.innerHTML += innerHTML;
+                }
+            });
+            break;
+
+            case 'update':
+                let pk_data = epid_vaccination_close_modal_btn.value.split('///');
+                epid_vaccination["old_vac_name_id"] = pk_data[0];
+                epid_vaccination["old_vac_type"] = pk_data[1];
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/vaccination/update",
+                    data: JSON.stringify({"json_data": epid_vaccination}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        innerHTML = '<p><strong>' + epid_vaccination.vac_name + '</strong> <strong>' + epid_vaccination.vac_type + '</strong> Дата: <u><mark>' + epid_vaccination.vac_date + '</mark></u>, \
+                        серия: <u><mark>' + epid_vaccination.serial + '</mark></u>, доза: <u><mark>' + epid_vaccination.dose + '</mark></u>, \
+                        способ введения: <u><mark>' + epid_vaccination.introduction_method + '</mark></u>, реакция: <u><mark>' + epid_vaccination.reaction + '</mark></u><br>\
+                        Врач: <u><mark>' + epid_vaccination.doctor + '</mark></u>\
+                        </p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#epidVaccinationModal" name="update-epid-vaccination-' + epid_vaccination.vac_name_id + '-' + epid_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="update_epid_vaccination(\'' + epid_vaccination.vac_name_id + '\', \'' + epid_vaccination.vac_type + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-epid-vaccination-' + epid_vaccination.vac_name_id + '-' + epid_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="delete_epid_vaccination(\'' + epid_vaccination.vac_name_id + '\', \'' + epid_vaccination.vac_type + '\')">Удалить</button>\
+                        </div>';
+                        let epid_vaccination_div = document.getElementsByName('div-epid-vaccination-' + epid_vaccination.old_vac_name_id + '-' + epid_vaccination.old_vac_type.replace(/ /g,''))[0]
+                        epid_vaccination_div.innerHTML = innerHTML;
+                        epid_vaccination_div.setAttribute('name', 'div-epid-vaccination-' + epid_vaccination.vac_name_id + '-' + epid_vaccination.vac_type.replace(/ /g,'')) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+/* GG INJECTION */
+function gg_injection_add_set_info(){
+
+    gg_injection_modal_header.innerHTML = "Добавление сведений о введении гамма-глобулина";
+    gg_injection_date_modal_dtpk.value = "2023-04-14";
+    gg_injection_reason_modal_txt.value = "Повышение иммунитета"
+    gg_injection_serial_modal_inpt.value = "АА2548";
+    gg_injection_dose_modal_inpt.value = "15.2";
+    gg_injection_doctor_modal_inpt.value = "Иванов Иван Иванович";
+    gg_injection_commit_modal_btn.value = 'add'; 
+}
+
+function update_gg_injection(vac_date){
+    var gg_injection = {
+        "medcard_num": medcard_num,
+        "vac_date": vac_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/gg_injection/get",
+        data: JSON.stringify({"json_data": gg_injection}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            gg_injection_modal_header.innerHTML = "Редактирование сведений о введении гамма-глобулина";
+            gg_injection_commit_modal_btn.value = 'update';
+            gg_injection_close_modal_btn.value = data.vac_date;
+            gg_injection_reason_modal_txt.value = data.reason;
+            gg_injection_date_modal_dtpk.value = data.vac_date;
+            gg_injection_serial_modal_inpt.value = data.serial;
+            gg_injection_dose_modal_inpt.value = data.dose;
+            gg_injection_reaction_modal_slct.value = data.reaction;
+            gg_injection_doctor_modal_inpt.value = data.doctor;
+        }
+    });    
+}
+
+function delete_gg_injection(vac_date){
+    delete_modal_header.innerHTML = 'Удалить сведения о введении гамма-глобулина';
+    close_delete_modal_btn.value = vac_date;
+    delete_commit_modal_btn.value = 'delete_gg_injection';
+}
+
+gg_injection_commit_modal_btn.addEventListener('click', () =>{    
+    var gg_injection = {
+        "medcard_num": medcard_num,
+        "vac_date": gg_injection_date_modal_dtpk.value,
+        "reason": gg_injection_reason_modal_txt.value,
+        "serial":  gg_injection_serial_modal_inpt.value,
+        "dose": gg_injection_dose_modal_inpt.value,
+        "reaction": gg_injection_reaction_modal_slct.value,
+        "doctor": gg_injection_doctor_modal_inpt.value 
+    };
+    switch (gg_injection_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/gg_injection/add",
+                data: JSON.stringify({"json_data": gg_injection}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    innerHTML = '<div name="div-gg-injection-' + gg_injection.vac_date + '" class="col-12 mb-3">\
+                    <p>Дата: <u><mark>' + gg_injection.vac_date + '</mark></u> <br>\
+                        Причина: <u><mark>' + gg_injection.reason + '</mark></u> <br>\
+                        Серия: <u><mark>' + gg_injection.serial + '</mark></u>, доза: <u><mark>' + gg_injection.dose + '</mark></u>, реакция: <u><mark>' + gg_injection.reaction + '</mark></u><br>\
+                        Врач: <u><mark>' + gg_injection.doctor + '</mark></u>\
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#ggInjectionModal" name="update-gg-injection-' + gg_injection.vac_date + '-btn" onclick="update_gg_injection(\'' + gg_injection.vac_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-gg-injection-' + gg_injection.vac_date + '-btn" onclick="delete_gg_injection(\'' + gg_injection.vac_date + '\')">Удалить</button>\
+                    </div>\
+                    </div>';
+                    let gg_injection_div = document.querySelector('#gg-injection-main-div');
+                    gg_injection_div.innerHTML += innerHTML;
+                }
+            });
+            break;
+
+            case 'update':
+                gg_injection["old_vac_date"] = gg_injection_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/gg_injection/update",
+                    data: JSON.stringify({"json_data": gg_injection}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        innerHTML = '<p>Дата: <u><mark>' + gg_injection.vac_date + '</mark></u> <br>\
+                        Причина: <u><mark>' + gg_injection.reason + '</mark></u> <br>\
+                        Серия: <u><mark>' + gg_injection.serial + '</mark></u>, доза: <u><mark>' + gg_injection.dose + '</mark></u>, реакция: <u><mark>' + gg_injection.reaction + '</mark></u><br>\
+                        Врач: <u><mark>' + gg_injection.doctor + '</mark></u>\
+                        </p>\
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#ggInjectionModal" name="update-gg-injection-' + gg_injection.vac_date + '-btn" onclick="update_gg_injection(\'' + gg_injection.vac_date + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-gg-injection-' + gg_injection.vac_date + '-btn" onclick="delete_gg_injection(\'' + gg_injection.vac_date + '\')">Удалить</button>\
+                        </div>';
+                        let gg_injection_div = document.getElementsByName('div-gg-injection-' + gg_injection.old_vac_date)[0]
+                        gg_injection_div.innerHTML = innerHTML;
+                        gg_injection_div.setAttribute('name', 'div-gg-injection-' + gg_injection.vac_date) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
+/* mantoux test */
+function mantoux_test_add_set_info(){
+    mantoux_test_modal_header.innerHTML = "Добавление сведений о реакции Манту";
+    mantoux_test_date_modal_dtpk.value = "2023-04-14";
+    mantoux_test_commit_modal_btn.value = 'add'; 
+}
+
+function update_mantoux_test(check_date){
+    var mantoux_test = {
+        "medcard_num": medcard_num,
+        "check_date": check_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/mantoux_test/get",
+        data: JSON.stringify({"json_data": mantoux_test}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            mantoux_test_modal_header.innerHTML = "Редактирование сведений о реакции Манту";
+            mantoux_test_commit_modal_btn.value = 'update';
+            mantoux_test_close_modal_btn.value = data.check_date;
+            mantoux_test_result_modal_slct.value = data.result;
+            mantoux_test_date_modal_dtpk.value = data.check_date;
+        }
+    });    
+}
+
+function delete_mantoux_test(check_date){
+    delete_modal_header.innerHTML = 'Удалить сведения о введении гамма-глобулина';
+    close_delete_modal_btn.value = check_date;
+    delete_commit_modal_btn.value = 'delete_mantoux_test';
+}
+
+mantoux_test_commit_modal_btn.addEventListener('click', () =>{    
+    var mantoux_test = {
+        "medcard_num": medcard_num,
+        "check_date": mantoux_test_date_modal_dtpk.value,
+        "result": mantoux_test_result_modal_slct.value        
+    };
+    switch (mantoux_test_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/mantoux_test/add",
+                data: JSON.stringify({"json_data": mantoux_test}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    innerHTML = '<div name="div-mantoux-test-' + mantoux_test.check_date + '" class="col-12 mb-3">\
+                    <p>Дата: <u><mark>' + mantoux_test.check_date + '</mark></u> <br>\
+                        Результат: <u><mark>' + mantoux_test.result  + '</mark></u>\
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#mantouxTestModal" name="update-mantoux-test-' + mantoux_test.check_date + '-btn" onclick="update_mantoux_test(\'' + mantoux_test.check_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-mantoux-test-' + mantoux_test.check_date + '-btn" onclick="delete_mantoux_test(\'' + mantoux_test.check_date + '\')">Удалить</button>\
+                    </div>\
+                </div>';
+                    let mantoux_test_div = document.querySelector('#mantoux-test-main-div');
+                    mantoux_test_div.innerHTML += innerHTML;
+                }
+            });
+            break;
+
+            case 'update':
+                mantoux_test["old_check_date"] = mantoux_test_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/mantoux_test/update",
+                    data: JSON.stringify({"json_data": mantoux_test}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        innerHTML = '<p>Дата: <u><mark>' + mantoux_test.check_date + '</mark></u> <br>\
+                        Результат: <u><mark>' + mantoux_test.result  + '</mark></u>\
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#mantouxTestModal" name="update-mantoux-test-' + mantoux_test.check_date + '-btn" onclick="update_mantoux_test(\'' + mantoux_test.check_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-mantoux-test-' + mantoux_test.check_date + '-btn" onclick="delete_mantoux_test(\'' + mantoux_test.check_date + '\')">Удалить</button>\
+                    </div>';
+                        let mantoux_test_div = document.getElementsByName('div-mantoux-test-' + mantoux_test.old_check_date)[0]
+                        mantoux_test_div.innerHTML = innerHTML;
+                        mantoux_test_div.setAttribute('name', 'div-mantoux-test-' + mantoux_test.check_date) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
+/* TUB VAC */
+function tub_vac_add_set_info(){
+
+    tub_vac_modal_header.innerHTML = "Добавление сведений о введении прививки против туберкулеза (БЦЖ)";
+    tub_vac_date_modal_dtpk.value = "2023-04-14";
+    tub_vac_serial_modal_inpt.value = "АА2548";
+    tub_vac_dose_modal_inpt.value = "15.2";
+    tub_vac_doctor_modal_inpt.value = "Иванов Иван Иванович";
+    tub_vac_commit_modal_btn.value = 'add'; 
+}
+
+function update_tub_vac(vac_date){
+    var tub_vac = {
+        "medcard_num": medcard_num,
+        "vac_date": vac_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/tub_vac/get",
+        data: JSON.stringify({"json_data": tub_vac}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            tub_vac_modal_header.innerHTML = "Редактирование сведений о введении прививки против туберкулеза (БЦЖ)";
+            tub_vac_commit_modal_btn.value = 'update';
+            tub_vac_close_modal_btn.value = data.vac_date;
+            tub_vac_date_modal_dtpk.value = data.vac_date;
+            tub_vac_serial_modal_inpt.value = data.serial;
+            tub_vac_dose_modal_inpt.value = data.dose;
+            tub_vac_doctor_modal_inpt.value = data.doctor;
+        }
+    });    
+}
+
+function delete_tub_vac(vac_date){
+    delete_modal_header.innerHTML = 'Удалить сведения о введении прививки против туберкулеза (БЦЖ)';
+    close_delete_modal_btn.value = vac_date;
+    delete_commit_modal_btn.value = 'delete_tub_vac';
+}
+
+tub_vac_commit_modal_btn.addEventListener('click', () =>{    
+    var tub_vac = {
+        "medcard_num": medcard_num,
+        "vac_date": tub_vac_date_modal_dtpk.value,
+        "serial":  tub_vac_serial_modal_inpt.value,
+        "dose": tub_vac_dose_modal_inpt.value,
+        "doctor": tub_vac_doctor_modal_inpt.value 
+    };
+    switch (tub_vac_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/tub_vac/add",
+                data: JSON.stringify({"json_data": tub_vac}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    innerHTML = '<div name="div-tub-vac-' + tub_vac.vac_date + '" class="col-12 mb-3">\
+                    <p>Дата: <u><mark>' + tub_vac.vac_date + '</mark></u>\
+                        Серия: <u><mark>' + tub_vac.serial + '</mark></u>, доза: <u><mark>' + tub_vac.dose + '</mark></u><br>\
+                        Врач: <u><mark>' + tub_vac.doctor + '</mark></u>\
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#tubVacModal" name="update-tub-vac-' + tub_vac.vac_date + '-btn" onclick="update_tub_vac(\'' + tub_vac.vac_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-tub-vac-' + tub_vac.vac_date + '-btn" onclick="delete_tub_vac(\'' + tub_vac.vac_date + '\')">Удалить</button>\
+                    </div>\
+                </div>';
+                    let tub_vac_div = document.querySelector('#tub-vac-main-div');
+                    tub_vac_div.innerHTML += innerHTML;
+                }
+            });
+            break;
+
+            case 'update':
+                tub_vac["old_vac_date"] = tub_vac_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/tub_vac/update",
+                    data: JSON.stringify({"json_data": tub_vac}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        innerHTML = '<p>Дата: <u><mark>' + tub_vac.vac_date + '</mark></u>\
+                        Серия: <u><mark>' + tub_vac.serial + '</mark></u>, доза: <u><mark>' + tub_vac.dose + '</mark></u><br>\
+                        Врач: <u><mark>' + tub_vac.doctor + '</mark></u>\
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#tubVacModal" name="update-tub-vac-' + tub_vac.vac_date + '-btn" onclick="update_tub_vac(\'' + tub_vac.vac_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-tub-vac-' + tub_vac.vac_date + '-btn" onclick="delete_tub_vac(\'' + tub_vac.vac_date + '\')">Удалить</button>\
+                    </div>';
+                        let tub_vac_div = document.getElementsByName('div-tub-vac-' + tub_vac.old_vac_date)[0]
+                        tub_vac_div.innerHTML = innerHTML;
+                        tub_vac_div.setAttribute('name', 'div-tub-vac-' + tub_vac.vac_date) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
+/* MEDICAL EXAMINATION */
+function medical_examination_add_set_info(){
+
+    medical_examination_modal_header.innerHTML = "Добавление сведений о медицинском осмотре";
+    medical_examination_date_modal_dtpk.value = "2023-01-01";
+    medical_examination_height_modal_inpt.value = "";
+    medical_examination_weight_modal_inpt.value = "";
+    medical_examination_complaints_modal_txt.value = "";
+    medical_examination_pediatrician_modal_txt.value = "";
+    medical_examination_orthopaedist_modal_txt.value = "";
+    medical_examination_ophthalmologist_modal_txt.value = "";
+    medical_examination_otolaryngologist_modal_txt.value = "";
+    medical_examination_dermatologist_modal_txt.value = "";
+    medical_examination_neurologist_modal_txt.value = "";
+    medical_examination_speech_therapist_modal_txt.value = "";
+    medical_examination_denta_surgeon_modal_txt.value = "";
+    medical_examination_psychologist_modal_txt.value = "";
+    medical_examination_other_doctors_modal_txt.value = "";
+    medical_examination_blood_test_modal_txt.value = "";
+    medical_examination_urine_analysis_modal_txt.value = "";
+    medical_examination_feces_analysis_modal_txt.value = "";
+    medical_examination_general_diagnosis_modal_txt.value = "";
+    medical_examination_physical_development_modal_txt.value = "";
+    medical_examination_mental_development_modal_txt.value = "";
+    medical_examination_med_and_ped_conclusion_modal_txt.value = "";
+    medical_examination_recommendations_modal_txt.value = "";
+    medical_examination_commit_modal_btn.value = 'add'; 
+}
+
+function update_medical_examination(period){
+    var medical_examination = {
+        "medcard_num": medcard_num,
+        "period": period
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/medical_examination/get",
+        data: JSON.stringify({"json_data": medical_examination}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            medical_examination_modal_header.innerHTML = "Редактирование сведений о медицинском осмотре";
+            medical_examination_commit_modal_btn.value = 'update';
+            medical_examination_close_modal_btn.value = data.period;
+            medical_examination_period_modal_slct.value = data.period;
+            medical_examination_date_modal_dtpk.value = data.examination_date;
+            medical_examination_height_modal_inpt.value = data.height;
+            medical_examination_weight_modal_inpt.value = data.weight;
+            medical_examination_complaints_modal_txt.value = data.complaints;
+            medical_examination_pediatrician_modal_txt.value = data.pediatrician;
+            medical_examination_orthopaedist_modal_txt.value = data.orthopaedist;
+            medical_examination_ophthalmologist_modal_txt.value = data.ophthalmologist;
+            medical_examination_otolaryngologist_modal_txt.value = data.otolaryngologist;
+            medical_examination_dermatologist_modal_txt.value = data.dermatologist;
+            medical_examination_neurologist_modal_txt.value = data.neurologist;
+            medical_examination_speech_therapist_modal_txt.value = data.speech_therapist;
+            medical_examination_denta_surgeon_modal_txt.value = data.denta_surgeon;
+            medical_examination_psychologist_modal_txt.value = data.psychologist;
+            medical_examination_other_doctors_modal_txt.value = data.other_doctors;
+            medical_examination_blood_test_modal_txt.value = data.blood_test;
+            medical_examination_urine_analysis_modal_txt.value = data.urine_analysis;
+            medical_examination_feces_analysis_modal_txt.value = data.feces_analysis;
+            medical_examination_general_diagnosis_modal_txt.value = data.general_diagnosis;
+            medical_examination_physical_development_modal_txt.value = data.physical_development;
+            medical_examination_mental_development_modal_txt.value = data.mental_development;
+            medical_examination_health_group_modal_slct.value = data.health_group;
+            medical_examination_sport_group_modal_slct.value = data.sport_group;
+            medical_examination_med_and_ped_conclusion_modal_txt.value = data.med_and_ped_conclusion;
+            medical_examination_recommendations_modal_txt.value = data.recommendations;
+        }
+    });    
+}
+
+function delete_medical_examination(period){
+    delete_modal_header.innerHTML = 'Удалить сведения о медицинском осмотре';
+    close_delete_modal_btn.value = period;
+    delete_commit_modal_btn.value = 'delete_medical_examination';
+}
+
+medical_examination_commit_modal_btn.addEventListener('click', () =>{    
+    var medical_examination = {
+        "medcard_num": medcard_num,
+        "period":  medical_examination_period_modal_slct.value,
+        "examination_date": medical_examination_date_modal_dtpk.value,
+        "height": medical_examination_height_modal_inpt.value,
+        "weight": medical_examination_weight_modal_inpt.value,
+        "complaints": medical_examination_complaints_modal_txt.value,
+        "pediatrician": medical_examination_pediatrician_modal_txt.value,
+        "orthopaedist":  medical_examination_orthopaedist_modal_txt.value,
+        "ophthalmologist": medical_examination_ophthalmologist_modal_txt.value,
+        "otolaryngologist": medical_examination_otolaryngologist_modal_txt.value,
+        "dermatologist": medical_examination_dermatologist_modal_txt.value,
+        "neurologist": medical_examination_neurologist_modal_txt.value,
+        "speech_therapist": medical_examination_speech_therapist_modal_txt.value,
+        "denta_surgeon": medical_examination_denta_surgeon_modal_txt.value,
+        "psychologist": medical_examination_psychologist_modal_txt.value,
+        "other_doctors": medical_examination_other_doctors_modal_txt.value,
+        "blood_test": medical_examination_blood_test_modal_txt.value,
+        "urine_analysis": medical_examination_urine_analysis_modal_txt.value,
+        "feces_analysis": medical_examination_feces_analysis_modal_txt.value,
+        "general_diagnosis": medical_examination_general_diagnosis_modal_txt.value,
+        "physical_development": medical_examination_physical_development_modal_txt.value,
+        "mental_development": medical_examination_mental_development_modal_txt.value,
+        "health_group": medical_examination_health_group_modal_slct.value,
+        "sport_group": medical_examination_sport_group_modal_slct.value,
+        "med_and_ped_conclusion": medical_examination_med_and_ped_conclusion_modal_txt.value,
+        "recommendations": medical_examination_recommendations_modal_txt.value
+    };
+    switch (medical_examination_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/medical_examination/add",
+                data: JSON.stringify({"json_data": medical_examination}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: (data) => {
+                    innerHTML = '<div name="div-medical-examination-' + medical_examination.period.replace(/ /g,'') + '" class="col-12 mb-3">\
+                    <p><strong>Период обследования: </strong><u><mark>' + medical_examination.period  + '</mark></u> <br>\
+                        Дата обследования: <u><mark>' + medical_examination.examination_date + '</mark></u> Возраст: <u><mark>' + data.age + '</mark></u><br>\
+                        Длина тела, см: <u><mark>' + medical_examination.height + '</mark></u>, масса тела, кг: <u><mark>' + medical_examination.weight + '</mark></u><br>\
+                        Жалобы: <u><mark>' + medical_examination.complaints + '</mark></u><br>\
+                        Педиатр: <u><mark>' + medical_examination.pediatrician + '</mark></u><br>\
+                        Ортопед: <u><mark>' + medical_examination.orthopaedist + '</mark></u><br>\
+                        Офтальмолог: <u><mark>' + medical_examination.ophthalmologist + '</mark></u><br>\
+                        Отоларинголог: <u><mark>' + medical_examination.otolaryngologist + '</mark></u><br>\
+                        Дерматолог: <u><mark>' + medical_examination.dermatologist + '</mark></u><br>\
+                        Невролог: <u><mark>' + medical_examination.neurologist + '</mark></u><br>\
+                        Логопед: <u><mark>' + medical_examination.speech_therapist + '</mark></u><br>\
+                        Стоматолог: <u><mark>' + medical_examination.denta_surgeon + '</mark></u><br>\
+                        Психолог: <u><mark>' + medical_examination.psychologist + '</mark></u><br>\
+                        Другие врачи: <u><mark>' + medical_examination.other_doctors + '</mark></u><br>\
+                        Анализ крови: <u><mark>' + medical_examination.blood_test + '</mark></u><br>\
+                        Анализ мочи: <u><mark>' + medical_examination.urine_analysis + '</mark></u><br>\
+                        Анализ кала: <u><mark>' + medical_examination.feces_analysis + '</mark></u><br>\
+                        <strong>Заключительный диагноз: </strong><u><mark>' + medical_examination.general_diagnosis + '</mark></u><br>\
+                        Оценка физического развития: <u><mark>' + medical_examination.physical_development + '</mark></u><br>\
+                        Оценка нервно-психического развития: <u><mark>' + medical_examination.mental_development + '</mark></u><br>\
+                        Группа здоровья: <u><mark>' + medical_examination.health_group + '</mark></u><br>\
+                        Мед. гр. для занятий физкультурой: <u><mark>' + medical_examination.sport_group + '</mark></u><br>\
+                        <strong>Медико-педагогическое заключение: </strong><u><mark>' + medical_examination.med_and_ped_conclusion + '</mark></u><br>\
+                        Рекомендации: <u><mark>' + medical_examination.recommendations + '</mark></u>\
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#medicalExaminationModal" name="update-medical-examination-' + medical_examination.period.replace(/ /g,'') + '-btn" onclick="update_medical_examination(\'' + medical_examination.period + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-medical-examination-' + medical_examination.period.replace(/ /g,'') + '-btn" onclick="delete_medical_examination(\'' + medical_examination.period + '\')">Удалить</button>\
+                    </div>\
+                </div>';
+                    let medical_examination_div = document.querySelector('#medical-examination-main-div');
+                    medical_examination_div.innerHTML += innerHTML;
+                }
+            });
+            break;
+
+            case 'update':
+                medical_examination["old_period"] = medical_examination_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/medical_examination/update",
+                    data: JSON.stringify({"json_data": medical_examination}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: (data) => {
+                        innerHTML = '<p><strong>Период обследования: </strong><u><mark>' + medical_examination.period  + '</mark></u> <br>\
+                        Дата обследования: <u><mark>' + medical_examination.examination_date + '</mark></u> Возраст: <u><mark>' + data.age + '</mark></u><br>\
+                        Длина тела, см: <u><mark>' + medical_examination.height + '</mark></u>, масса тела, кг: <u><mark>' + medical_examination.weight + '</mark></u><br>\
+                        Жалобы: <u><mark>' + medical_examination.complaints + '</mark></u><br>\
+                        Педиатр: <u><mark>' + medical_examination.pediatrician + '</mark></u><br>\
+                        Ортопед: <u><mark>' + medical_examination.orthopaedist + '</mark></u><br>\
+                        Офтальмолог: <u><mark>' + medical_examination.ophthalmologist + '</mark></u><br>\
+                        Отоларинголог: <u><mark>' + medical_examination.otolaryngologist + '</mark></u><br>\
+                        Дерматолог: <u><mark>' + medical_examination.dermatologist + '</mark></u><br>\
+                        Невролог: <u><mark>' + medical_examination.neurologist + '</mark></u><br>\
+                        Логопед: <u><mark>' + medical_examination.speech_therapist + '</mark></u><br>\
+                        Стоматолог: <u><mark>' + medical_examination.denta_surgeon + '</mark></u><br>\
+                        Психолог: <u><mark>' + medical_examination.psychologist + '</mark></u><br>\
+                        Другие врачи: <u><mark>' + medical_examination.other_doctors + '</mark></u><br>\
+                        Анализ крови: <u><mark>' + medical_examination.blood_test + '</mark></u><br>\
+                        Анализ мочи: <u><mark>' + medical_examination.urine_analysis + '</mark></u><br>\
+                        Анализ кала: <u><mark>' + medical_examination.feces_analysis + '</mark></u><br>\
+                        <strong>Заключительный диагноз: </strong><u><mark>' + medical_examination.general_diagnosis + '</mark></u><br>\
+                        Оценка физического развития: <u><mark>' + medical_examination.physical_development + '</mark></u><br>\
+                        Оценка нервно-психического развития: <u><mark>' + medical_examination.mental_development + '</mark></u><br>\
+                        Группа здоровья: <u><mark>' + medical_examination.health_group + '</mark></u><br>\
+                        Мед. гр. для занятий физкультурой: <u><mark>' + medical_examination.sport_group + '</mark></u><br>\
+                        <strong>Медико-педагогическое заключение: </strong><u><mark>' + medical_examination.med_and_ped_conclusion + '</mark></u><br>\
+                        Рекомендации: <u><mark>' + medical_examination.recommendations + '</mark></u>\
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#medicalExaminationModal" name="update-medical-examination-' + medical_examination.period.replace(/ /g,'') + '-btn" onclick="update_medical_examination(\'' + medical_examination.period + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-medical-examination-' + medical_examination.period.replace(/ /g,'') + '-btn" onclick="delete_medical_examination(\'' + medical_examination.period + '\')">Удалить</button>\
+                    </div>';
+                        let medical_examination_div = document.getElementsByName('div-medical-examination-' + medical_examination.old_period.replace(/ /g,''))[0]
+                        medical_examination_div.innerHTML = innerHTML;
+                        medical_examination_div.setAttribute('name', 'div-medical-examination-' + medical_examination.period.replace(/ /g,'')) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
+/* ONGOING MEDICAL SUPERVISION */
+function ongoing_medical_supervision_add_set_info(){
+
+    oms_modal_header.innerHTML = "Добавление сведений о проведении текущего медицинского обследования";
+    oms_examination_date_modal_dtpk.value = "2023-01-01";
+    oms_examination_data_modal_txt.value = "";
+    oms_diagnosis_modal_txt.value = "";
+    oms_prescription_modal_txt.value = "";
+    oms_doctor_modal_inpt.value = "";
+    oms_commit_modal_btn.value = 'add'; 
+}
+
+function update_ongoing_medical_supervision(examination_date){
+    var oms = {
+        "medcard_num": medcard_num,
+        "examination_date": examination_date
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/ongoing_medical_supervision/get",
+        data: JSON.stringify({"json_data": oms}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            oms_modal_header.innerHTML = "Редактирование сведений о текущем медицинском обследовании";
+            oms_commit_modal_btn.value = 'update';
+            oms_close_modal_btn.value = data.examination_date;
+            oms_examination_date_modal_dtpk.value = data.examination_date;
+            oms_examination_data_modal_txt.value = data.examination_data;
+            oms_diagnosis_modal_txt.value = data.diagnosis;
+            oms_prescription_modal_txt.value = data.prescription;
+            oms_doctor_modal_inpt.value = data.doctor;
+        }
+    });    
+}
+
+function delete_ongoing_medical_supervision(examination_date){
+    delete_modal_header.innerHTML = 'Удалить сведения о текущем медицинском обследовании';
+    close_delete_modal_btn.value = examination_date;
+    delete_commit_modal_btn.value = 'delete_oms';
+}
+
+oms_commit_modal_btn.addEventListener('click', () =>{    
+    var oms = {
+        "medcard_num": medcard_num,
+        "examination_date": oms_examination_date_modal_dtpk.value,
+        "examination_data": oms_examination_data_modal_txt.value,
+        "diagnosis": oms_diagnosis_modal_txt.value,
+        "prescription": oms_prescription_modal_txt.value,
+        "doctor": oms_doctor_modal_inpt.value 
+    };
+    switch (oms_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/ongoing_medical_supervision/add",
+                data: JSON.stringify({"json_data": oms}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    innerHTML = '<div name="div-ongoing-medical-supervision-' + oms.examination_date + '" class="col-12 mb-3">\
+                    <p>Дата: <u><mark>' + oms.examination_date + '</mark></u> <br>\
+                        Данные осмотра: <u><mark>' + oms.examination_data + '</mark></u> <br>\
+                        Диагноз: <u><mark>' + oms.diagnosis + '</mark></u><br>\
+                        Назначения: <u><mark>' + oms.prescription + '</mark></u><br>\
+                        Врач: <u><mark>' + oms.doctor + '</mark></u>\
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#omsModal" name="update-ongoing-medical-supervision-' + oms.examination_date + '-btn" onclick="update_ongoing_medical_supervision(\'' + oms.examination_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-ongoing-medical-supervision-' + oms.examination_date + '-btn" onclick="delete_ongoing_medical_supervision(\'' + oms.examination_date + '\')">Удалить</button>\
+                    </div>\
+                </div>';
+                    let oms_div = document.querySelector('#ongoing-medical-supervision-main-div');
+                    oms_div.innerHTML += innerHTML;
+                }
+            });
+            break;
+
+            case 'update':
+                oms["old_examination_date"] = oms_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/ongoing_medical_supervision/update",
+                    data: JSON.stringify({"json_data": oms}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        innerHTML = '<p>Дата: <u><mark>' + oms.examination_date + '</mark></u> <br>\
+                        Данные осмотра: <u><mark>' + oms.examination_data + '</mark></u> <br>\
+                        Диагноз: <u><mark>' + oms.diagnosis + '</mark></u><br>\
+                        Назначения: <u><mark>' + oms.prescription + '</mark></u><br>\
+                        Врач: <u><mark>' + oms.doctor + '</mark></u>\
+                    </p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#omsModal" name="update-ongoing-medical-supervision-' + oms.examination_date + '-btn" onclick="update_ongoing_medical_supervision(\'' + oms.examination_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-ongoing-medical-supervision-' + oms.examination_date + '-btn" onclick="delete_ongoing_medical_supervision(\'' + oms.examination_date + '\')">Удалить</button>\
+                    </div>';
+                        let oms_div = document.getElementsByName('div-ongoing-medical-supervision-' + oms.old_examination_date)[0]
+                        oms_div.innerHTML = innerHTML;
+                        oms_div.setAttribute('name', 'div-ongoing-medical-supervision-' + oms.examination_date) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
+/* SCREENING */
+function screening_add_set_info(){
+    screening_modal_header.innerHTML = "Добавление скрининга";
+    screening_height_modal_inpt.value = "";
+    screening_weight_modal_inpt.value = "";
+    screening_blood_pressures_modal_inpt.value = "";
+    screening_sight_od_modal_inpt.value = "";
+    screening_sight_os_modal_inpt.value = "";
+    screening_dynammetry_left_modal_inpt.value = "";
+    screening_dynammetry_right_modal_inpt.value = "";
+    screening_kern_test_modal_inpt.value = "";
+    screening_commit_modal_btn.value = 'add'; 
+}
+
+function update_screening(age){
+    var screening = {
+        "medcard_num": medcard_num,
+        "age": age
+    }
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: "/medical_record/child/" + medcard_num + "/screening/get",
+        data: JSON.stringify({"json_data": screening}),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data){
+            screening_modal_header.innerHTML = "Редактирование скрининга";
+            screening_commit_modal_btn.value = 'update';
+            screening_close_modal_btn.value = data.age;
+            screening_age_modal_slct.value = data.age;
+            screening_questionnaire_test_modal_slct.value = data.questionnaire_test;
+            screening_height_modal_inpt.value = data.height;
+            screening_weight_modal_inpt.value = data.weight;
+            screening_physical_development_modal_slct.value = data.physical_development;
+            screening_blood_pressures_modal_inpt.value = data.blood_pressures;
+            screening_carriage_modal_slct.value = data.carriage;
+            screening_foot_condition_modal_slct.value = data.foot_condition;
+            screening_sight_od_modal_inpt.value = data.sight_od;
+            screening_sight_os_modal_inpt.value = data.sight_os;
+            screening_visual_acuity_modal_slct.value = data.visual_acuity;
+            screening_malinovsky_test_modal_slct.value = data.malinovsky_test;
+            screening_binocular_vision_modal_slct.value = data.binocular_vision;
+            screening_hearing_acuteness_modal_slct.value = data.hearing_acuteness;
+            screening_dynammetry_left_modal_inpt.value = data.dynammetry_left;
+            screening_dynammetry_right_modal_inpt.value = data.dynammetry_right;
+            screening_physical_fitness_modal_slct.value = data.physical_fitness;
+            screening_protein_in_urine_modal_slct.value = data.protein_in_urine;
+            screening_glucose_in_urine_modal_slct.value = data.glucose_in_urine;
+            screening_biological_age_modal_slct.value = data.biological_age;
+            screening_speech_defects_modal_chck.value = data.speech_defects;
+            screening_kern_test_modal_inpt.value = data.kern_test;
+            screening_neurotic_disorders_modal_chck.value = data.neurotic_disorders;
+            screening_thinking_and_speech_disorders_modal_chck.value = data.thinking_and_speech_disorders;
+            screening_motor_development_disorders_modal_chck.value = data.motor_development_disorders;
+            screening_attention_and_memory_disorders_modal_chck.value = data.attention_and_memory_disorders;
+            screening_social_contacts_disorders_modal_chck.value = data.social_contacts_disorders;
+        }
+    });    
+}
+
+function delete_screening(age){
+    delete_modal_header.innerHTML = 'Удалить скрининг';
+    close_delete_modal_btn.value = age;
+    delete_commit_modal_btn.value = 'delete_screening';
+}
+
+screening_commit_modal_btn.addEventListener('click', () =>{ 
+    var screening = {
+        "medcard_num": medcard_num,
+        "age": screening_age_modal_slct.value,
+        "questionnaire_test": screening_questionnaire_test_modal_slct.value,
+        "height": screening_height_modal_inpt.value,
+        "weight": screening_weight_modal_inpt.value,
+        "physical_development": screening_physical_development_modal_slct.value,
+        "blood_pressures": screening_blood_pressures_modal_inpt.value,
+        "carriage": screening_carriage_modal_slct.value,
+        "foot_condition": screening_foot_condition_modal_slct.value,
+        "sight_od": screening_sight_od_modal_inpt.value,
+        "sight_os": screening_sight_os_modal_inpt.value,
+        "visual_acuity": screening_visual_acuity_modal_slct.value,
+        "malinovsky_test": screening_malinovsky_test_modal_slct.value,
+        "binocular_vision": screening_binocular_vision_modal_slct.value,
+        "hearing_acuteness": screening_hearing_acuteness_modal_slct.value,
+        "dynammetry_left": screening_dynammetry_left_modal_inpt.value,
+        "dynammetry_right": screening_dynammetry_right_modal_inpt.value,
+        "physical_fitness": screening_physical_fitness_modal_slct.value,
+        "protein_in_urine": screening_protein_in_urine_modal_slct.value,
+        "glucose_in_urine": screening_glucose_in_urine_modal_slct.value,
+        "biological_age": screening_biological_age_modal_slct.value,
+        "speech_defects": screening_speech_defects_modal_chck.checked,
+        "kern_test": screening_kern_test_modal_inpt.value,
+        "neurotic_disorders": screening_neurotic_disorders_modal_chck.checked,
+        "thinking_and_speech_disorders": screening_thinking_and_speech_disorders_modal_chck.checked,
+        "motor_development_disorders": screening_motor_development_disorders_modal_chck.checked,
+        "attention_and_memory_disorders": screening_attention_and_memory_disorders_modal_chck.checked,
+        "social_contacts_disorders": screening_social_contacts_disorders_modal_chck.checked
+        
+    };
+    switch (screening_commit_modal_btn.value) {
+        case 'add':
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/screening/add",
+                data: JSON.stringify({"json_data": screening}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    innerHTML = '<div-screening-' + screening.age + '" class="col-12 mb-3">\
+                    <p>Возраст: <u><mark>' + screening.age + '</mark></u>, Анкетный тест: <u><mark>' + screening.questionnaire_test + '</mark></u>, \
+                        рост, см: <u><mark>' + screening.height + '</mark></u>, масса, кг: <u><mark>' + screening.weight + '</mark></u>, '
+                        if (screening.physical_development){
+                            innerHTML += 'Физическое развитие: <u><mark>' + screening.physical_development + '</mark></u>, '
+                        }
+                        if (screening.blood_pressures){
+                            innerHTML += 'АД, мм.рт.ст.: <u><mark>' + screening.blood_pressures + '</mark></u>, '
+                        }
+                        if (screening.carriage){
+                            innerHTML += 'Осанка: <u><mark>' + screening.carriage + '</mark></u>, '
+                        }
+                        if (screening.foot_condition){
+                            innerHTML += 'Состояние стопы: <u><mark>' + screening.foot_condition + '</mark></u>, '
+                        }
+                        if (screening.sight_od){
+                            innerHTML += 'Зрение, ОД: <u><mark>' + screening.sight_od + '</mark></u>, '
+                        }
+                        if (screening.sight_os){
+                            innerHTML += 'Зрение, OS: <u><mark>' + screening.sight_os + '</mark></u>, '
+                        }
+                        if (screening.visual_acuity){
+                            innerHTML += 'Острота зрения: <u><mark>' + screening.visual_acuity + '</mark></u>, '
+                        }
+                        if (screening.malinovsky_test){
+                            innerHTML += 'Тест Малиновского: <u><mark>' + screening.malinovsky_test + '</mark></u>, '
+                        }
+                        if (screening.binocular_vision){
+                            innerHTML += 'Бинокулярное зрение: <u><mark>' + screening.binocular_vision + '</mark></u>, '
+                        }
+                        if (screening.hearing_acuteness){
+                            innerHTML += 'Острота слуха: <u><mark>' + screening.hearing_acuteness + '</mark></u>, '
+                        }
+                        if (screening.dynammetry_left){
+                            innerHTML += 'Динамометрия (Правая рука): <u><mark>' + screening.dynammetry_left + '</mark></u>, '
+                        }
+                        if (screening.dynammetry_right){
+                            innerHTML += 'Динамометрия (Левая рука): <u><mark>' + screening.dynammetry_right + '</mark></u>, '
+                        }
+                        if (screening.physical_fitness){
+                            innerHTML += 'Физическая подготовленность: <u><mark>' + screening.physical_fitness + '</mark></u>, '
+                        }
+                        if (screening.protein_in_urine){
+                            innerHTML += 'Определение белка в моче: <u><mark>' + screening.protein_in_urine + '</mark></u>, '
+                        }
+                        if (screening.glucose_in_urine){
+                            innerHTML += 'Определение глюкозы в моче: <u><mark>' + screening.glucose_in_urine + '</mark></u>'
+                        }
+                        innerHTML += '<br>'
+                        if (screening.biological_age ||  screening.speech_defects || screening.kern_test || screening.neurotic_disorders || screening.thinking_and_speech || screening.motor_development || screening.attention_and_memory || screening.social_contacts){
+                            innerHTML += '<strong>Расширенная скрининг-программа</strong><br>'
+                            if (screening.biological_age){
+                                innerHTML += 'Биологический возраст: <u><mark>' + screening.biological_age + '</mark></u>, '
+                            }
+                            if (screening.kern_test){
+                                innerHTML += 'Тест Керна-Иерасика: <u><mark>' + screening.kern_test + '</mark></u>, '
+                            }
+                            if (screening.speech_defects){
+                                innerHTML += 'Дефекты речи: <u><mark>Отклонение</mark></u>, '
+                            }
+                            if (screening.neurotic_disorders){
+                                innerHTML += 'Выявление невротических расстройств:  <u><mark>Отклонение</mark></u>, '
+                            }
+                            if (screening.thinking_and_speech_disorders){
+                                innerHTML += 'Мышление и речь: <u><mark>Отклонение</mark></u>,  '
+                            }
+                            if (screening.motor_development_disorders){
+                                innerHTML += 'Моторное развитие: <u><mark>Отклонение</mark></u>, '
+                            }
+                            if (screening.attention_and_memory_disorders){
+                                innerHTML += 'Внимание и память: <u><mark>Отклонение</mark></u>, '
+                            }
+                            if (screening.social_contacts_disorders){
+                                innerHTML += 'Социальные контакты: <u><mark>Отклонение</mark></u>'
+                            }
+                        }    
+                    innerHTML += '</p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-' + screening.age + '-btn" onclick="update_screening(\'' + screening.age + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-screening-' + screening.age + '-btn" onclick="delete_screening(\'' + screening.age + '\')">Удалить</button>\
+                    </div>\
+                </div>';
+                    let screening_div = document.querySelector('#screening-main-div');
+                    screening_div.innerHTML += innerHTML;
+                }
+            });
+            break;
+
+            case 'update':
+                screening["old_age"] = screening_close_modal_btn.value;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/medical_record/child/" + medcard_num + "/screening/update",
+                    data: JSON.stringify({"json_data": screening}),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: () => {
+                        innerHTML = '<p>Возраст: <u><mark>' + screening.age + '</mark></u>, Анкетный тест: <u><mark>' + screening.questionnaire_test + '</mark></u>, \
+                        рост, см: <u><mark>' + screening.height + '</mark></u>, масса, кг: <u><mark>' + screening.weight + '</mark></u>, '
+                        if (screening.physical_development){
+                            innerHTML += 'Физическое развитие: <u><mark>' + screening.physical_development + '</mark></u>, '
+                        }
+                        if (screening.blood_pressures){
+                            innerHTML += 'АД, мм.рт.ст.: <u><mark>' + screening.blood_pressures + '</mark></u>, '
+                        }
+                        if (screening.carriage){
+                            innerHTML += 'Осанка: <u><mark>' + screening.carriage + '</mark></u>, '
+                        }
+                        if (screening.foot_condition){
+                            innerHTML += 'Состояние стопы: <u><mark>' + screening.foot_condition + '</mark></u>, '
+                        }
+                        if (screening.sight_od){
+                            innerHTML += 'Зрение, ОД: <u><mark>' + screening.sight_od + '</mark></u>, '
+                        }
+                        if (screening.sight_os){
+                            innerHTML += 'Зрение, OS: <u><mark>' + screening.sight_os + '</mark></u>, '
+                        }
+                        if (screening.visual_acuity){
+                            innerHTML += 'Острота зрения: <u><mark>' + screening.visual_acuity + '</mark></u>, '
+                        }
+                        if (screening.malinovsky_test){
+                            innerHTML += 'Тест Малиновского: <u><mark>' + screening.malinovsky_test + '</mark></u>, '
+                        }
+                        if (screening.binocular_vision){
+                            innerHTML += 'Бинокулярное зрение: <u><mark>' + screening.binocular_vision + '</mark></u>, '
+                        }
+                        if (screening.hearing_acuteness){
+                            innerHTML += 'Острота слуха: <u><mark>' + screening.hearing_acuteness + '</mark></u>, '
+                        }
+                        if (screening.dynammetry_left){
+                            innerHTML += 'Динамометрия (Правая рука): <u><mark>' + screening.dynammetry_left + '</mark></u>, '
+                        }
+                        if (screening.dynammetry_right){
+                            innerHTML += 'Динамометрия (Левая рука): <u><mark>' + screening.dynammetry_right + '</mark></u>, '
+                        }
+                        if (screening.physical_fitness){
+                            innerHTML += 'Физическая подготовленность: <u><mark>' + screening.physical_fitness + '</mark></u>, '
+                        }
+                        if (screening.protein_in_urine){
+                            innerHTML += 'Определение белка в моче: <u><mark>' + screening.protein_in_urine + '</mark></u>, '
+                        }
+                        if (screening.glucose_in_urine){
+                            innerHTML += 'Определение глюкозы в моче: <u><mark>' + screening.glucose_in_urine + '</mark></u>'
+                        }
+                        innerHTML += '<br>'
+                        if (screening.biological_age ||  screening.speech_defects || screening.kern_test || screening.neurotic_disorders || screening.thinking_and_speech || screening.motor_development || screening.attention_and_memory || screening.social_contacts){
+                            innerHTML += '<strong>Расширенная скрининг-программа</strong><br>'
+                            if (screening.biological_age){
+                                innerHTML += 'Биологический возраст: <u><mark>' + screening.biological_age + '</mark></u>, '
+                            }
+                            if (screening.kern_test){
+                                innerHTML += 'Тест Керна-Иерасика: <u><mark>' + screening.kern_test + '</mark></u>, '
+                            }
+                            if (screening.speech_defects){
+                                innerHTML += 'Дефекты речи: <u><mark>Отклонение</mark></u>, '
+                            }
+                            if (screening.neurotic_disorders){
+                                innerHTML += 'Выявление невротических расстройств:  <u><mark>Отклонение</mark></u>, '
+                            }
+                            if (screening.thinking_and_speech_disorders){
+                                innerHTML += 'Мышление и речь: <u><mark>Отклонение</mark></u>,  '
+                            }
+                            if (screening.motor_development_disorders){
+                                innerHTML += 'Моторное развитие: <u><mark>Отклонение</mark></u>, '
+                            }
+                            if (screening.attention_and_memory_disorders){
+                                innerHTML += 'Внимание и память: <u><mark>Отклонение</mark></u>, '
+                            }
+                            if (screening.social_contacts_disorders){
+                                innerHTML += 'Социальные контакты: <u><mark>Отклонение</mark></u>'
+                            }
+                        }    
+                    innerHTML += '</p>\
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-' + screening.age + '-btn" onclick="update_screening(\'' + screening.age + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-screening-' + screening.age + '-btn" onclick="delete_screening(\'' + screening.age + '\')">Удалить</button>\
+                    </div>';
+                        let screening_div = document.getElementsByName('div-screening-' + screening.old_age)[0]
+                        screening_div.innerHTML = innerHTML;
+                        screening_div.setAttribute('name', 'div-screening-' + screening.age) 
+                    }
+                });
+                break;
+    
+        default:
+            break;
+    }
+})
+
+
 /* DELETE MODAL WINDOW*/
 delete_commit_modal_btn.addEventListener('click', () => {    
     switch (delete_commit_modal_btn.value) {
         case 'delete_allergy':
-            allergy = {
+            var allergy = {
                 "allergen": close_delete_modal_btn.value,
                 "medcard_num": medcard_num
             };
@@ -1402,7 +2934,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break;
 
         case 'delete_parent':
-            parent = {
+            var parent = {
                 "id": close_delete_modal_btn.value
             };
             $.ajax({
@@ -1433,8 +2965,8 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break;
 
         case 'delete_extra_class':
-            extra_class_data = close_delete_modal_btn.value.split('///')
-            extra_class = {
+            var extra_class_data = close_delete_modal_btn.value.split('///')
+            var extra_class = {
                 "medcard_num": medcard_num,
                 "classes_type": extra_class_data[0],
                 "age": extra_class_data[1]
@@ -1455,8 +2987,8 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break;
 
         case 'delete_past_illness':
-            past_illness_data = close_delete_modal_btn.value.split('///')
-            past_illness = {
+            var past_illness_data = close_delete_modal_btn.value.split('///')
+            var past_illness = {
                 "medcard_num": medcard_num,
                 "diagnosis": past_illness_data[0],
                 "start_date": past_illness_data[1]
@@ -1477,7 +3009,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break;
         
         case 'delete_hospitalization':
-            hospitalization = {
+            var hospitalization = {
                 "medcard_num": medcard_num,
                 "start_date": close_delete_modal_btn.value
             }
@@ -1497,7 +3029,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break;
 
         case 'delete_spa_treatment':
-            spa_treatment = {
+            var spa_treatment = {
                 "medcard_num": medcard_num,
                 "start_date": close_delete_modal_btn.value
             }
@@ -1517,8 +3049,8 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break;        
 
         case 'delete_medical_certificate':
-            medical_certificate_data = close_delete_modal_btn.value.split('///')
-            medical_certificate = {
+            var medical_certificate_data = close_delete_modal_btn.value.split('///')
+            var medical_certificate = {
                 "medcard_num": medcard_num,
                 "disease": medical_certificate_data[0],
                 "cert_date": medical_certificate_data[1]
@@ -1539,7 +3071,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break;
 
         case 'delete_dispensary':
-            dispensary = {
+            var dispensary = {
                 "medcard_num": medcard_num,
                 "start_date": close_delete_modal_btn.value
             }
@@ -1559,7 +3091,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break; 
         
         case 'delete_visit_specialist_control':
-            visit_specialist_control = {
+            var visit_specialist_control = {
                 "medcard_num": medcard_num,
                 "start_dispanser_date": visit_specialist_control_add_btn.value,
                 "assigned_date": close_delete_modal_btn.value
@@ -1580,7 +3112,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break;     
          
         case 'delete_deworming':
-            deworming = {
+            var deworming = {
                 "medcard_num": medcard_num,
                 "deworming_date": close_delete_modal_btn.value
             }
@@ -1600,7 +3132,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break;     
         
         case 'delete_oral_sanation':
-            oral_sanation = {
+            var oral_sanation = {
                 "medcard_num": medcard_num,
                 "sanation_date": close_delete_modal_btn.value
             }
@@ -1618,10 +3150,192 @@ delete_commit_modal_btn.addEventListener('click', () => {
             });
             
             break;
+
+        case 'delete_prevaccination_checkup':
+            var prevaccination_checkup = {
+                "medcard_num": medcard_num,
+                "examination_date": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/prevaccination_checkup/delete",
+                data: JSON.stringify({"json_data": prevaccination_checkup}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var prevaccination_checkup_div = document.getElementsByName('div-prevaccination-checkup-' + prevaccination_checkup.examination_date)[0];
+                    prevaccination_checkup_div.remove();
+                }
+            });
             
+            break;
             
+        case 'delete_prof_vaccination':
+            var pk_data = close_delete_modal_btn.value.split('///');
+            var prof_vaccination = {
+                "medcard_num": medcard_num,
+                "vac_name_id": pk_data[0],
+                "vac_type": pk_data[1]
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/vaccination/delete",
+                data: JSON.stringify({"json_data": prof_vaccination}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var prof_vaccination_div = document.getElementsByName('div-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,''))[0];
+                    prof_vaccination_div.remove();
+                }
+            });
+            
+            break;
+            
+        case 'delete_epid_vaccination':
+            var pk_data = close_delete_modal_btn.value.split('///');
+            var epid_vaccination = {
+                "medcard_num": medcard_num,
+                "vac_name_id": pk_data[0],
+                "vac_type": pk_data[1]
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/vaccination/delete",
+                data: JSON.stringify({"json_data": epid_vaccination}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var epid_vaccination_div = document.getElementsByName('div-epid-vaccination-' + epid_vaccination.vac_name_id + '-' + epid_vaccination.vac_type.replace(/ /g,''))[0];
+                    epid_vaccination_div.remove();
+                }
+            });
+            
+            break;
+
+        case 'delete_gg_injection':
+            var gg_injection = {
+                "medcard_num": medcard_num,
+                "vac_date": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/gg_injection/delete",
+                data: JSON.stringify({"json_data": gg_injection}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var gg_injection_div = document.getElementsByName('div-gg-injection-' + gg_injection.vac_date)[0];
+                    gg_injection_div.remove();
+                }
+            });
+            
+            break;
+
+        case 'delete_mantoux_test':
+            var mantoux_test = {
+                "medcard_num": medcard_num,
+                "check_date": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/mantoux_test/delete",
+                data: JSON.stringify({"json_data": mantoux_test}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var mantoux_test_div = document.getElementsByName('div-mantoux-test-' + mantoux_test.check_date)[0];
+                    mantoux_test_div.remove();
+                }
+            });
+            
+            break;
+
+        case 'delete_tub_vac':
+            var tub_vac = {
+                "medcard_num": medcard_num,
+                "vac_date": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/tub_vac/delete",
+                data: JSON.stringify({"json_data": tub_vac}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var tub_vac_div = document.getElementsByName('div-tub-vac-' + tub_vac.vac_date)[0];
+                    tub_vac_div.remove();
+                }
+            });
+            
+            break;
+
+        case 'delete_medical_examination':
+            var medical_examination = {
+                "medcard_num": medcard_num,
+                "period": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/medical_examination/delete",
+                data: JSON.stringify({"json_data": medical_examination}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var medical_examination_div = document.getElementsByName('div-medical-examination-' + medical_examination.period.replace(/ /g,''))[0];
+                    medical_examination_div.remove();
+                }
+            });
+            
+            break;
+
+         case 'delete_oms':
+            var oms = {
+                "medcard_num": medcard_num,
+                "examination_date": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/ongoing_medical_supervision/delete",
+                data: JSON.stringify({"json_data": oms}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var oms_div = document.getElementsByName('div-ongoing-medical-supervision-' + oms.examination_date)[0];
+                    oms_div.remove();
+                }
+            });
+            
+            break;
+
+        case 'delete_screening':
+            var screening = {
+                "medcard_num": medcard_num,
+                "age": close_delete_modal_btn.value
+            }
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/medical_record/child/" + medcard_num + "/screening/delete",
+                data: JSON.stringify({"json_data": screening}),
+                contentType: "application/json",
+                dataType: 'json',
+                success: () => {
+                    var screening_div = document.getElementsByName('div-screening-' + screening.age)[0];
+                    screening_div.remove();
+                }
+            });
+            
+            break;
+
         default:
             break;
     }
-
 })

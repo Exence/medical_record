@@ -1,0 +1,137 @@
+<div class="modal fade" id="medicalExaminationModal" tabindex="-1" aria-labelledby="medicalExaminationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="medicalExaminationModalLabel">Данные плановых профилактических медицинских осмотров</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-md-6">
+                <label for="medicalExaminationPeriod-modal" class="form-label">Период обследования</label>
+                <select class="form-select" id="medicalExaminationPeriod-modal" required>
+                  <option selected>Перед поступлением в ясли-сад, детский сад</option>
+                  <option>За 1 год до школы</option>
+                  <option>Перед школой</option>
+                </select>
+            </div>
+            <div class="form-group" >
+                <label for="medicalExaminationDate-modal" class="form-label">Дата обследования</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="medicalExaminationDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите дату медосмотра.
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="medicalExaminationHeight-modal" class="form-label">Длина тела, см</label>
+                <input type="text" class="form-control only-digits-modal" id="medicalExaminationHeight-modal" placeholder="150" required>
+            </div>
+            <div class="col-md-4">
+                <label for="medicalExaminationWeight-modal" class="form-label">Масса тела, кг</label>
+                <input type="text" class="form-control only-digits-modal" id="medicalExaminationWeight-modal" placeholder="45.80" required>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationComplaints-modal" class="form-label">Жалобы</label>
+                <textarea class="form-control" id="medicalExaminationComplaints-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationPediatrician-modal" class="form-label">Педиатр</label>
+                <textarea class="form-control" id="medicalExaminationPediatrician-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationOrthopaedist-modal" class="form-label">Ортопед</label>
+                <textarea class="form-control" id="medicalExaminationOrthopaedist-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationOphthalmologist-modal" class="form-label">Офтальмолог</label>
+                <textarea class="form-control" id="medicalExaminationOphthalmologist-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationOtolaryngologist-modal" class="form-label">Отоларинголог</label>
+                <textarea class="form-control" id="medicalExaminationOtolaryngologist-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationDermatologist-modal" class="form-label">Дерматолог</label>
+                <textarea class="form-control" id="medicalExaminationDermatologist-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationNeurologist-modal" class="form-label">Невролог</label>
+                <textarea class="form-control" id="medicalExaminationNeurologist-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationSpeechTherapist-modal" class="form-label">Логопед</label>
+                <textarea class="form-control" id="medicalExaminationSpeechTherapist-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationDentaSurgeon-modal" class="form-label">Стоматолог</label>
+                <textarea class="form-control" id="medicalExaminationDentaSurgeon-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationPsychologist-modal" class="form-label">Психолог</label>
+                <textarea class="form-control" id="medicalExaminationPsychologist-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationOtherDoctors-modal" class="form-label">Другие врачи</label>
+                <textarea class="form-control" id="medicalExaminationOtherDoctors-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationBloodTest-modal" class="form-label">Анализ крови</label>
+                <textarea class="form-control" id="medicalExaminationBloodTest-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationUrineAnalysis-modal" class="form-label">Анализ мочи</label>
+                <textarea class="form-control" id="medicalExaminationUrineAnalysis-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationFecesAnalysis-modal" class="form-label">Анализ кала</label>
+                <textarea class="form-control" id="medicalExaminationFecesAnalysis-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationGeneralDiagnosis-modal" class="form-label"><strong>Заключительный диагноз</strong></label>
+                <textarea class="form-control" id="medicalExaminationGeneralDiagnosis-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationPhysicalDevelopment-modal" class="form-label">Оценка физического развития</label>
+                <textarea class="form-control" id="medicalExaminationPhysicalDevelopment-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationMentalDevelopment -modal" class="form-label">Оценка нервно-психического развития</label>
+                <textarea class="form-control" id="medicalExaminationMentalDevelopment-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-4">
+                <label for="medicalExaminationHealthGroup-modal" class="form-label">Группа здоровья</label>
+                <select class="form-select" id="medicalExaminationHealthGroup-modal" required>
+                  <option selected>I</option>
+                  <option>II</option>
+                  <option>III</option>
+                  <option>IV</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="medicalExaminationSportGroup-modal" class="form-label">Мед. гр. для занятий физкультурой</label>
+                <select class="form-select" id="medicalExaminationSportGroup-modal" required>
+                  <option selected>Основная</option>
+                  <option>ЛФК</option>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationMedAndPedConclusion-modal" class="form-label"><strong>Медико-педагогическое заключение</strong></label>
+                <textarea class="form-control" id="medicalExaminationMedAndPedConclusion-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationRecommendations-modal" class="form-label">Рекомендации</label>
+                <textarea class="form-control" id="medicalExaminationRecommendations-modal" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="medicalExaminationDoctor-modal" class="form-label">Врач</label>
+                <input type="text" class="form-control only-letters-modal" id="medicalExaminationDoctor-modal" placeholder="Иванов Иван Иванович">
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="medical-examination-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="medical-examination-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

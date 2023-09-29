@@ -1,0 +1,55 @@
+<div class="modal fade" id="prevaccinationCheckupModal" tabindex="-1" aria-labelledby="prevaccinationCheckupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="prevaccinationCheckupModalLabel">Осмотр перед профилактическими прививками</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" >
+                <label for="prevaccinationCheckupExaminationDate-modal" class="form-label">Дата осмотра</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="prevaccinationCheckupExaminationDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите дату осмотра.
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label for="prevaccinationCheckupDiagnosis-modal" class="form-label">Диагноз</label>
+                <input type="text" class="form-control only-letters-modal" id="prevaccinationCheckupDiagnosis-modal" placeholder="Здоров" required>
+            </div>
+            <div class="col-md-4">
+                <label for="prevaccinationCheckupReport-modal" class="form-label">Заключение</label>
+                <select class="form-select" id="prevaccinationCheckupReport-modal" required>
+                  <option selected>Разрешено</option>
+                  <option>Неразрешено</option>
+                  <option>Отказ</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="prevaccinationCheckupVacName-modal" class="form-label">Прививка</label>
+                <select class="form-select" id="prevaccinationCheckupVacName-modal" required>
+                  {% for vac_name in prof_vac_names %}
+                    {% include '/medical_record/child/main_divs/vac_name.html' %}
+                  {% endfor %}
+                </select>
+            </div>
+            <div class="form-group" >
+                <label for="prevaccinationCheckupNoVacDate-modal" class="form-label">Мед. отвод до</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="prevaccinationCheckupNoVacDate-modal">
+                </div>                  
+            </div>
+            <div class="col-md-12">
+                <label for="prevaccinationCheckupDoctor-modal" class="form-label">Врач</label>
+                <input type="text" class="form-control only-letters-modal" id="prevaccinationCheckupDoctor-modal" placeholder="Иванов Иван Иванович">
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="prevaccination-checkup-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="prevaccination-checkup-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

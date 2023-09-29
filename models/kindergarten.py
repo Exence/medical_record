@@ -3,7 +3,7 @@ from pydantic import (
     Field,
 )
 from typing import List
-from models.child import ChildShow
+from models.child import ChildToShow
 
 
 class KindergartenBase(BaseModel):

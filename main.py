@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from settings import settings
-from api import router
+from app import router
 
 
 locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))

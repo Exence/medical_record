@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	<title>Прививки</title>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h1 class="text-center">Все медкарты</h1>
+        <h2>Профилактические прививки</h2>
+        <div class="list-group">
+            {% for vaccine in prof_vaccines %}
+                  {% include '/vaccines/divs/vaccine.html' %}                               
+            {% endfor %}  
+        </div>
+	</div>
+{% endblock %}

@@ -1,0 +1,118 @@
+<div class="modal fade" id="childModal" tabindex="-1" aria-labelledby="childModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="childModalLabel">Редактировать общие сведения о ребенке</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12">
+                    <label for="kindergarten_name" class="form-label">Детский сад</label>
+                    <div class="">
+                        <select class="form-select" name="kindergarten_name" id="kindergarten_name" required>
+                            <option selected> МБДОУ Детский сад №1</option>
+                            <option> МБДОУ Детский сад №2</option>
+                            <option> МБДОУ Детский сад №3</option>
+                            <option> МБДОУ Детский сад №4</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="">
+                    <label for="surname" class="form-label">Фамилия</label>
+                    <input type="text" class="form-control only-letters" name="surname" id="surname" placeholder="Иванов" required>
+                </div>
+                <div class="">
+                    <label for="name" class="form-label">Имя</label>
+                    <input type="text" class="form-control only-letters" name="name" id="name" placeholder="Иван" required>
+                </div>
+                <div class="">
+                    <label for="patronymic" class="form-label">Отчество</label>
+                    <input type="text" class="form-control only-letters" name="patronymic" id="patronymic" placeholder="Иванович" required>
+                </div>
+                <div class="form-group " >
+                    <label for="birthday" class="form-label" required>Дата рождения</label>
+                    <input type="date" class="form-control" name="birthday" id="birthday">
+                    <div class="invalid-feedback">
+                        Пожалуйста, введите дату рождения.
+                    </div>
+                </div>
+                <div class="form-group " >
+                    <label>Пол</label>
+                    <div class="form-check ">
+                        <input class="form-check-input" type="radio" name="sex" id="flexRadioSex1" value="Мужской" checked>
+                        <label class="form-check-label" for="flexRadioSex1">
+                        Мужской
+                        </label>
+                    </div>
+                    <div class="form-check ">
+                        <input class="form-check-input" type="radio" name="sex" id="flexRadioSex2" value="Женский">
+                        <label class="form-check-label" for="flexRadioSex2">
+                        Женский
+                        </label>
+                    </div>
+                </div>
+                <div class="">
+                    <label for="group_num" class="form-label">Группа</label>
+                    <select class="form-select" name="group_num" id="group_num" required>
+                        <option selected>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                    </select>
+                </div> 
+                <div class="form-group " >
+                    <label for="entering_date" class="form-label">Дата поступления</label>
+                    <input type="date" class="form-control" name="entering_date" id="entering_date">
+                    <div class="invalid-feedback" required>
+                        Пожалуйста, введите дату поступления.
+                    </div>
+                </div>   
+                <div class="">
+                    <label for="clinic" class="form-label">Обслуживающая поликлиника</label>
+                    <select class="form-select" name="clinic" id="clinic" required>
+                        <option selected>Городская детская поликлиника №1</option>
+                        <option>Городская детская поликлиника №2</option>
+                        <option>Городская детская поликлиника №3</option>
+                        <option>Городская детская поликлиника №4</option>
+                    </select>
+                </div> 
+                <div class="col-12">
+                    <label for="address" class="form-label">Домашний адрес</label>
+                    <input type="text" class="form-control" name="address" id="address" placeholder="Город, улица, дом, квартира" required>
+                </div> 
+                <div class="">
+                    <label for="family_characteristics" class="form-label">Характеристика семьи</label>
+                    <select class="form-select" name="family_characteristics" id="family_characteristics" required>
+                        <option selected>Полная</option>
+                        <option>Неполная</option>
+                    </select>
+                </div>
+                <div class="">
+                    <label for="family_microclimate" class="form-label">Микроклимат в семье</label>
+                    <select class="form-select" name="family_microclimate" id="family_microclimate" required>
+                        <option selected>Благоприятный</option>
+                        <option>Неблагоприятный</option>
+                    </select>
+                </div>
+                <div class="">
+                    <label for="rest_and_class_opportunities" class="form-label">Место для отдыха и занятий</label>
+                    <select class="form-select" name="rest_and_class_opportunities" id="rest_and_class_opportunities" required>
+                        <option selected>Комната</option>
+                        <option>Индивидуальный стол</option>
+                        <option>Нет</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label for="case_history" class="form-label">Семейный анамнез</label>
+                    <textarea class="form-control" name="case_history" id="case_history" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="child-close-modal">Отмена</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="child-commit-modal">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>

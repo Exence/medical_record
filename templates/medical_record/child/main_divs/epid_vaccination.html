@@ -1,0 +1,11 @@
+<div name="div-epid-vaccination-{{ epid_vaccination.vac_name_id }}-{{ epid_vaccination.vac_type.replace(' ','') }}" class="col-12 mb-3">
+    <p><strong>{{ epid_vaccination.vac_name }}</strong> <strong>{{ epid_vaccination.vac_type }}</strong> Дата: <u><mark>{{ epid_vaccination.vac_date.strftime("%d.%m.%Y") }}</mark></u>, 
+        серия: <u><mark>{{ epid_vaccination.serial }}</mark></u>, доза: <u><mark>{{ epid_vaccination.dose }}</mark></u>, 
+        способ введения: <u><mark>{{ epid_vaccination.introduction_method }}</mark></u>, реакция: <u><mark>{{ epid_vaccination.reaction }}</mark></u><br>
+        Врач: <u><mark>{{ epid_vaccination.doctor }}</mark></u>
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#epidVaccinationModal" name="update-epid-vaccination-{{ epid_vaccination.vac_name_id }}-{{ epid_vaccination.vac_type.replace(' ','') }}-btn" onclick="update_epid_vaccination('{{ epid_vaccination.vac_name_id }}', '{{ epid_vaccination.vac_type}}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-epid-vaccination-{{ epid_vaccination.vac_name_id }}-{{ epid_vaccination.vac_type.replace(' ','') }}-btn" onclick="delete_epid_vaccination('{{ epid_vaccination.vac_name_id }}', '{{ epid_vaccination.vac_type}}')">Удалить</button>
+    </div>
+</div>

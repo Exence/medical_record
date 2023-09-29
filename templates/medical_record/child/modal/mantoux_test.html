@@ -1,0 +1,33 @@
+<div class="modal fade" id="mantouxTestModal" tabindex="-1" aria-labelledby="mantouxTestModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="mantouxTestModalLabel">Реакция Манту</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" >
+                <label for="mantouxTestDate-modal" class="form-label">Дата</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="mantouxTestDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback" >
+                    Пожалуйста, введите дату проведения санации полости рта.
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="mantouxTestResult-modal" class="form-label">Результат</label>
+                <select class="form-select" id="mantouxTestResult-modal" required>
+                <option selected>Отрицательно</option>
+                <option>Сомнительно</option>
+                <option>Положительно</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="mantoux-test-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="mantoux-test-commit-modal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+</div>

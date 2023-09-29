@@ -1,0 +1,13 @@
+<div name="div-prevaccination-checkup-{{ prevaccination_checkup.examination_date }}" class="col-12 mb-3">
+    <p><strong>{{ prevaccination_checkup.vac_name }}</strong> Дата осмотра: <u><mark>{{ prevaccination_checkup.examination_date.strftime("%d.%m.%Y") }}</mark></u>, Возраст: <u><mark>{{ prevaccination_checkup.age }}</mark></u>
+        Диагноз: <u><mark>{{ prevaccination_checkup.diagnosis }}</mark></u>, Заключение: <u><mark>{{ prevaccination_checkup.report }}</mark></u> <br>
+    {% if prevaccination_checkup.no_vac_date %}
+        <strong>Мед. отвод до: </strong><u><mark>{{ prevaccination_checkup.no_vac_date.strftime("%d.%m.%Y") }}</mark></u> <br>
+    {% endif %}
+    Врач: <u><mark>{{ prevaccination_checkup.doctor }}</mark></u>
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#prevaccinationCheckupModal" name="update-prevaccination-checkup-{{ prevaccination_checkup.examination_date }}-btn" onclick="update_prevaccination_checkup('{{ prevaccination_checkup.examination_date }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-prevaccination-checkup-{{ prevaccination_checkup.examination_date }}-btn" onclick="delete_prevaccination_checkup('{{ prevaccination_checkup.examination_date }}')">Удалить</button>
+    </div>
+</div>

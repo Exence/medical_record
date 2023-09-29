@@ -13,7 +13,7 @@
               Справочники
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="/vaccinations/vac_names">Наименования прививок</a></li>
+              <li><a class="dropdown-item" href="/vaccine/vac_names">Наименования прививок</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -31,8 +31,8 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="/reports/annual ">Годовой отчет</a></li>
-              <li><a class="dropdown-item" href="/reports/immunization">Отчет по прививкам</a></li>
-              <li><a class="dropdown-item" href="/reports/tuberculin">Туберкулинодиагностика</a></li>
+              <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#vacReportModal" id="add-vac-report-btn">Отчет по прививкам</button></li>
+              <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#tubReportModal" >Туберкулинодиагностика</button></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -45,14 +45,88 @@
               <li><a class="dropdown-item" href="/users/all">Просмотр / редактирование / удаление</a></li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/auth/leave">Выход</a>
-          </li>
         </ul>
-        <form class="d-flex" action="/search">
-          <input class="form-control me-2" id="autocomplete" name="query" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
+        <form class="d-flex" action="/auth/leave">
+          <button class="btn btn-outline-secondary mx-4" type="submit">Выход</button>
         </form>
       </div>
     </div>
   </nav>
+
+<!-- MODALS -->
+  <div class="modal fade" id="tubReportModal" tabindex="-1" aria-labelledby="tubReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="tubReportModalLabel">Туберкулинодиагностика</h5><br>        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" >
+                <label for="tubReportStartDate-modal" class="form-label">С</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="tubReportStartDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback">
+                    Пожалуйста, введите дату отчета.
+                </div>
+            </div>
+            <div class="form-group" >
+                <label for="tubReportEndDate-modal" class="form-label">По</label>
+                <div class="col-md-4">
+                    <input type="date" class="form-control" id="tubReportEndDate-modal" required>
+                </div>                    
+                <div class="invalid-feedback">
+                    Пожалуйста, введите дату отчета.
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="tub-report-close-modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="tub-report-commit-modal">Сформировать отчет</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="modal fade" id="vacReportModal" tabindex="-1" aria-labelledby="vacReportModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="vacReportModalLabel">Отчет по прививкам</h5><br> 
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="row g-3 needs-validation" id="vac-report-form" name="form_data" novalidate method="post" action="/reports/vac_report">          
+          <div class="col-md-6">
+            <label for="vacReportVacName-modal" class="form-label">Прививка</label>
+            <select class="form-select" name="vac_name_id" id="vacReportVacName-modal" required>
+            
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="vacReportVacType-modal" class="form-label">Тип</label>
+            <select class="form-select" name="vac_type" id="vacReportVacType-modal" required>
+                <option selected>Вакцинация I</option>
+                <option>Вакцинация II</option>
+                <option>Вакцинация III</option>
+                <option>Ревакцинация I</option>
+                <option>Ревакцинация II</option>
+                <option>Ревакцинация III</option>
+                <option>Ревакцинация IV</option>
+            </select>
+          </div>
+      
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="vac-report-close-modal">Отмена</button>
+            <button type="submit" class="btn btn-primary" id="vac-report-commit-modal">Сформировать отчет</button>
+          </div>
+        </form>
+  </div>
+  </div>
+</div>
+
+{% block script %}
+  <script src="{{ url_for('static', path='js/report_modal.js') }}"></script>
+{% endblock %}

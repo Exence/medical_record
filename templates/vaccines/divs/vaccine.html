@@ -1,0 +1,7 @@
+<div name="div-vaccine-{{ vaccine.id }}" class="col-12 mb-3">
+    <p><strong>{{ vaccine.name }}</strong></p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#vaccineModal" name="update-vaccine-{{ vaccine.id }}-btn" onclick="update_vaccine('{{ vaccine.id }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-vaccine-{{ vaccine.id }}-btn" onclick="delete_vaccine('{{ vaccine.id }}')">Удалить</button>
+    </div>
+</div>

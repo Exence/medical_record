@@ -1,0 +1,31 @@
+<div name="div-medical-examination-{{ medical_examination.period.replace(' ','') }}" class="col-12 mb-3">
+    <p><strong>Период обследования: </strong><u><mark>{{ medical_examination.period  }}</mark></u> <br>
+        Дата обследования: <u><mark>{{ medical_examination.examination_date.strftime("%d.%m.%Y") }}</mark></u> Возраст: <u><mark>{{ medical_examination.age }}</mark></u><br>
+        Длина тела, см: <u><mark>{{ medical_examination.height }}</mark></u>, масса тела, кг: <u><mark>{{ medical_examination.weight }}</mark></u><br>
+        Жалобы: <u><mark>{{ medical_examination.complaints }}</mark></u><br>
+        Педиатр: <u><mark>{{ medical_examination.pediatrician }}</mark></u><br>
+        Ортопед: <u><mark>{{ medical_examination.orthopaedist }}</mark></u><br>
+        Офтальмолог: <u><mark>{{ medical_examination.ophthalmologist }}</mark></u><br>
+        Отоларинголог: <u><mark>{{ medical_examination.otolaryngologist }}</mark></u><br>
+        Дерматолог: <u><mark>{{ medical_examination.dermatologist }}</mark></u><br>
+        Невролог: <u><mark>{{ medical_examination.neurologist }}</mark></u><br>
+        Логопед: <u><mark>{{ medical_examination.speech_therapist }}</mark></u><br>
+        Стоматолог: <u><mark>{{ medical_examination.denta_surgeon }}</mark></u><br>
+        Психолог: <u><mark>{{ medical_examination.psychologist }}</mark></u><br>
+        Другие врачи: <u><mark>{{ medical_examination.other_doctors }}</mark></u><br>
+        Анализ крови: <u><mark>{{ medical_examination.blood_test }}</mark></u><br>
+        Анализ мочи: <u><mark>{{ medical_examination.urine_analysis }}</mark></u><br>
+        Анализ кала: <u><mark>{{ medical_examination.feces_analysis }}</mark></u><br>
+        <strong>Заключительный диагноз: </strong><u><mark>{{ medical_examination.general_diagnosis }}</mark></u><br>
+        Оценка физического развития: <u><mark>{{ medical_examination.physical_development }}</mark></u><br>
+        Оценка нервно-психического развития: <u><mark>{{ medical_examination.mental_development }}</mark></u><br>
+        Группа здоровья: <u><mark>{{ medical_examination.health_group }}</mark></u><br>
+        Мед. гр. для занятий физкультурой: <u><mark>{{ medical_examination.sport_group }}</mark></u><br>
+        <strong>Медико-педагогическое заключение: </strong><u><mark>{{ medical_examination.med_and_ped_conclusion }}</mark></u><br>
+        Рекомендации: <u><mark>{{ medical_examination.recommendations }}</mark></u>
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#medicalExaminationModal" name="update-medical-examination-{{ medical_examination.period.replace(' ','') }}-btn" onclick="update_medical_examination('{{ medical_examination.period }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-medical-examination-{{ medical_examination.period.replace(' ','') }}-btn" onclick="delete_medical_examination('{{ medical_examination.period }}')">Удалить</button>
+    </div>
+</div>

@@ -101,8 +101,8 @@ class AuthService():
             raise exception
         
         user = SerializationService.serialization_user(self.connection, query_user)
-       
-        if not self.verify_password(password, user.password_hash):
+
+        if not self.verify_password(password, user.password_hash):            
             raise exception
 
         return self.create_token(user)
