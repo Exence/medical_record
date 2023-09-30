@@ -1,7 +1,5 @@
 import psycopg2
 
-from pprint import pprint
-
 from fastapi import (
     Depends,
     HTTPException,
@@ -21,7 +19,7 @@ from services.kindergarten import (
     get_kindergarten_num_by_name,
     get_kindergarten_name_by_num,
 )
-from services.parent import select_parent_id
+from services.medical_record.parent import select_parent_id
 from services.serialization import SerializationService
 
 from settings import settings

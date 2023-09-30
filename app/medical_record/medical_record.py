@@ -8,9 +8,7 @@ from fastapi.templating import Jinja2Templates
 
 from models.child import CreateChildForm
 from models.json import JsonForm
-from services.medical_record import MedicalRecordService
-from services.parent import get_parent_by_id
-from services.vac_name import get_vac_names_by_type
+from services.medical_record.medical_record import MedicalRecordService
 
 from .child.child import router as child_router
 

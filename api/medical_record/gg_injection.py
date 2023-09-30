@@ -3,7 +3,7 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
-from services.gg_injection import GammaGlobulinInjectionService
+from services.medical_record.gg_injection import GammaGlobulinInjectionService
 
 
 router = APIRouter(

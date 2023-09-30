@@ -3,7 +3,7 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
-from services.allergy import AllergyService
+from services.medical_record.allergy import AllergyService
 
 
 router = APIRouter(

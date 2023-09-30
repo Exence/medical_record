@@ -3,7 +3,7 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
-from services.medical_certificate import MedicalCertificateService
+from services.medical_record.medical_certificate import MedicalCertificateService
 
 
 router = APIRouter(

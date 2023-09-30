@@ -7,10 +7,15 @@ from .report import router as report_router
 from .vaccine import router as vac_router
 
 
+sub_routers = [
+    main_router,
+    auth_router,
+    user_router,
+    medical_record_router,
+    report_router,
+    vac_router,
+]
 router = APIRouter()
-router.include_router(main_router)
-router.include_router(auth_router)
-router.include_router(user_router)
-router.include_router(medical_record_router)
-router.include_router(report_router)
-router.include_router(vac_router)
+
+for sub_router in sub_routers:
+    router.include_router(sub_router)

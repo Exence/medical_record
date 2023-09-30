@@ -8,25 +8,25 @@ from fastapi.templating import Jinja2Templates
 
 from models.child import CreateChildForm
 from models.json import JsonForm
-from services.medical_record import MedicalRecordService
-from services.allergy import AllergyService
-from services.extra_class import ExtraClassService
-from services.past_illness import PastIllnessService
-from services.hospitalization import HospitalizationService
-from services.spa_treatment import SpaTreatmentService
-from services.medical_certificate import MedicalCertificateService
-from services.dispensary import DispensaryService
-from services.deworming import DewormingService
-from services.oral_sanation import OralSanationService
-from services.prevaccination_checkup import PrevaccinationCheckupService
-from services.vaccination import VaccinationService
-from services.gg_injection import GammaGlobulinInjectionService
-from services.mantoux_test import MantouxTestService
-from services.tub_vac import TuberculosisVaccinationService
-from services.medical_examination import MedicalExaminationService
-from services.ongoing_medical_supervision import OngoingMedicalSupervisionService
-from services.screening import ScreeningService
-from services.parent import get_parent_by_id
+from services.medical_record.medical_record import MedicalRecordService
+from services.medical_record.allergy import AllergyService
+from services.medical_record.extra_class import ExtraClassService
+from services.medical_record.past_illness import PastIllnessService
+from services.medical_record.hospitalization import HospitalizationService
+from services.medical_record.spa_treatment import SpaTreatmentService
+from services.medical_record.medical_certificate import MedicalCertificateService
+from services.medical_record.dispensary import DispensaryService
+from services.medical_record.deworming import DewormingService
+from services.medical_record.oral_sanation import OralSanationService
+from services.medical_record.prevaccination_checkup import PrevaccinationCheckupService
+from services.medical_record.vaccination import VaccinationService
+from services.medical_record.gg_injection import GammaGlobulinInjectionService
+from services.medical_record.mantoux_test import MantouxTestService
+from services.medical_record.tub_vac import TuberculosisVaccinationService
+from services.medical_record.medical_examination import MedicalExaminationService
+from services.medical_record.ongoing_medical_supervision import OngoingMedicalSupervisionService
+from services.medical_record.screening import ScreeningService
+from services.medical_record.parent import get_parent_by_id
 from services.vac_name import get_vac_names_by_type
 
 from api import router as api_router

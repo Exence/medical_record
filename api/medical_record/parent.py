@@ -3,7 +3,7 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
-from services.parent import ParentService
+from services.medical_record.parent import ParentService
 
 
 router = APIRouter(

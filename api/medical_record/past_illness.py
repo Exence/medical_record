@@ -3,7 +3,7 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
-from services.past_illness import PastIllnessService
+from services.medical_record.past_illness import PastIllnessService
 
 
 router = APIRouter(

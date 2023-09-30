@@ -3,7 +3,7 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
-from services.mantoux_test import MantouxTestService
+from services.medical_record.mantoux_test import MantouxTestService
 
 
 router = APIRouter(

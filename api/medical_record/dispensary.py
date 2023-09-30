@@ -3,7 +3,7 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
-from services.dispensary import DispensaryService
+from services.medical_record.dispensary import DispensaryService
 
 
 router = APIRouter(

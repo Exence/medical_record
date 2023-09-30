@@ -3,7 +3,7 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
-from services.deworming import DewormingService
+from services.medical_record.deworming import DewormingService
 
 
 router = APIRouter(

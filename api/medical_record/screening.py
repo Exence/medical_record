@@ -3,7 +3,7 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
-from services.screening import ScreeningService
+from services.medical_record.screening import ScreeningService
 
 
 router = APIRouter(
