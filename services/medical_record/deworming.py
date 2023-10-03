@@ -48,7 +48,8 @@ class DewormingService():
             query = f"""INSERT INTO dewormings (medcard_num, deworming_date, result) 
                             VALUES (%(medcard_num)s, %(deworming_date)s, %(result)s)"""
             execute_data_query(self.connection, query, deworming)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_deworming(self, user: User, deworming: dict):
         if check_user_access(user=user, medcard_num=deworming["medcard_num"]):
@@ -57,11 +58,13 @@ class DewormingService():
                         WHERE   medcard_num = %(medcard_num)s AND
                                 deworming_date = %(old_deworming_date)s"""
             execute_data_query(self.connection, query, deworming)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_deworming(self, user: User, deworming: dict):
         if check_user_access(user=user, medcard_num=deworming["medcard_num"]):
             query = f"""DELETE FROM dewormings WHERE  medcard_num = %(medcard_num)s AND
                                                     deworming_date = %(deworming_date)s"""
             execute_data_query(self.connection, query, deworming)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

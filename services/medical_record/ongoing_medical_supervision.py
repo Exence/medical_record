@@ -48,7 +48,8 @@ class OngoingMedicalSupervisionService():
             query = f"""INSERT INTO ongoing_medical_supervisions (medcard_num, examination_date, examination_data, diagnosis, prescription, doctor) 
                             VALUES (%(medcard_num)s, %(examination_date)s, %(examination_data)s, %(diagnosis)s, %(prescription)s, %(doctor)s)"""
             execute_data_query(self.connection, query, ongoing_medical_supervision)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_ongoing_medical_supervision(self, user: User, ongoing_medical_supervision: dict):
         if check_user_access(user=user, medcard_num=ongoing_medical_supervision["medcard_num"]):
@@ -60,11 +61,13 @@ class OngoingMedicalSupervisionService():
                         WHERE   medcard_num = %(medcard_num)s AND
                                 examination_date = %(old_examination_date)s"""
             execute_data_query(self.connection, query, ongoing_medical_supervision)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_ongoing_medical_supervision(self, user: User, ongoing_medical_supervision: dict):
         if check_user_access(user=user, medcard_num=ongoing_medical_supervision["medcard_num"]):
             query = f"""DELETE FROM ongoing_medical_supervisions WHERE  medcard_num = %(medcard_num)s AND
                                                         examination_date = %(examination_date)s"""
             execute_data_query(self.connection, query, ongoing_medical_supervision)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

@@ -30,8 +30,8 @@ from typing import Any
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/sign-in')
 
-def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
-    return AuthService.validate_token(token)
+def get_current_user(access_token: str = Depends(oauth2_scheme)) -> User:
+    return AuthService.validate_token(access_token)
 
 def get_current_user_from_cookie(access_token: str | None = Cookie(default=None)) -> User:
     return AuthService.validate_token(access_token)

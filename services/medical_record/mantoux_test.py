@@ -48,7 +48,8 @@ class MantouxTestService():
             query = f"""INSERT INTO mantoux_tests (medcard_num, check_date, result) 
                             VALUES (%(medcard_num)s, %(check_date)s, %(result)s)"""
             execute_data_query(self.connection, query, mantoux_test)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_mantoux_test(self, user: User, mantoux_test: dict):
         if check_user_access(user=user, medcard_num=mantoux_test["medcard_num"]):
@@ -57,11 +58,13 @@ class MantouxTestService():
                         WHERE medcard_num = %(medcard_num)s AND
                             check_date = %(old_check_date)s"""
             execute_data_query(self.connection, query, mantoux_test)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_mantoux_test(self, user: User, mantoux_test: dict):
         if check_user_access(user=user, medcard_num=mantoux_test["medcard_num"]):
             query = f"""DELETE FROM mantoux_tests WHERE  medcard_num = %(medcard_num)s AND
                                                         check_date = %(check_date)s"""
             execute_data_query(self.connection, query, mantoux_test)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

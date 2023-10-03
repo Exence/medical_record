@@ -55,7 +55,8 @@ class MedicalCertificateService():
             query = f"""INSERT INTO medical_certificates (medcard_num, disease, cert_date, start_date, end_date, infection_contact, sport_exemption_date, vac_exemption_date, doctor) 
                     VALUES (%(medcard_num)s, %(disease)s, %(cert_date)s, %(start_date)s, %(end_date)s, %(infection_contact)s, %(sport_exemption_date)s, %(vac_exemption_date)s, %(doctor)s)"""
             execute_data_query(self.connection, query, medical_certificate)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def update_medical_certificate(self, user: User, medical_certificate: dict):
         if check_user_access(user=user, medcard_num=medical_certificate["medcard_num"]):
@@ -76,7 +77,8 @@ class MedicalCertificateService():
                                 disease = %(old_disease)s AND
                                 cert_date = %(old_cert_date)s"""
             execute_data_query(self.connection, query, medical_certificate)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_medical_certificate(self, user: User, medical_certificate: dict):
         if check_user_access(user=user, medcard_num=medical_certificate["medcard_num"]):
@@ -84,4 +86,5 @@ class MedicalCertificateService():
                                                                 disease = %(disease)s AND
                                                                 cert_date = %(cert_date)s"""
             execute_data_query(self.connection, query, medical_certificate)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

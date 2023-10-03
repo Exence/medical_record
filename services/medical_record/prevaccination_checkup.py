@@ -76,4 +76,5 @@ class PrevaccinationCheckupService():
             query = f"""DELETE FROM prevaccination_checkups WHERE  medcard_num = %(medcard_num)s AND
                                                     examination_date = %(examination_date)s"""
             execute_data_query(self.connection, query, prevaccination_checkup)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

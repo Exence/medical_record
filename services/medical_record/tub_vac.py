@@ -48,7 +48,8 @@ class TuberculosisVaccinationService():
             query = f"""INSERT INTO tuberculosis_vaccinations (medcard_num, vac_date, serial, dose, doctor) 
                             VALUES (%(medcard_num)s, %(vac_date)s, %(serial)s, %(dose)s, %(doctor)s)"""
             execute_data_query(self.connection, query, tub_vac)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_tub_vac(self, user: User, tub_vac: dict):
         if check_user_access(user=user, medcard_num=tub_vac["medcard_num"]):
@@ -59,11 +60,13 @@ class TuberculosisVaccinationService():
                         WHERE   medcard_num = %(medcard_num)s AND
                                 vac_date = %(old_vac_date)s"""
             execute_data_query(self.connection, query, tub_vac)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_tub_vac(self, user: User, tub_vac: dict):
         if check_user_access(user=user, medcard_num=tub_vac["medcard_num"]):
             query = f"""DELETE FROM tuberculosis_vaccinations WHERE  medcard_num = %(medcard_num)s AND
                                                         vac_date = %(vac_date)s"""
             execute_data_query(self.connection, query, tub_vac)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

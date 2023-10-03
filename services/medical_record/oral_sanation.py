@@ -46,7 +46,8 @@ class OralSanationService():
             query = f"""INSERT INTO oral_sanations (medcard_num, sanation_date, dental_result, sanation_result) 
                             VALUES (%(medcard_num)s, %(sanation_date)s, %(dental_result)s, %(sanation_result)s)"""
             execute_data_query(self.connection, query, oral_sanation)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_oral_sanation(self, user: User, oral_sanation: dict):
         if check_user_access(user=user, medcard_num=oral_sanation["medcard_num"]):
@@ -56,11 +57,13 @@ class OralSanationService():
                         WHERE   medcard_num = %(medcard_num)s AND
                                 sanation_date = %(old_sanation_date)s"""
             execute_data_query(self.connection, query, oral_sanation)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_oral_sanation(self, user: User, oral_sanation: dict):
         if check_user_access(user=user, medcard_num=oral_sanation["medcard_num"]):
             query = f"""DELETE FROM oral_sanations WHERE  medcard_num = %(medcard_num)s AND
                                                     sanation_date = %(sanation_date)s"""
             execute_data_query(self.connection, query, oral_sanation)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

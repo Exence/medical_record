@@ -48,7 +48,8 @@ class GammaGlobulinInjectionService():
             query = f"""INSERT INTO gamma_globulin_injections (medcard_num, vac_date, reason, serial, dose, reaction, doctor) 
                             VALUES (%(medcard_num)s, %(vac_date)s, %(reason)s, %(serial)s, %(dose)s, %(reaction)s, %(doctor)s)"""
             execute_data_query(self.connection, query, gg_injection)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_gg_injection(self, user: User, gg_injection: dict):
         if check_user_access(user=user, medcard_num=gg_injection["medcard_num"]):
@@ -61,10 +62,13 @@ class GammaGlobulinInjectionService():
                         WHERE   medcard_num = %(medcard_num)s AND
                             vac_date = %(old_vac_date)s"""
             execute_data_query(self.connection, query, gg_injection)
+        else:
+            raise exception_403 from None    
 
     def delete_gg_injection(self, user: User, gg_injection: dict):
         if check_user_access(user=user, medcard_num=gg_injection["medcard_num"]):
             query = f"""DELETE FROM gamma_globulin_injections WHERE  medcard_num = %(medcard_num)s AND
                                                         vac_date = %(vac_date)s"""
             execute_data_query(self.connection, query, gg_injection)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

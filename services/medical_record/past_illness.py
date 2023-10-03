@@ -51,7 +51,8 @@ class PastIllnessService():
             query = f"""INSERT INTO past_illnesses (medcard_num, start_date, end_date, diagnosis) 
                             VALUES (%(medcard_num)s, %(start_date)s, %(end_date)s, %(diagnosis)s)"""
             execute_data_query(self.connection, query, past_illness)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_past_illness(self, user: User, past_illness: dict):
         if check_user_access(user=user, medcard_num=past_illness["medcard_num"]):
@@ -62,7 +63,8 @@ class PastIllnessService():
                                 start_date = %(old_start_date)s AND
                                 diagnosis = %(old_diagnosis)s"""
             execute_data_query(self.connection, query, past_illness)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_past_illness(self, user: User, past_illness: dict):
         if check_user_access(user=user, medcard_num=past_illness["medcard_num"]):
@@ -70,4 +72,5 @@ class PastIllnessService():
                                                         start_date = %(start_date)s AND
                                                         diagnosis = %(diagnosis)s"""
             execute_data_query(self.connection, query, past_illness)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

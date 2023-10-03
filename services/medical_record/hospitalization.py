@@ -66,11 +66,13 @@ class HospitalizationService():
                         WHERE   medcard_num = %(medcard_num)s AND
                                 start_date = %(old_start_date)s"""
             execute_data_query(self.connection, query, hospitalization)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_hospitalization(self, user: User, hospitalization: dict):
         if check_user_access(user=user, medcard_num=hospitalization["medcard_num"]):
             query = f"""DELETE FROM hospitalizations WHERE  medcard_num = %(medcard_num)s AND
                                                             start_date = %(start_date)s"""
             execute_data_query(self.connection, query, hospitalization)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

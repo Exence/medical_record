@@ -28,7 +28,8 @@ class VaccinationService():
             query = f"""INSERT INTO vaccinations (medcard_num, vac_name_id, vac_type, vac_date, serial, dose, introduction_method, reaction, doctor) 
                             VALUES (%(medcard_num)s, %(vac_name_id)s, %(vac_type)s, %(vac_date)s, %(serial)s, %(dose)s, %(introduction_method)s, %(reaction)s, %(doctor)s)"""
             execute_data_query(self.connection, query, vaccination)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_vaccination(self, user: User, vaccination: dict):
         if check_user_access(user=user, medcard_num=vaccination["medcard_num"]):
@@ -44,7 +45,8 @@ class VaccinationService():
                                 vac_name_id = %(old_vac_name_id)s AND
                                 vac_type = %(old_vac_type)s"""
             execute_data_query(self.connection, query, vaccination)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_vaccination(self, user: User, vaccination: dict):
         if check_user_access(user=user, medcard_num=vaccination["medcard_num"]):
@@ -52,7 +54,8 @@ class VaccinationService():
                                                         vac_name_id = %(vac_name_id)s AND
                                                         vac_type = %(vac_type)s"""
             execute_data_query(self.connection, query, vaccination)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     
     def get_prof_vaccinations_by_medcard_num(self, user: User, medcard_num: int) -> list[Vaccination]:

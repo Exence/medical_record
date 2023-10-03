@@ -52,7 +52,8 @@ class SpaTreatmentService():
             query = f"""INSERT INTO spa_treatments (medcard_num, start_date, end_date, diagnosis, founding_specialization, climatic_zone) 
                             VALUES (%(medcard_num)s, %(start_date)s, %(end_date)s, %(diagnosis)s, %(founding_specialization)s, %(climatic_zone)s)"""
             execute_data_query(self.connection, query, spa_treatment)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_spa_treatment(self, user: User, spa_treatment: dict):
         if check_user_access(user=user, medcard_num=spa_treatment["medcard_num"]):
@@ -67,11 +68,13 @@ class SpaTreatmentService():
                         WHERE   medcard_num = %(medcard_num)s AND
                                 start_date = %(old_start_date)s"""
             execute_data_query(self.connection, query, spa_treatment)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_spa_treatment(self, user: User, spa_treatment: dict):
         if check_user_access(user=user, medcard_num=spa_treatment["medcard_num"]):
             query = f"""DELETE FROM spa_treatments WHERE  medcard_num = %(medcard_num)s AND
                                                             start_date = %(start_date)s"""
             execute_data_query(self.connection, query, spa_treatment)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

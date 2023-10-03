@@ -52,7 +52,8 @@ class DispensaryService():
             query = f"""INSERT INTO dispensaryes (medcard_num, start_date, end_date, diagnosis, specialist, end_reason) 
                             VALUES (%(medcard_num)s, %(start_date)s, %(end_date)s, %(diagnosis)s, %(specialist)s, %(end_reason)s)"""
             execute_data_query(self.connection, query, dispensary)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_dispensary(self, user: User, dispensary: dict):
         if check_user_access(user=user, medcard_num=dispensary["medcard_num"]):
@@ -67,11 +68,13 @@ class DispensaryService():
                         WHERE   medcard_num = %(medcard_num)s AND
                                 start_date = %(old_start_date)s"""
             execute_data_query(self.connection, query, dispensary)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_dispensary(self, user: User, dispensary: dict):
         if check_user_access(user=user, medcard_num=dispensary["medcard_num"]):
             query = f"""DELETE FROM dispensaryes WHERE  medcard_num = %(medcard_num)s AND
                                                             start_date = %(start_date)s"""
             execute_data_query(self.connection, query, dispensary)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

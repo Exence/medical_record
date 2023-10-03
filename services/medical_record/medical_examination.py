@@ -116,4 +116,5 @@ class MedicalExaminationService():
             query = f"""DELETE FROM medical_examinations WHERE  medcard_num = %(medcard_num)s AND
                                                         period = %(period)s"""
             execute_data_query(self.connection, query, medical_examination)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

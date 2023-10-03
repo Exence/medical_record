@@ -80,7 +80,8 @@ class ScreeningService():
                                     %(social_contacts_disorders)s,
                                     NULL)"""
             execute_data_query(self.connection, query, screening)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_screening(self, user: User, screening: dict):
         if check_user_access(user=user, medcard_num=screening["medcard_num"]):
@@ -118,11 +119,13 @@ class ScreeningService():
                         WHERE   medcard_num = %(medcard_num)s AND
                                 age = %(old_age)s"""
             execute_data_query(self.connection, query, screening)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_screening(self, user: User, screening: dict):
         if check_user_access(user=user, medcard_num=screening["medcard_num"]):
             query = f"""DELETE FROM screenings WHERE medcard_num = %(medcard_num)s AND
                                                     age = %(age)s"""
             execute_data_query(self.connection, query, screening)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

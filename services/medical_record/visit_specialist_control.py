@@ -55,7 +55,8 @@ class VisitSpecialistControlService():
             query = f"""INSERT INTO visit_specialist_controls (medcard_num, start_dispanser_date, assigned_date, fact_date) 
                             VALUES (%(medcard_num)s, %(start_dispanser_date)s, %(assigned_date)s, %(fact_date)s)"""
             execute_data_query(self.connection, query, visit_specialist_control)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
     
     def update_visit_specialist_control(self, user: User, visit_specialist_control: dict):
         if check_user_access(user=user, medcard_num=visit_specialist_control["medcard_num"]):
@@ -68,7 +69,8 @@ class VisitSpecialistControlService():
                                 start_dispanser_date = %(start_dispanser_date)s AND
                                 assigned_date = %(old_assigned_date)s"""
             execute_data_query(self.connection, query, visit_specialist_control)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_visit_specialist_control(self, user: User, visit_specialist_control: dict):
         if check_user_access(user=user, medcard_num=visit_specialist_control["medcard_num"]):
@@ -76,4 +78,5 @@ class VisitSpecialistControlService():
                                                                     start_dispanser_date = %(start_dispanser_date)s AND
                                                                     assigned_date = %(assigned_date)s"""
             execute_data_query(self.connection, query, visit_specialist_control)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

@@ -41,7 +41,8 @@ class ExtraClassService():
         if check_user_access(user=user, medcard_num=extra_class["medcard_num"]):
             query = f"INSERT INTO extra_classes (medcard_num, classes_type, age, hours_on_week) VALUES (%(medcard_num)s, %(classes_type)s, %(age)s, %(hours_on_week)s)"
             execute_data_query(self.connection, query, extra_class)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def update_extra_class(self, user: User, extra_class: dict):
         if check_user_access(user=user, medcard_num=extra_class["medcard_num"]):
@@ -52,7 +53,8 @@ class ExtraClassService():
                                 classes_type = %(old_classes_type)s AND
                                 age = %(old_age)s"""
             execute_data_query(self.connection, query, extra_class)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_extra_class(self, user: User, extra_class: dict):
         if check_user_access(user=user, medcard_num=extra_class["medcard_num"]):
@@ -60,4 +62,5 @@ class ExtraClassService():
                                                         classes_type = %(classes_type)s AND
                                                         age = %(age)s"""
             execute_data_query(self.connection, query, extra_class)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None

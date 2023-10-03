@@ -38,7 +38,8 @@ class AllergyService():
             query = f"INSERT INTO allergyes (medcard_num, allergen, allergy_type, start_age, reaction_type, diagnosis_date, note) VALUES %s"
             allergy_data = SerializationService.serialization_allergy_to_create(medcard_num, allergy)
             execute_data_query(self.connection, query, allergy_data)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def update_allergy(self, user: User, allergy: dict):
         if check_user_access(user=user, medcard_num=allergy["medcard_num"]):
@@ -50,10 +51,12 @@ class AllergyService():
                                                 note = %(note)s
                         WHERE medcard_num = %(medcard_num)s AND allergen = %(prev_allergen)s"""
             execute_data_query(self.connection, query, allergy)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
 
     def delete_allergy(self, user: User, allergy: dict):
         if check_user_access(user=user, medcard_num=allergy["medcard_num"]):
             query = f"DELETE FROM allergyes WHERE medcard_num = %(medcard_num)s AND allergen = %(allergen)s"
             execute_data_query(self.connection, query, allergy)
-        raise exception_403 from None
+        else:
+            raise exception_403 from None
