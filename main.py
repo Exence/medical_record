@@ -5,14 +5,17 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from settings import settings
-from app import router
+from app import router as app_router
+from api import router as api_router
 
 
 locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
 app = FastAPI(
     redoc_url=None,
     )
-app.include_router(router)
+app.include_router(app_router, include_in_schema=False)
+app.include_router(api_router)
+
 app.mount('/static', StaticFiles(directory='static'), name='static')
 
 if __name__ == "__main__":

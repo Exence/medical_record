@@ -3,7 +3,9 @@ from fastapi import (
     Depends,  
 )
 from models.json import JsonForm
+from models.user import User
 from services.medical_record.allergy import AllergyService
+from services.auth import get_current_user
 
 
 router = APIRouter(
@@ -12,16 +14,26 @@ router = APIRouter(
 )
 
 @router.post('/add')
-async def add_allergy(allergy_data: JsonForm, medcard_num: int, service: AllergyService = Depends()):
+async def add_allergy(allergy_data: JsonForm, 
+                      medcard_num: int, 
+                      user: User = Depends(get_current_user),
+                      service: AllergyService = Depends()):
     allergy = allergy_data.json_data
-    service.add_new_allergy(medcard_num, allergy)
+    service.add_new_allergy(user=user,
+                            medcard_num=medcard_num, 
+                            allergy=allergy)
 
 @router.post('/update')
-async def update_allergy(allergy_data: JsonForm, service: AllergyService = Depends()):
+async def update_allergy(allergy_data: JsonForm, 
+                         user: User = Depends(get_current_user),
+                         service: AllergyService = Depends()):
     allergy = allergy_data.json_data
-    service.update_allergy(allergy)
+    service.update_allergy(user=user, allergy=allergy)
 
 @router.post('/delete')
-async def delete_allergy(allergy_data: JsonForm, service: AllergyService = Depends()):
+async def delete_allergy(allergy_data: JsonForm, 
+                         user: User = Depends(get_current_user),
+                         service: AllergyService = Depends()):
     allergy = allergy_data.json_data
-    service.delete_allergy(allergy)
+    service.delete_allergy(user=user, allergy=allergy)
+    

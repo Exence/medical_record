@@ -22,6 +22,13 @@ from database import (
 )
 
 
+def check_user_access(user: User, medcard_num: int, connection: Any = Depends(get_connection)) -> bool:
+        if user.access_level == 'user':
+            query = f"""SELECT  kindergarten_num FROM childrens WHERE medcard_num = {medcard_num}"""
+            kindergarten_num = execute_read_query_first(connection, query)[0]
+            return kindergarten_num == user.kindergarten_num
+        return True
+
 class UserService():
     @classmethod
     def get_hashed_password(cls, password: str) -> str:

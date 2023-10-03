@@ -3,6 +3,7 @@ from datetime import (
     timedelta,
 )
 from fastapi import (
+    Cookie,
     Depends,
     HTTPException,
     status,
@@ -27,11 +28,14 @@ from services.serialization import SerializationService
 from typing import Any
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/sign-in')
 
 def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
     return AuthService.validate_token(token)
 
+def get_current_user_from_cookie(access_token: str | None = Cookie(default=None)) -> User:
+    return AuthService.validate_token(access_token)
+    
 class AuthService():
     @classmethod
     def verify_password(cls, password: str, password_hash: str) -> bool:        

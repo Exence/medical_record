@@ -8,6 +8,9 @@ from fastapi.templating import Jinja2Templates
 
 from models.child import CreateChildForm
 from models.json import JsonForm
+from models.user import User
+
+from services.auth import get_current_user_from_cookie
 from services.medical_record.medical_record import MedicalRecordService
 from services.medical_record.allergy import AllergyService
 from services.medical_record.extra_class import ExtraClassService
@@ -41,6 +44,7 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get('/')
 def get_child_medcard(medcard_num: int, request: Request, 
+                      user: User = Depends(get_current_user_from_cookie),
                       service: MedicalRecordService = Depends(),
                       allergy_service: AllergyService = Depends(),
                       extra_class_service: ExtraClassService = Depends(),
@@ -60,28 +64,28 @@ def get_child_medcard(medcard_num: int, request: Request,
                       ongoing_medical_supervision_service: OngoingMedicalSupervisionService = Depends(),
                       screening_service: ScreeningService = Depends()):
     child = service.get_child_by_medcard_num(medcard_num)
-    allergyes = allergy_service.get_allergyes_by_medcard_num(medcard_num)
+    allergyes = allergy_service.get_allergyes_by_medcard_num(user=user, medcard_num=medcard_num)
     father = get_parent_by_id(service.connection, child.father_id)
     mother = get_parent_by_id(service.connection, child.mother_id)
-    extra_classes = extra_class_service.get_extra_classes_by_medcard_num(medcard_num)
-    past_illnesses = past_illness_service.get_past_illnesses_by_medcard_num(medcard_num)
-    hospitalizations = hospitalization_service.get_hospitalizations_by_medcard_num(medcard_num)
-    spa_treatments = spa_treatment_service.get_spa_treatments_by_medcard_num(medcard_num)
-    medical_certificates = medical_certificate_service.get_medical_certificates_by_medcard_num(medcard_num)
-    dispensaryes = dispensary_service.get_dispensaryes_by_medcard_num(medcard_num)
-    dewormings = deworming_service.get_dewormings_by_medcard_num(medcard_num)
-    oral_sanations = oral_sanation_service.get_oral_sanations_by_medcard_num(medcard_num)
+    extra_classes = extra_class_service.get_extra_classes_by_medcard_num(user=user, medcard_num=medcard_num)
+    past_illnesses = past_illness_service.get_past_illnesses_by_medcard_num(user=user, medcard_num=medcard_num)
+    hospitalizations = hospitalization_service.get_hospitalizations_by_medcard_num(user=user, medcard_num=medcard_num)
+    spa_treatments = spa_treatment_service.get_spa_treatments_by_medcard_num(user=user, medcard_num=medcard_num)
+    medical_certificates = medical_certificate_service.get_medical_certificates_by_medcard_num(user=user, medcard_num=medcard_num)
+    dispensaryes = dispensary_service.get_dispensaryes_by_medcard_num(user=user, medcard_num=medcard_num)
+    dewormings = deworming_service.get_dewormings_by_medcard_num(user=user, medcard_num=medcard_num)
+    oral_sanations = oral_sanation_service.get_oral_sanations_by_medcard_num(user=user, medcard_num=medcard_num)
     prof_vac_names = get_vac_names_by_type(service.connection, 'Профилактическая')
     epid_vac_names = get_vac_names_by_type(service.connection, 'По показаниям')
-    prevaccination_checkups = prevaccination_checkup_service.get_prevaccination_checkups_by_medcard_num(medcard_num)
-    prof_vaccinations = vaccination_service.get_prof_vaccinations_by_medcard_num(medcard_num)
-    epid_vaccinations = vaccination_service.get_epid_vaccinations_by_medcard_num(medcard_num)
-    gg_injections = gg_injection_service.get_gg_injections_by_medcard_num(medcard_num)
-    mantoux_tests = mantoux_test_service.get_mantoux_tests_by_medcard_num(medcard_num)
-    tub_vacs = tub_vac_service.get_tub_vacs_by_medcard_num(medcard_num)
-    medical_examinations = medical_examination_service.get_medical_examinations_by_medcard_num(medcard_num)
-    ongoing_medical_supervisions = ongoing_medical_supervision_service.get_ongoing_medical_supervisions_by_medcard_num(medcard_num)
-    screenings = screening_service.get_screenings_by_medcard_num(medcard_num)
+    prevaccination_checkups = prevaccination_checkup_service.get_prevaccination_checkups_by_medcard_num(user=user, medcard_num=medcard_num)
+    prof_vaccinations = vaccination_service.get_prof_vaccinations_by_medcard_num(user=user, medcard_num=medcard_num)
+    epid_vaccinations = vaccination_service.get_epid_vaccinations_by_medcard_num(user=user, medcard_num=medcard_num)
+    gg_injections = gg_injection_service.get_gg_injections_by_medcard_num(user=user, medcard_num=medcard_num)
+    mantoux_tests = mantoux_test_service.get_mantoux_tests_by_medcard_num(user=user, medcard_num=medcard_num)
+    tub_vacs = tub_vac_service.get_tub_vacs_by_medcard_num(user=user, medcard_num=medcard_num)
+    medical_examinations = medical_examination_service.get_medical_examinations_by_medcard_num(user=user, medcard_num=medcard_num)
+    ongoing_medical_supervisions = ongoing_medical_supervision_service.get_ongoing_medical_supervisions_by_medcard_num(user=user, medcard_num=medcard_num)
+    screenings = screening_service.get_screenings_by_medcard_num(user=user, medcard_num=medcard_num)
     return templates.TemplateResponse(
         "/medical_record/child/index.html", {"request": request, 
                                              "child": child, 
