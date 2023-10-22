@@ -8,7 +8,6 @@ from fastapi import (
     HTTPException,
     status,
 )
-from fastapi.security import OAuth2PasswordBearer
 from jose import (
     jwt,
     JWTError,
@@ -23,19 +22,17 @@ from database import (
 )
 from models.auth import Token
 from models.user import User
+from services.oauth2_scheme import OAuth2PasswordBearerWithCookie
 from services.serialization import SerializationService
 
 from typing import Any
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/sign-in')
+oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl='/sign-in')
 
 def get_current_user(access_token: str = Depends(oauth2_scheme)) -> User:
     return AuthService.validate_token(access_token)
 
-def get_current_user_from_cookie(access_token: str | None = Cookie(default=None)) -> User:
-    return AuthService.validate_token(access_token)
-    
 class AuthService():
     @classmethod
     def verify_password(cls, password: str, password_hash: str) -> bool:        

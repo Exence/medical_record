@@ -5,7 +5,7 @@ from fastapi import (
 from models.json import JsonForm
 from models.user import User
 from services.medical_record.vaccination import VaccinationService
-from services.auth import get_current_user_from_cookie
+from services.auth import get_current_user
 
 
 router = APIRouter(
@@ -15,21 +15,21 @@ router = APIRouter(
 
 @router.post('/add')
 async def add_extra_class(vaccination_data: JsonForm,
-                          user: User = Depends(get_current_user_from_cookie),
+                          user: User = Depends(get_current_user),
                           service: VaccinationService = Depends()):
     vaccination = vaccination_data.json_data
     service.add_new_vaccination(user=user, vaccination=vaccination)
 
 @router.post('/update')
 async def update_vaccination(vaccination_data: JsonForm,
-                             user: User = Depends(get_current_user_from_cookie),
+                             user: User = Depends(get_current_user),
                              service: VaccinationService = Depends()):
     vaccination = vaccination_data.json_data
     service.update_vaccination(user=user, vaccination=vaccination)
 
 @router.post('/delete')
 async def delete_prof_vaccination(vaccination_data: JsonForm,
-                                  user: User = Depends(get_current_user_from_cookie),
+                                  user: User = Depends(get_current_user),
                                   service: VaccinationService = Depends()):
     vaccination = vaccination_data.json_data
     service.delete_vaccination(user=user, vaccination=vaccination)

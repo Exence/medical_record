@@ -22,11 +22,13 @@ from database import (
 )
 
 
-def check_user_access(user: User, medcard_num: int, connection: Any = Depends(get_connection)) -> bool:
+def check_user_access(user: User, medcard_num: int) -> bool:
         if user.access_level == 'user':
+            connection_gen = get_connection()
+            connection = next(connection_gen)
             query = f"""SELECT  kindergarten_num FROM childrens WHERE medcard_num = {medcard_num}"""
             kindergarten_num = execute_read_query_first(connection, query)[0]
-            print(kindergarten_num)
+            connection.close()
             return kindergarten_num == user.kindergarten_num
         return True
 

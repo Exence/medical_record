@@ -42,7 +42,7 @@ async def sign_in(
                     "cabinet/index.html", {"request": request, "msg": msg, "user": current_user}
                 )
         response.set_cookie(
-            key="access_token", value=f"{jwt_token.access_token}", httponly=True
+            key="access_token", value=f"{jwt_token.token_type} {jwt_token.access_token}", httponly=True
         )
         return response
     except:

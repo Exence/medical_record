@@ -10,7 +10,7 @@ from models.child import CreateChildForm
 from models.json import JsonForm
 from models.user import User
 
-from services.auth import get_current_user_from_cookie
+from services.auth import get_current_user
 from services.medical_record.medical_record import MedicalRecordService
 from services.medical_record.allergy import AllergyService
 from services.medical_record.extra_class import ExtraClassService
@@ -44,7 +44,7 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get('/')
 def get_child_medcard(medcard_num: int, request: Request, 
-                      user: User = Depends(get_current_user_from_cookie),
+                      user: User = Depends(get_current_user),
                       service: MedicalRecordService = Depends(),
                       allergy_service: AllergyService = Depends(),
                       extra_class_service: ExtraClassService = Depends(),
