@@ -277,16 +277,10 @@ const close_delete_modal_btn = document.querySelector('#delete_close_modal');
 
 /* CHILD */
 function update_child(){
-    var child = {
-        "medcard_num": medcard_num
-    }
     $.ajax({
-        type: "POST",
+        type: "GET",
         async: true,
-        url: "/medical_record/child/get",
-        data: JSON.stringify({"json_data": child}),
-        contentType: "application/json",
-        dataType: 'json',
+        url: "/medical_record/child/get/" + medcard_num,
         success: function(data){
             child_surname_modal_inpt.value = data.surname;
             child_name_modal_inpt.value = data.name;
@@ -334,7 +328,7 @@ child_commit_modal_btn.addEventListener('click', () => {
         type: "POST",
         async: true,
         url: "/medical_record/child/update",
-        data: JSON.stringify({"json_data": child}),
+        data: JSON.stringify(child),
         contentType: "application/json",
         dataType: 'json',
         success: () => {
@@ -361,6 +355,7 @@ child_commit_modal_btn.addEventListener('click', () => {
 /* ALLERGY */
 allergy_commit_modal_btn.addEventListener('click', () => {
     var allergy = {
+            "medcard_num": medcard_num,
             "allergen": allergen.value,
             "allergy_type": allergy_type.value,
             "start_age": start_age.value,
@@ -375,7 +370,7 @@ allergy_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/allergy/add",
-                data: JSON.stringify({"json_data": allergy}),
+                data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -390,7 +385,7 @@ allergy_commit_modal_btn.addEventListener('click', () => {
                         allergy_block.innerHTML += '</br><small>Примечание: <em>'+ allergy["note"] +'</em></small>'
                     }
                     allergy_block.innerHTML += '<div class="d-grid gap-2 d-md-flex justify-content-md-end">\
-                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#allergyModal" id="btn-update-'+ allergy["allergen"].replace(/ /g,'') +'" value="' + allergy["allergen"] + '///' + allergy["allergy_type"] + '///' + allergy["start_age"] + '///' + allergy["reaction_type"] + '///' + allergy["diagnosis_date"] + '///' + allergy["note"] + '" onclick="update_allergy(' + allergy["allergen"] + ')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#allergyModal" id="btn-update-'+ allergy["allergen"].replace(/ /g,'') +'" value="' + allergy["allergen"] + '///' + allergy["allergy_type"] + '///' + allergy["start_age"] + '///' + allergy["reaction_type"] + '///' + allergy["diagnosis_date"] + '///' + allergy["note"] + '" onclick="update_allergy(\'' + allergy["allergen"] + '\')">Редактировать</button>\
                         <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" id="btn-delete-'+ allergy["allergen"].replace(/ /g,'') +'"  onclick="delete_allergy(\'' + allergy["allergen"] + '\')">Удалить</button>\
                     </div>'
                 }
@@ -400,12 +395,11 @@ allergy_commit_modal_btn.addEventListener('click', () => {
         case 'update': 
             const allergen_name = allergy_close_modal_btn.value;
             allergy["prev_allergen"] = allergen_name;
-            allergy["medcard_num"] = medcard_num;
             $.ajax({
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/allergy/update",
-                data: JSON.stringify({"json_data": allergy}),
+                data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -2922,7 +2916,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/allergy/delete",
-                data: JSON.stringify({"json_data": allergy}),
+                data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {

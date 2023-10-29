@@ -7,8 +7,8 @@ from fastapi import (
 from fastapi.templating import Jinja2Templates
 
 from models.child import CreateChildForm
-from models.json import JsonForm
-from services.medical_record.medical_record import MedicalRecordService
+from models.child import ChildEdit
+from services.medical_record.medical_record import MedicalRecordService, json_to_child_edit
 
 from .child.child import router as child_router
 
@@ -52,13 +52,11 @@ def show_all_medcards(request: Request, service: MedicalRecordService = Depends(
         "/medical_record/all/index.html", {"request": request, "kindergartens": kindergartens}
     )
 
-@router.post('/child/get')
-async def get_child(child_data: JsonForm,  service: MedicalRecordService = Depends()):
-    medcard_num = child_data.json_data["medcard_num"]
+@router.get('/child/get/{medcard_num}')
+async def get_child(medcard_num: int, service: MedicalRecordService = Depends()):
     child = service.get_child_by_medcard_num(medcard_num)
     return child
 
 @router.post('/child/update')
-async def update_child(child_data: JsonForm,  service: MedicalRecordService = Depends()):
-    child = child_data.json_data
-    service.update_child(child)
+async def update_child(child_data: ChildEdit = Depends(json_to_child_edit),  service: MedicalRecordService = Depends()):
+    service.update_child(child_data)

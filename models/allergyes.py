@@ -7,18 +7,28 @@ from pydantic import (
 )
 
 
-class AllergyBase(BaseModel):
+class AllergyPK(BaseModel):
     medcard_num: int = Field(...)
     allergen: str = Field(...)
+
+
+class AllergyBase(AllergyPK):
     allergy_type: str = Field(...)
     start_age: int = Field(...)
     reaction_type: str = Field(...)
     diagnosis_date: date = Field(...)
     note: str | None
 
-class Allergy(AllergyBase):
+class AllergyUpdate(AllergyBase):
+    prev_allergen: str = Field(...)
     class Config:
         orm_mode = True
+
+class AllergyCreate(AllergyBase):
+    pass
+
+class Allergy(AllergyBase):
+    pass 
 
 class AllergyCreate(AllergyBase):
     @validator("allergy_type")

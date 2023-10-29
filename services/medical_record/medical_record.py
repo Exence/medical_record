@@ -12,6 +12,7 @@ from models.kindergarten import KindergartenWithChildrens
 from models.child import (
     CreateChildForm,
     Child,
+    ChildEdit,
 )
 
 from services.auth import AuthService
@@ -74,7 +75,24 @@ def create_medcard_tranzaction(connection: Any, father: ParentCreate, mother: Pa
     finally:
         if cursor:
             cursor.close()
-    
+ 
+def json_to_child_edit(child_data: dict) -> ChildEdit:
+    child_data = child_data['json_data']
+    return ChildEdit(medcard_num=child_data['medcard_num'],
+                surname=child_data['surname'],
+                name=child_data['name'],
+                patronymic=child_data['patronymic'],
+                kindergarten_name=child_data['kindergarten_name'],
+                birthday=child_data['birthday'],
+                sex=child_data['sex'],
+                group_num=child_data['group_num'],
+                address=child_data['address'],
+                clinic=child_data['clinic'],
+                entering_date=child_data['entering_date'],
+                family_characteristics=child_data['family_characteristics'],
+                family_microclimate=child_data['family_microclimate'],
+                rest_and_class_opportunities=child_data['rest_and_class_opportunities'],
+                case_history=child_data['case_history'])
 
 class MedicalRecordService():
     def __init__(self, connection: Any = Depends(get_connection)):
@@ -124,23 +142,23 @@ class MedicalRecordService():
         return child
 
     
-    def update_child(self, child: dict):
+    def update_child(self, child: ChildEdit):
         cursor = self.connection.cursor()
-        kindergarten_num = get_kindergarten_num_by_name(cursor, child["kindergarten_name"])
+        kindergarten_num = get_kindergarten_num_by_name(cursor, child.kindergarten_name)
         cursor.close()
-        query = f"""UPDATE childrens SET surname = %(surname)s,
-                                         name = %(name)s,
-                                         patronymic = %(patronymic)s,
-                                         kindergarten_num = {kindergarten_num},
-                                         birthday = %(birthday)s,
-                                         sex = %(sex)s,
-                                         group_num = %(group_num)s,
-                                         address = %(address)s,
-                                         clinic = %(clinic)s,
-                                         entering_date = %(entering_date)s,
-                                         family_characteristics = %(family_characteristics)s,
-                                         family_microclimate = %(family_microclimate)s,
-                                         rest_and_class_opportunities = %(rest_and_class_opportunities)s,
-                                         case_history = %(case_history)s
-                    WHERE medcard_num = %(medcard_num)s"""
-        execute_data_query(self.connection, query, child)
+        query = f"""UPDATE childrens SET surname = '{child.surname}',
+                                         name = '{child.name}',
+                                         patronymic = '{child.patronymic}',
+                                         kindergarten_num = '{kindergarten_num}',
+                                         birthday = '{child.birthday}',
+                                         sex = '{child.sex}',
+                                         group_num = '{child.group_num}',
+                                         address = '{child.address}',
+                                         clinic = '{child.clinic}',
+                                         entering_date = '{child.entering_date}',
+                                         family_characteristics = '{child.family_characteristics}',
+                                         family_microclimate = '{child.family_microclimate}',
+                                         rest_and_class_opportunities = '{child.rest_and_class_opportunities}',
+                                         case_history = '{child.case_history}'
+                    WHERE medcard_num = '{child.medcard_num}'"""
+        execute_data_query(self.connection, query)

@@ -14,34 +14,42 @@ from datetime import date
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 
+
 class ChildBase(BaseModel):
     surname: str = Field(..., max_length=150)
     name: str = Field(..., max_length=150)
     patronymic: str = Field(..., max_length=150)
-    kindergarten_num: int = Field(...,gt=-1, lt=1000)
     birthday: date = Field(...)
     sex: str = Field(..., max_length=1)
     group_num: int = Field(...,gt=0,lt=7)
     address: str = Field(..., max_length=250)
     clinic: str = Field(..., max_length=200)
-    edu_type: str = Field(...,max_length=25)
+    edu_type: str = Field(default='ДДУ', max_length=25)
     entering_date: date = Field(...)
-    father_id: int | None
-    mother_id: int | None
     family_characteristics: str = Field(...)
     family_microclimate: str = Field(...)
     rest_and_class_opportunities: str = Field(...)
     case_history: str
 
-class Child(ChildBase):
+class ChildEdit(ChildBase):
     medcard_num: int = Field(...)
     kindergarten_name: str | None
-
+    
     class Config:
         orm_mode = True
+        
+class Child(ChildEdit):
+    father_id: int | None
+    mother_id: int | None
+    kindergarten_num: int = Field(...,gt=-1, lt=1000)
+
 
 
 class ChildCreate(ChildBase):
+    father_id: int | None
+    mother_id: int | None
+    kindergarten_num: int = Field(...,gt=-1, lt=1000)
+
     @validator("name")
     def validate_name(cls, value):
         if not LETTER_MATCH_PATTERN.match(value):
