@@ -1,70 +1,90 @@
-import psycopg2
-
+from datetime import date
 from fastapi import (
     Depends,
+    HTTPException,
+    status,
 )
-from typing import (
-    Any,
-    )
+from sqlalchemy.orm import Session
 
-from database import (
-    get_connection,
-    execute_data_query,
-    execute_read_query_first,
-    execute_read_query_all,
-)
-from services.serialization import SerializationService
-from services.user import check_user_access
+from database import get_session
+from services.user import check_user_access_to_medcard
 
-from models.mantoux_test import MantouxTest
+from models.mantoux_test import MantouxTestUpdate, MantouxTestCreate, MantouxTestPK
 from models.user import User
-from models.exceptions import exception_403
-
+from tables import MantouxTest
 
 class MantouxTestService():
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
+
+    def _get_by_pk(self, medcard_num: int, check_date: date) -> MantouxTest:
+        mantoux_test = (
+            self.session
+            .query(MantouxTest)
+            .filter_by(medcard_num=medcard_num,check_date=check_date)
+            .first()
+        )
+
+        if not mantoux_test:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='MantouxTest is not found'
+            )
+        return mantoux_test
 
     def get_mantoux_tests_by_medcard_num(self, user: User, medcard_num: int) -> list[MantouxTest]:
-        if check_user_access(user=user, medcard_num=medcard_num):
-            query = f"""SELECT  * FROM mantoux_tests WHERE medcard_num = {medcard_num}  ORDER BY check_date"""
-            selected_mantoux_tests = execute_read_query_all(self.connection, query)
-            mantoux_tests = []
-            for mantoux_test in selected_mantoux_tests:
-                mantoux_tests.append(SerializationService.serialization_mantoux_test(mantoux_test))
-            return mantoux_tests
-        raise exception_403 from None
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            query = (
+                self.session.query(MantouxTest)
+                .filter_by(medcard_num=medcard_num)
+                .order_by(MantouxTest.check_date)
+            )
+            mantoux_tests = query.all()            
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return mantoux_tests
     
-    def get_mantoux_test_by_pk(self, user: User, mantoux_test_data: dict) -> MantouxTest:
-        if check_user_access(user=user, medcard_num=mantoux_test_data["medcard_num"]):
-            query = f"""SELECT * FROM mantoux_tests WHERE medcard_num = '{mantoux_test_data["medcard_num"]}' AND
-                                                        check_date = '{mantoux_test_data["check_date"]}'"""
-            mantoux_test = execute_read_query_first(self.connection, query)
-            return SerializationService.serialization_mantoux_test(mantoux_test)
-        raise exception_403 from None
+    def get_mantoux_test_by_pk(self, user: User, mantoux_test_pk: MantouxTestPK):
+        if check_user_access_to_medcard(user=user, medcard_num=mantoux_test_pk.medcard_num):
+            mantoux_test = self._get_by_pk(mantoux_test_pk.medcard_num, mantoux_test_pk.check_date)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return mantoux_test
 
-    def add_new_mantoux_test(self, user: User, mantoux_test: dict):
-        if check_user_access(user=user, medcard_num=mantoux_test["medcard_num"]):
-            query = f"""INSERT INTO mantoux_tests (medcard_num, check_date, result) 
-                            VALUES (%(medcard_num)s, %(check_date)s, %(result)s)"""
-            execute_data_query(self.connection, query, mantoux_test)
+    def add_new_mantoux_test(self, user: User, mantoux_test_data: MantouxTestCreate):
+        if check_user_access_to_medcard(user=user, medcard_num=mantoux_test_data.medcard_num):
+            mantoux_test = MantouxTest(**mantoux_test_data.dict())
+            self.session.add(mantoux_test)
+            self.session.commit()            
         else:
-            raise exception_403 from None
-    
-    def update_mantoux_test(self, user: User, mantoux_test: dict):
-        if check_user_access(user=user, medcard_num=mantoux_test["medcard_num"]):
-            query = f"""UPDATE mantoux_tests SET check_date = %(check_date)s,
-                                                            result = %(result)s
-                        WHERE medcard_num = %(medcard_num)s AND
-                            check_date = %(old_check_date)s"""
-            execute_data_query(self.connection, query, mantoux_test)
-        else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return mantoux_test
 
-    def delete_mantoux_test(self, user: User, mantoux_test: dict):
-        if check_user_access(user=user, medcard_num=mantoux_test["medcard_num"]):
-            query = f"""DELETE FROM mantoux_tests WHERE  medcard_num = %(medcard_num)s AND
-                                                        check_date = %(check_date)s"""
-            execute_data_query(self.connection, query, mantoux_test)
+    def update_mantoux_test(self, user: User, mantoux_test_data: MantouxTestUpdate):
+        if check_user_access_to_medcard(user=user, medcard_num=mantoux_test_data.medcard_num):
+            mantoux_test = self._get_by_pk(mantoux_test_data.medcard_num, mantoux_test_data.prev_check_date)
+            for field, value in mantoux_test_data:
+                if field != 'prev_check_date':
+                    setattr(mantoux_test, field, value)
+            self.session.commit()
+            return mantoux_test
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+
+    def delete_mantoux_test(self, user: User, mantoux_test_pk: MantouxTestPK):
+        if check_user_access_to_medcard(user=user, medcard_num=mantoux_test_pk.medcard_num):
+            mantoux_test = self._get_by_pk(mantoux_test_pk.medcard_num, mantoux_test_pk.check_date)
+            self.session.delete(mantoux_test)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )

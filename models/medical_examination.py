@@ -1,5 +1,7 @@
 import re
 from datetime import date
+from decimal import Decimal
+from enum import Enum
 from fastapi import HTTPException
 from pydantic import (
     BaseModel,
@@ -8,13 +10,28 @@ from pydantic import (
 )
 
 
-class MedicalExaminationBase(BaseModel):
+class MedicalExaminationPeriodKind(str, Enum):
+    FIRST = 'Перед поступлением в ясли-сад, детский сад'
+    SECOND = 'За 1 год до школы'
+    THIRD = 'Перед школой'
+    
+class HealthGroupKind(str, Enum):
+    FIRST = 'I'
+    SECOND = 'II'
+    THIRD = 'III'
+    FOURTH = 'IV'
+
+class SportGroupKind(str, Enum):
+    BASIC = 'Основная'
+    EXERCISE_THERAPY = 'Лечебная'
+class MedicalExaminationPK(BaseModel):
     medcard_num: int = Field(...)
-    period: str = Field(...)
+    period: MedicalExaminationPeriodKind = Field(...)
+class MedicalExaminationBase(MedicalExaminationPK):
     examination_date: date = Field(...)
-    age: int = Field(...)
-    height: float = Field(...)
-    weight: float = Field(...)
+    age: int | None
+    height: Decimal = Field(...)
+    weight: Decimal = Field(...)
     complaints: str | None
     pediatrician: str | None
     orthopaedist: str | None
@@ -32,8 +49,8 @@ class MedicalExaminationBase(BaseModel):
     general_diagnosis: str | None
     physical_development: str | None
     mental_development: str | None
-    health_group: str | None
-    sport_group: str | None
+    health_group: HealthGroupKind = Field(...)
+    sport_group: SportGroupKind = Field(...)
     med_and_ped_conclusion: str | None
     recommendations: str | None
 
@@ -57,3 +74,6 @@ class MedicalExaminationCreate(MedicalExaminationBase):
                 status_code=422, detail="Health group should be I-IV"
             )
         return value
+    
+class MedicalExaminationUpdate(MedicalExaminationCreate):
+    prev_period: str = Field(...)

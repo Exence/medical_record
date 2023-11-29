@@ -1,70 +1,90 @@
-import psycopg2
-
+from datetime import date
 from fastapi import (
     Depends,
+    HTTPException,
+    status,
 )
-from typing import (
-    Any,
-    )
+from sqlalchemy.orm import Session
 
-from database import (
-    get_connection,
-    execute_data_query,
-    execute_read_query_first,
-    execute_read_query_all,
-)
-from services.serialization import SerializationService
-from services.user import check_user_access
+from database import get_session
+from services.user import check_user_access_to_medcard
 
-from models.deworming import Deworming
+from models.deworming import DewormingUpdate, DewormingCreate, DewormingPK
 from models.user import User
-from models.exceptions import exception_403
-
+from tables import Deworming
 
 class DewormingService():
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
+
+    def _get_by_pk(self, medcard_num: int, deworming_date: date) -> Deworming:
+        deworming = (
+            self.session
+            .query(Deworming)
+            .filter_by(medcard_num=medcard_num,deworming_date=deworming_date)
+            .first()
+        )
+
+        if not deworming:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Deworming is not found'
+            )
+        return deworming
 
     def get_dewormings_by_medcard_num(self, user: User, medcard_num: int) -> list[Deworming]:
-        dewormings = []
-        if check_user_access(user=user, medcard_num=medcard_num):
-            query = f"""SELECT  * FROM dewormings WHERE medcard_num = {medcard_num} ORDER BY deworming_date"""
-            selected_dewormings = execute_read_query_all(self.connection, query)
-            for deworming in selected_dewormings:
-                dewormings.append(SerializationService.serialization_deworming(deworming))         
-            return dewormings
-        raise exception_403 from None
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            query = (
+                self.session.query(Deworming)
+                .filter_by(medcard_num=medcard_num)
+                .order_by(Deworming.deworming_date)
+            )
+            dewormings = query.all()            
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return dewormings
     
-    def get_deworming_by_pk(self, user: User, deworming_data: dict) -> Deworming:
-        if check_user_access(user=user, medcard_num=deworming_data["medcard_num"]):
-            query = f"""SELECT * FROM dewormings WHERE medcard_num = '{deworming_data["medcard_num"]}' AND
-                                                            deworming_date = '{deworming_data["deworming_date"]}'"""
-            deworming = execute_read_query_first(self.connection, query)
-            return SerializationService.serialization_deworming(deworming)        
-        raise exception_403 from None
+    def get_deworming_by_pk(self, user: User, deworming_pk: DewormingPK):
+        if check_user_access_to_medcard(user=user, medcard_num=deworming_pk.medcard_num):
+            deworming = self._get_by_pk(deworming_pk.medcard_num, deworming_pk.deworming_date)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return deworming
 
-    def add_new_deworming(self, user: User, deworming: dict):
-        if check_user_access(user=user, medcard_num=deworming["medcard_num"]):
-            query = f"""INSERT INTO dewormings (medcard_num, deworming_date, result) 
-                            VALUES (%(medcard_num)s, %(deworming_date)s, %(result)s)"""
-            execute_data_query(self.connection, query, deworming)
+    def add_new_deworming(self, user: User, deworming_data: DewormingCreate):
+        if check_user_access_to_medcard(user=user, medcard_num=deworming_data.medcard_num):
+            deworming = Deworming(**deworming_data.dict())
+            self.session.add(deworming)
+            self.session.commit()            
         else:
-            raise exception_403 from None
-    
-    def update_deworming(self, user: User, deworming: dict):
-        if check_user_access(user=user, medcard_num=deworming["medcard_num"]):
-            query = f"""UPDATE  dewormings SET deworming_date = %(deworming_date)s, 
-                                            result = %(result)s
-                        WHERE   medcard_num = %(medcard_num)s AND
-                                deworming_date = %(old_deworming_date)s"""
-            execute_data_query(self.connection, query, deworming)
-        else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return deworming
 
-    def delete_deworming(self, user: User, deworming: dict):
-        if check_user_access(user=user, medcard_num=deworming["medcard_num"]):
-            query = f"""DELETE FROM dewormings WHERE  medcard_num = %(medcard_num)s AND
-                                                    deworming_date = %(deworming_date)s"""
-            execute_data_query(self.connection, query, deworming)
+    def update_deworming(self, user: User, deworming_data: DewormingUpdate):
+        if check_user_access_to_medcard(user=user, medcard_num=deworming_data.medcard_num):
+            deworming = self._get_by_pk(deworming_data.medcard_num, deworming_data.prev_deworming_date)
+            for field, value in deworming_data:
+                if field != 'prev_deworming_date':
+                    setattr(deworming, field, value)
+            self.session.commit()
+            return deworming
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+
+    def delete_deworming(self, user: User, deworming_pk: DewormingPK):
+        if check_user_access_to_medcard(user=user, medcard_num=deworming_pk.medcard_num):
+            deworming = self._get_by_pk(deworming_pk.medcard_num, deworming_pk.deworming_date)
+            self.session.delete(deworming)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )

@@ -15,6 +15,16 @@ LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 
 
+class ParentModel(BaseModel):
+    surname: str = Field(..., max_length=150)
+    name: str = Field(..., max_length=150)
+    patronymic: str = Field(..., max_length=150)
+    birthday_year: int = Field(..., gt=1900)
+    education: str = Field(...)
+    phone_num: int = Field(..., gt=80000000000, lt=90000000000)
+
+class ChildPK(BaseModel):
+    medcard_num: int = Field(...)
 class ChildBase(BaseModel):
     surname: str = Field(..., max_length=150)
     name: str = Field(..., max_length=150)
@@ -26,28 +36,28 @@ class ChildBase(BaseModel):
     clinic: str = Field(..., max_length=200)
     edu_type: str = Field(default='ДДУ', max_length=25)
     entering_date: date = Field(...)
+    father: ParentModel | None
+    mother: ParentModel | None
     family_characteristics: str = Field(...)
     family_microclimate: str = Field(...)
     rest_and_class_opportunities: str = Field(...)
     case_history: str
 
-class ChildEdit(ChildBase):
-    medcard_num: int = Field(...)
+class ChildView(ChildPK, ChildBase):
     kindergarten_name: str | None
+    
+class ChildEdit(ChildPK, ChildBase):    
+    kindergarten_num: str | None
     
     class Config:
         orm_mode = True
         
-class Child(ChildEdit):
-    father_id: int | None
-    mother_id: int | None
+class Child(ChildPK, ChildBase):
     kindergarten_num: int = Field(...,gt=-1, lt=1000)
-
-
+    class Config:
+        orm_mode = True
 
 class ChildCreate(ChildBase):
-    father_id: int | None
-    mother_id: int | None
     kindergarten_num: int = Field(...,gt=-1, lt=1000)
 
     @validator("name")

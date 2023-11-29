@@ -1,6 +1,7 @@
 import re
 
 from datetime import date
+from decimal import Decimal
 from fastapi import HTTPException
 from pydantic import (
     BaseModel,
@@ -12,12 +13,14 @@ from pydantic import (
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 REACTION_MATCH_PATTERN = re.compile(r"^(Не|За)медленная$")
 
-class GammaGlobulinInjectionBase(BaseModel):
+class GammaGlobulinInjectionPK(BaseModel):
     medcard_num: int = Field(...)
     vac_date: date = Field(...)
+
+class GammaGlobulinInjectionBase(GammaGlobulinInjectionPK):
     reason: str = Field(...)
     serial: str = Field(..., max_length=90)
-    dose: float = Field(...)
+    dose: Decimal = Field(...)
     reaction: str = Field(...)
     doctor: str = Field(..., max_length=200)
 
@@ -41,3 +44,6 @@ class GammaGlobulinInjectionCreate(GammaGlobulinInjectionBase):
                 status_code=422, detail="Field doctor should contains only letters"
             )
         return value
+    
+class GammaGlobulinInjectionUpdate(GammaGlobulinInjectionCreate):
+    prev_vac_date: date = Field(...)

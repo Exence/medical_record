@@ -15,11 +15,12 @@ from pydantic import (
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 REACTION_MATCH_PATTERN = re.compile(r"^(Не|За)медленная$")
 
-class VaccinationBase(BaseModel):
+class VaccinationPK(BaseModel):
     medcard_num: int = Field(...)
     vac_name_id: int = Field(...)
-    vac_type: str = Field(..., max_length=16)
-    vac_date: date = Field(...)
+    vac_type: str = Field(..., max_length=16) 
+class VaccinationBase(VaccinationPK):
+    vac_date: date = Field(...)    
     serial: str = Field(..., max_length=90)
     dose: float = Field(...)
     introduction_method: str = Field(..., max_length=90)
@@ -27,7 +28,6 @@ class VaccinationBase(BaseModel):
     doctor: str = Field(..., max_length=200)
 
 class Vaccination(VaccinationBase):
-    vac_name: str
 
     class Config:
         orm_mode = True
@@ -56,6 +56,13 @@ class VaccinationCreate(VaccinationBase):
                 status_code=422, detail="Field doctor should contains only letters"
             )
         return value
+
+class VaccinationUpdate(VaccinationCreate):
+    prev_vac_name_id: int = Field(...)
+    prev_vac_type: str = Field(...)
+
+class VaccinationView(VaccinationBase):
+    vac_name: str
 
 
 class VacReport(BaseModel):

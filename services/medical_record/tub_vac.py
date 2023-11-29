@@ -1,72 +1,90 @@
-import psycopg2
-
+from datetime import date
 from fastapi import (
     Depends,
+    HTTPException,
+    status,
 )
-from typing import (
-    Any,
-    )
+from sqlalchemy.orm import Session
 
-from database import (
-    get_connection,
-    execute_data_query,
-    execute_read_query_first,
-    execute_read_query_all,
-)
-from services.serialization import SerializationService
-from services.user import check_user_access
+from database import get_session
+from services.user import check_user_access_to_medcard
 
-from models.tub_vac import TuberculosisVaccination
+from models.tub_vac import TuberculosisVaccinationUpdate, TuberculosisVaccinationCreate, TuberculosisVaccinationPK
 from models.user import User
-from models.exceptions import exception_403
-
+from tables import TuberculosisVaccination
 
 class TuberculosisVaccinationService():
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
+
+    def _get_by_pk(self, medcard_num: int, vac_date: date) -> TuberculosisVaccination:
+        tub_vac = (
+            self.session
+            .query(TuberculosisVaccination)
+            .filter_by(medcard_num=medcard_num,vac_date=vac_date)
+            .first()
+        )
+
+        if not tub_vac:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='TuberculosisVaccination is not found'
+            )
+        return tub_vac
 
     def get_tub_vacs_by_medcard_num(self, user: User, medcard_num: int) -> list[TuberculosisVaccination]:
-        if check_user_access(user=user, medcard_num=medcard_num):
-            query = f"""SELECT  * FROM tuberculosis_vaccinations WHERE medcard_num = {medcard_num} ORDER BY vac_date"""
-            selected_tub_vacs = execute_read_query_all(self.connection, query)
-            tub_vacs = []
-            for tub_vac in selected_tub_vacs:
-                tub_vacs.append(SerializationService.serialization_tub_vac(tub_vac))
-            return tub_vacs
-        raise exception_403 from None
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            query = (
+                self.session.query(TuberculosisVaccination)
+                .filter_by(medcard_num=medcard_num)
+                .order_by(TuberculosisVaccination.vac_date)
+            )
+            tub_vacs = query.all()            
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return tub_vacs
     
-    def get_tub_vac_by_pk(self, user: User, tub_vac_data: dict) -> TuberculosisVaccination:
-        if check_user_access(user=user, medcard_num=tub_vac_data["medcard_num"]):
-            query = f"""SELECT * FROM tuberculosis_vaccinations WHERE medcard_num = '{tub_vac_data["medcard_num"]}' AND
-                                                                    vac_date = '{tub_vac_data["vac_date"]}'"""
-            tub_vac = execute_read_query_first(self.connection, query)
-            return SerializationService.serialization_tub_vac(tub_vac)
-        raise exception_403 from None
+    def get_tub_vac_by_pk(self, user: User, tub_vac_pk: TuberculosisVaccinationPK):
+        if check_user_access_to_medcard(user=user, medcard_num=tub_vac_pk.medcard_num):
+            tub_vac = self._get_by_pk(tub_vac_pk.medcard_num, tub_vac_pk.vac_date)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return tub_vac
 
-    def add_new_tub_vac(self, user: User, tub_vac: dict):
-        if check_user_access(user=user, medcard_num=tub_vac["medcard_num"]):
-            query = f"""INSERT INTO tuberculosis_vaccinations (medcard_num, vac_date, serial, dose, doctor) 
-                            VALUES (%(medcard_num)s, %(vac_date)s, %(serial)s, %(dose)s, %(doctor)s)"""
-            execute_data_query(self.connection, query, tub_vac)
+    def add_new_tub_vac(self, user: User, tub_vac_data: TuberculosisVaccinationCreate):
+        if check_user_access_to_medcard(user=user, medcard_num=tub_vac_data.medcard_num):
+            tub_vac = TuberculosisVaccination(**tub_vac_data.dict())
+            self.session.add(tub_vac)
+            self.session.commit()            
         else:
-            raise exception_403 from None
-    
-    def update_tub_vac(self, user: User, tub_vac: dict):
-        if check_user_access(user=user, medcard_num=tub_vac["medcard_num"]):
-            query = f"""UPDATE tuberculosis_vaccinations SET vac_date = %(vac_date)s,
-                                                serial = %(serial)s, 
-                                                dose = %(dose)s,
-                                                doctor = %(doctor)s
-                        WHERE   medcard_num = %(medcard_num)s AND
-                                vac_date = %(old_vac_date)s"""
-            execute_data_query(self.connection, query, tub_vac)
-        else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return tub_vac
 
-    def delete_tub_vac(self, user: User, tub_vac: dict):
-        if check_user_access(user=user, medcard_num=tub_vac["medcard_num"]):
-            query = f"""DELETE FROM tuberculosis_vaccinations WHERE  medcard_num = %(medcard_num)s AND
-                                                        vac_date = %(vac_date)s"""
-            execute_data_query(self.connection, query, tub_vac)
+    def update_tub_vac(self, user: User, tub_vac_data: TuberculosisVaccinationUpdate):
+        if check_user_access_to_medcard(user=user, medcard_num=tub_vac_data.medcard_num):
+            tub_vac = self._get_by_pk(tub_vac_data.medcard_num, tub_vac_data.prev_vac_date)
+            for field, value in tub_vac_data:
+                if field != 'prev_vac_date':
+                    setattr(tub_vac, field, value)
+            self.session.commit()
+            return tub_vac
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+
+    def delete_tub_vac(self, user: User, tub_vac_pk: TuberculosisVaccinationPK):
+        if check_user_access_to_medcard(user=user, medcard_num=tub_vac_pk.medcard_num):
+            tub_vac = self._get_by_pk(tub_vac_pk.medcard_num, tub_vac_pk.vac_date)
+            self.session.delete(tub_vac)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )

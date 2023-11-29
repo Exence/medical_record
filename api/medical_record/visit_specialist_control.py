@@ -2,7 +2,13 @@ from fastapi import (
     APIRouter,
     Depends,  
 )
-from models.json import JsonForm
+from models.visit_specialist_control import (
+    VisitSpecialistControlMain,
+    VisitSpecialistControlPK,
+    VisitSpecialistControl,
+    VisitSpecialistControlCreate,
+    VisitSpecialistControlUpdate,
+)
 from models.user import User
 from services.medical_record.visit_specialist_control import VisitSpecialistControlService
 from services.auth import get_current_user
@@ -14,38 +20,31 @@ router = APIRouter(
 )
 
 @router.post('/get_all')
-async def get_visit_specialist_control(visit_specialist_control_data: JsonForm, 
+async def get_visit_specialist_control(visit_specialist_control: VisitSpecialistControlMain, 
                                        user: User = Depends(get_current_user), 
                                        service: VisitSpecialistControlService = Depends()):
-    visit_specialist_control = visit_specialist_control_data.json_data
-    visit_specialist_controls = service.get_visit_specialist_controls_by_dispensary(user=user, visit_specialist_control_data=visit_specialist_control)
-    return {"visit_specialist_control": visit_specialist_controls}
-
-@router.post('/get')
-async def get_visit_specialist_control(visit_specialist_control_data: JsonForm,  
+    return service.get_visit_specialist_controls_by_dispensary(user=user, visit_specialist_control=visit_specialist_control)
+    
+@router.post('/get_one')
+async def get_visit_specialist_control(visit_specialist_control_pk: VisitSpecialistControlPK,  
                                        user: User = Depends(get_current_user),
                                        service: VisitSpecialistControlService = Depends()):
-    visit_specialist_control = visit_specialist_control_data.json_data
-    visit_specialist_control = service.get_visit_specialist_control_by_pk(user=user, visit_specialist_control_data=visit_specialist_control)
-    return {"visit_specialist_control": visit_specialist_control}
+    return service.get_visit_specialist_control_by_pk(user=user, visit_specialist_control_pk=visit_specialist_control_pk)
 
 @router.post('/add')
-async def add_extra_class(visit_specialist_control_data: JsonForm, 
+async def add_extra_class(visit_specialist_control: VisitSpecialistControlCreate, 
                           user: User = Depends(get_current_user), 
                           service: VisitSpecialistControlService = Depends()):
-    visit_specialist_control = visit_specialist_control_data.json_data
-    service.add_new_visit_specialist_control(user=user, visit_specialist_control=visit_specialist_control)
+    service.add_new_visit_specialist_control(user=user, visit_specialist_control_data=visit_specialist_control)
 
 @router.post('/update')
-async def update_visit_specialist_control(visit_specialist_control_data: JsonForm, 
+async def update_visit_specialist_control(visit_specialist_control: VisitSpecialistControlUpdate, 
                                           user: User = Depends(get_current_user), 
                                           service: VisitSpecialistControlService = Depends()):
-    visit_specialist_control = visit_specialist_control_data.json_data
-    service.update_visit_specialist_control(user=user, visit_specialist_control=visit_specialist_control)
+    service.update_visit_specialist_control(user=user, visit_specialist_control_data=visit_specialist_control)
 
 @router.post('/delete')
-async def delete_visit_specialist_control(visit_specialist_control_data: JsonForm, 
+async def delete_visit_specialist_control(visit_specialist_control_pk: VisitSpecialistControlPK, 
                                           user: User = Depends(get_current_user), 
                                           service: VisitSpecialistControlService = Depends()):
-    visit_specialist_control = visit_specialist_control_data.json_data
-    service.delete_visit_specialist_control(user=user, visit_specialist_control=visit_specialist_control)
+    service.delete_visit_specialist_control(user=user, visit_specialist_control_pk=visit_specialist_control_pk)

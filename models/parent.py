@@ -1,6 +1,6 @@
 import re
 
-from collections import namedtuple
+from enum import Enum
 from fastapi import (
     HTTPException,
 )
@@ -13,22 +13,29 @@ from pydantic import (
 
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 
+class PatentType(str, Enum):
+    MOTHER = 'mothet'
+    FATHET = 'father'
+
+class ParentPK(BaseModel):
+    id: int = Field(...)
+
 class ParentBase(BaseModel):
     surname: str = Field(..., max_length=150)
     name: str = Field(..., max_length=150)
     patronymic: str = Field(..., max_length=150)
     birthday_year: int = Field(..., gt=1900)
     education: str = Field(...)
-    phone_num: int = Field(...,gt=80000000000, lt=90000000000)
+    phone_num: int = Field(..., gt=80000000000, lt=90000000000)
 
-class Parent(ParentBase):
-    id: int = Field(...)
-    
+class Parent(ParentPK, ParentBase):
     class Config:
         orm_mode = True
 
 
 class ParentCreate(ParentBase):
+    parent_type: PatentType = Field(...)
+     
     @validator("name")
     def validate_name(cls, value):
         if not LETTER_MATCH_PATTERN.match(value):
@@ -63,3 +70,6 @@ class ParentCreate(ParentBase):
     
     def to_tuple(self):
         return (self.surname, self.name, self.patronymic, self.birthday_year, self.education, self.phone_num, )
+
+class ParentUpdate(ParentPK, ParentCreate):
+    pass

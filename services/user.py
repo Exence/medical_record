@@ -1,35 +1,37 @@
 from fastapi import (
     Depends,
     HTTPException,
+    status,
 )
+from sqlalchemy.orm import Session
+
+from database import get_session
+
 from passlib.hash import bcrypt
 from typing import Any
 
 from models.user import (
-        User,
         CreateUserForm,
+        UserCreate
 )
 
 from services.auth import AuthService
 from services.serialization import SerializationService
 
 from settings import settings
-from database import (
-    get_connection,
-    execute_data_query,
-    execute_read_query_first,
-    execute_read_query_all,
-)
+
+from tables import Child, Kindergarten, User
 
 
-def check_user_access(user: User, medcard_num: int) -> bool:
+def check_user_access_to_medcard(user: User, medcard_num: int, session: Session = Depends(get_session)) -> bool:
         if user.access_level == 'user':
-            connection_gen = get_connection()
-            connection = next(connection_gen)
-            query = f"""SELECT  kindergarten_num FROM childrens WHERE medcard_num = {medcard_num}"""
-            kindergarten_num = execute_read_query_first(connection, query)[0]
-            connection.close()
-            return kindergarten_num == user.kindergarten_num
+            medcard = (
+                session
+                .query(Child)
+                .filter_by(medcard_num=medcard_num)
+                .first()
+            )
+            return medcard.kindergarten_num == user.kindergarten_num
         return True
 
 class UserService():
@@ -37,40 +39,46 @@ class UserService():
     def get_hashed_password(cls, password: str) -> str:
         return bcrypt.encrypt(password + settings.password_salt)
     
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
     
     def create_new_user(self, form_data: CreateUserForm, access_token: str) -> None:
         current_user = AuthService.validate_token(access_token)
         if not current_user.access_level in ['admin', 'db_admin']:
             raise HTTPException(
-                status_code=403, detail="Forbidden"
+                status_code=status.HTTP_403_FORBIDDEN
             )
         try:
-            form_data.password = self.get_hashed_password(form_data.password)
+            password_hash = self.get_hashed_password(form_data.password)
             form_data.login = form_data.login.lower()
 
-            if form_data.access_level in ['admin', 'db_admin']:
-                kindergarten_num = 0
-            else:
-                query = f"SELECT number FROM kindergartens WHERE name = '{form_data.kindergarten_name}'"
-                kindergarten_num = execute_read_query_first(self.connection, query)[0]
+            kindergarten_num = 0
 
-            user = [(form_data.login, form_data.surname, form_data.name, form_data.patronymic, form_data.password, form_data.access_level, kindergarten_num)]
-           
-            insert_query = (
-                f"INSERT INTO users (login, surname, name, patronymic, password_hash, access_level, kindergarten_num) VALUES %s"
-            )
-            execute_data_query(self.connection, insert_query, user)
-            self.connection.commit()
+            if not form_data.access_level in ['admin', 'db_admin']:
+                kindergarten = (
+                    self.session
+                    .query(Kindergarten)
+                    .filter_by(name=form_data.kindergarten_name)
+                    .first()
+                )
+                kindergarten_num = kindergarten.number
+
+            user = UserCreate()
+            for field, value in form_data:
+                if field != 'kindergarten_name' or field != 'password':
+                    setattr(user, field, value)
+            user.kindergarten_num = kindergarten_num
+            user.password_hash = password_hash
+
+            self.session.add(user)
+            self.session.commit()
             return True
         except:
             return False
 
-    def get_all_users(self) -> list:
-        query = f"SELECT * FROM users"
-        selected_users = execute_read_query_all(self.connection, query)
-        users = []
-        for user in selected_users:
-            users.append(SerializationService.serialization_user(self.connection, user))
-        return users
+    def get_all_users(self) -> list[User]:
+        return (
+            self.session
+            .query(User)
+            .all()
+        )

@@ -1,164 +1,70 @@
-import psycopg2
-
+from datetime import date
 from fastapi import (
     Depends,
     HTTPException,
+    status,
 )
-from typing import (
-    Any,
-    )
+from sqlalchemy.orm import Session
 
-from models.kindergarten import KindergartenWithChildrens
-from models.child import (
-    CreateChildForm,
-    Child,
-    ChildEdit,
-)
+from database import get_session
+from services.user import check_user_access_to_medcard
 
-from services.auth import AuthService
-from services.kindergarten import (
-    get_kindergarten_num_by_name,
-    get_kindergarten_name_by_num,
-)
-from services.medical_record.parent import select_parent_id
-from services.serialization import SerializationService
-
-from settings import settings
-from database import (
-    get_connection,
-    execute_data_query,
-    execute_read_query_first,
-    execute_read_query_all,
-)
-
-from models.parent import (
-    Parent,
-    ParentCreate,)
-
-
-def create_medcard_tranzaction(connection: Any, father: ParentCreate, mother: ParentCreate, form_data:CreateChildForm) -> bool:
-    try:
-        cursor = connection.cursor()
-        father_id = None
-        mother_id = None
-
-        query = f"""INSERT INTO parents (surname, name, patronymic, birthday_year, education, phone_num) VALUES %s"""
-
-        if father and mother:  
-            query += ", %s"      
-            cursor.execute(query, [father.to_tuple(), mother.to_tuple()])
-            father_id = select_parent_id(cursor, father)
-            mother_id = select_parent_id(cursor, mother)
-        elif father:
-            cursor.execute(query, [father.to_tuple()])
-            father_id = select_parent_id(cursor, father)
-        else:
-            cursor.execute(query, [mother.to_tuple()])
-            mother_id = select_parent_id(cursor, mother)
-
-        kindergarten_num = get_kindergarten_num_by_name(cursor, form_data.kindergarten_name)
-
-        cursor.close()
-
-        child = SerializationService.serialization_child_to_create(form_data, father_id, mother_id, kindergarten_num)
-
-        query = f"""INSERT INTO childrens (surname, name, patronymic, kindergarten_num, birthday, sex, group_num, address, clinic, edu_type, entering_date, father_id, mother_id, family_characteristics, family_microclimate, rest_and_class_opportunities, case_history) VALUES %s"""
-
-        execute_data_query(connection, query, child)   
-        
-        return True     
-        
-    except (Exception, psycopg2.DatabaseError) as error :
-        print ("Ошибка в транзакции. Отмена всех остальных операций транзакции", error)
-        connection.rollback()
-        return False
-    finally:
-        if cursor:
-            cursor.close()
- 
-def json_to_child_edit(child_data: dict) -> ChildEdit:
-    child_data = child_data['json_data']
-    return ChildEdit(medcard_num=child_data['medcard_num'],
-                surname=child_data['surname'],
-                name=child_data['name'],
-                patronymic=child_data['patronymic'],
-                kindergarten_name=child_data['kindergarten_name'],
-                birthday=child_data['birthday'],
-                sex=child_data['sex'],
-                group_num=child_data['group_num'],
-                address=child_data['address'],
-                clinic=child_data['clinic'],
-                entering_date=child_data['entering_date'],
-                family_characteristics=child_data['family_characteristics'],
-                family_microclimate=child_data['family_microclimate'],
-                rest_and_class_opportunities=child_data['rest_and_class_opportunities'],
-                case_history=child_data['case_history'])
+from models.child import ChildCreate, ChildEdit
+from models.user import User
+from tables import Child, Parent
 
 class MedicalRecordService():
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
 
-    def create_new_medcard(self, form_data: CreateChildForm, access_token: str):
-        current_user = AuthService.validate_token(access_token)
-        father = None
-        mother = None
+    def _get(self, medcard_num: int) -> Child:
+        medcard = (
+            self.session
+            .query(Child)
+            .filter_by(medcard_num=medcard_num)
+            .first()
+        )
 
-        if (form_data.father):
-            father = SerializationService.serialization_parent_to_create(form_data.father.split())
-        
-        if (form_data.mother):
-            mother = SerializationService.serialization_parent_to_create(form_data.mother.split())
-
-        return create_medcard_tranzaction(self.connection, father, mother, form_data)    
-
-    def get_all_childrens(self) -> list:
-        query = f"""SELECT  * FROM all_childrens"""
-        selected_childrens = execute_read_query_all(self.connection, query)
-
-        query = f"""SELECT * FROM kindergartens
-                    WHERE number <> 0"""
-        selected_kindergartens = execute_read_query_all(self.connection, query)
-
-        kindergartens = []
-        for kindergarten in selected_kindergartens:
-            kindergartens.append(KindergartenWithChildrens(number = kindergarten[0], name=kindergarten[1]))
-        
-        for child in selected_childrens:
-            child = SerializationService.serialization_child_to_show(child)
-            for kindergarten in kindergartens:
-                if child.kindergarten_name == kindergarten.name:
-                    kindergarten.groups[child.group_num - 1].append(child)
-
-        return kindergartens          
-
-    def get_child_by_medcard_num(self, medcard_num: int) -> Child:
-        query = f"""SELECT  * FROM childrens WHERE medcard_num = {medcard_num}"""
-        selected_child = execute_read_query_first(self.connection, query)
-        child = SerializationService.serialization_child(selected_child)
-        cursor = self.connection.cursor()
-        kindergarten_name = get_kindergarten_name_by_num(cursor, child.kindergarten_num)
-        cursor.close()
-        child.kindergarten_name = kindergarten_name
-        return child
-
+        if not medcard:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='child is not found'
+            )
+        return medcard
     
-    def update_child(self, child: ChildEdit):
-        cursor = self.connection.cursor()
-        kindergarten_num = get_kindergarten_num_by_name(cursor, child.kindergarten_name)
-        cursor.close()
-        query = f"""UPDATE childrens SET surname = '{child.surname}',
-                                         name = '{child.name}',
-                                         patronymic = '{child.patronymic}',
-                                         kindergarten_num = '{kindergarten_num}',
-                                         birthday = '{child.birthday}',
-                                         sex = '{child.sex}',
-                                         group_num = '{child.group_num}',
-                                         address = '{child.address}',
-                                         clinic = '{child.clinic}',
-                                         entering_date = '{child.entering_date}',
-                                         family_characteristics = '{child.family_characteristics}',
-                                         family_microclimate = '{child.family_microclimate}',
-                                         rest_and_class_opportunities = '{child.rest_and_class_opportunities}',
-                                         case_history = '{child.case_history}'
-                    WHERE medcard_num = '{child.medcard_num}'"""
-        execute_data_query(self.connection, query)
+    def get_medcard_by_num(self, user: User, medcard_num: int) -> Child:
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            medcard = self._get(medcard_num)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return medcard
+
+    def add_new_medcard(self, user: User, child_data: ChildCreate):
+        medcard = Child(**child_data.dict())
+        self.session.add(medcard)
+        self.session.commit()
+        return medcard        
+
+    def update_medcard(self, user: User, medcard_data: ChildEdit):
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_data.medcard_num):
+            medcard = self._get(medcard_data.medcard_num)
+            for field, value in medcard_data:
+                setattr(medcard, field, value)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return medcard
+
+    def delete_medcard(self, user: User, medcard_num: int):
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            medcard = self._get(medcard_num)
+            self.session.delete(medcard)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )

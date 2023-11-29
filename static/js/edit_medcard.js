@@ -281,27 +281,27 @@ function update_child(){
         type: "GET",
         async: true,
         url: "/medical_record/child/get/" + medcard_num,
-        success: function(data){
-            child_surname_modal_inpt.value = data.surname;
-            child_name_modal_inpt.value = data.name;
-            child_patronymic_modal_inpt.value = data.patronymic;
-            child_kindergarten_name_modal_slct.value = data.kindergarten_name.trim();
-            child_birthday_modal_inpt.value = data.birthday;
-            if (data.sex === 'М'){
+        success: function(child){
+            child_surname_modal_inpt.value = child.surname;
+            child_name_modal_inpt.value = child.name;
+            child_patronymic_modal_inpt.value = child.patronymic;
+            child_kindergarten_name_modal_slct.value = child.kindergarten_name.trim();
+            child_birthday_modal_inpt.value = child.birthday;
+            if (sex === 'М'){
                 child_male_modal_rd.checked = true;
                 child_female_modal_rd.checked = false;
             } else {
                 child_male_modal_rd.checked = false;
                 child_female_modal_rd.checked = true;
             }
-            child_group_num_modal_slct.value = data.group_num;
-            child_address_modal_inpt.value = data.address;
-            child_clinic_modal_slct.value = data.clinic.trim();
-            child_entering_date_modal_dtpk.value = data.entering_date;
-            child_family_characteristics_modal_slct.value = data.family_characteristics.trim();
-            child_family_microclimate_modal_slct.value = data.family_microclimate;
-            child_rest_and_class_opportunities_modal_slct.value = data.rest_and_class_opportunities;
-            child_case_history_modal_txt.value = data.case_history;
+            child_group_num_modal_slct.value = child.group_num;
+            child_address_modal_inpt.value = child.address;
+            child_clinic_modal_slct.value = child.clinic.trim();
+            child_entering_date_modal_dtpk.value = child.entering_date;
+            child_family_characteristics_modal_slct.value = child.family_characteristics.trim();
+            child_family_microclimate_modal_slct.value = child.family_microclimate;
+            child_rest_and_class_opportunities_modal_slct.value = child.rest_and_class_opportunities;
+            child_case_history_modal_txt.value = child.case_history;
         }
     });  
 }
@@ -482,7 +482,7 @@ function mother_add_btn_click() {
 }
 
 function parent_update_set_info(unsplit_data){
-    parent_data = unsplit_data.split('///');
+    parent_data = unsplit_split('///');
     parent_surname_inpt.value = parent_data[1];
     parent_name_inpt.value = parent_data[2];
     parent_patronymic_inpt.value = parent_data[3];
@@ -523,11 +523,11 @@ parent_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/parent/add",
-                data: JSON.stringify({"json_data": parent}),
+                data: JSON.stringify(parent),
                 contentType: "application/json",
                 dataType: 'json',
                 success: function(parent_data) {
-                    parent["id"] = parent_data.id;
+                    parent["id"] = parent_id;
                     switch (parent.parent_type) {
                         case 'father':
                             father_div = document.getElementsByName('father-main-div')[0]
@@ -570,7 +570,7 @@ parent_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/parent/update",
-                data: JSON.stringify({"json_data": parent}),
+                data: JSON.stringify(parent),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -668,7 +668,7 @@ class_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/extra_class/add",
-                data: JSON.stringify({"json_data": extra_class}),
+                data: JSON.stringify(extra_class),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -685,22 +685,22 @@ class_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                let old_extra_classes_data = class_close_modal_btn.value.split('///');
-                extra_class["old_classes_type"] = old_extra_classes_data[0];
-                extra_class["old_age"] = old_extra_classes_data[1];
+                let prev_extra_classes_data = class_close_modal_btn.value.split('///');
+                extra_class["prev_classes_type"] = prev_extra_classes_data[0];
+                extra_class["prev_age"] = prev_extra_classes_data[1];
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/extra_class/update",
-                    data: JSON.stringify({"json_data": extra_class}),
+                    data: JSON.stringify(extra_class),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
-                        let extra_classes_div = document.getElementsByName('div-class-' + extra_class.old_classes_type.replace(/ /g,'') + '-' + extra_class.old_age)[0];
+                        let extra_classes_div = document.getElementsByName('div-class-' + extra_class.prev_classes_type.replace(/ /g,'') + '-' + extra_class.prev_age)[0];
                         extra_classes_div.innerHTML = '<p><strong>' + extra_class.classes_type + '</strong> в возрасте: <u><mark>' + extra_class.age + '</mark></u> по <u><mark>' + extra_class.hours_on_week + '</mark></u> ч/нед.</p>\
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#classModal" name="update-class-' + extra_class.classes_type.replace(/ /g,'') + '-' + extra_class.age + '-btn" onclick="update_class(\'' + extra_class.classes_type +'\', \'' + extra_class.age + '\', \'' + extra_class.hours_on_week + '\')">Редактировать</button>\
-                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-class-' + extra_class.classes_type.replace(/ /g,'') + '-' + extra_class.age + '-btn" onclick="">Удалить</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-class-' + extra_class.classes_type.replace(/ /g,'') + '-' + extra_class.age + '-btn" onclick="delete_class(\'' + extra_class.classes_type +'\', \'' + extra_class.age + '\')">Удалить</button>\
                         </div>';
                         extra_classes_div.setAttribute('name', 'div-class-' + extra_class.classes_type.replace(/ /g,'') + '-' + extra_class.age) 
                     }
@@ -732,17 +732,17 @@ function update_past_illness(diagnosis, start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/past_illness/get",
-        data: JSON.stringify({"json_data": past_illness}),
+        url: "/medical_record/child/" + medcard_num + "/past_illness/get_one",
+        data: JSON.stringify(past_illness),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(past_illness){
             past_illness_modal_header.innerHTML = "Редактирование сведений о перенесенном заболевании";
             past_illness_commit_modal_btn.value = 'update';
             past_illness_close_modal_btn.value = past_illness.diagnosis + '///' + past_illness.start_date;
             past_illness_diagnosis_modal_inpt.value = past_illness.diagnosis;
             past_illness_start_date_modal_dtpkr.value = past_illness.start_date;
-            past_illness_end_date_modal_dtpkr.value = data.past_illness.end_date;
+            past_illness_end_date_modal_dtpkr.value = past_illness.end_date;
         }
     });    
 }
@@ -758,7 +758,7 @@ past_illness_commit_modal_btn.addEventListener('click', () =>{
         "medcard_num": medcard_num,
         "diagnosis": past_illness_diagnosis_modal_inpt.value,
         "start_date": past_illness_start_date_modal_dtpkr.value,
-        "end_date": past_illness_end_date_modal_dtpkr.value
+        "end_date": past_illness_end_date_modal_dtpkr.value? past_illness_end_date_modal_dtpkr.value : null
     }
     switch (past_illness_commit_modal_btn.value) {
         case 'add':
@@ -766,7 +766,7 @@ past_illness_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/past_illness/add",
-                data: JSON.stringify({"json_data": past_illness}),
+                data: JSON.stringify(past_illness),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -783,18 +783,18 @@ past_illness_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                let old_past_illness_data = past_illness_close_modal_btn.value.split('///');
-                past_illness["old_diagnosis"] = old_past_illness_data[0];
-                past_illness["old_start_date"] = old_past_illness_data[1];
+                let prev_past_illness_data = past_illness_close_modal_btn.value.split('///');
+                past_illness["prev_diagnosis"] = prev_past_illness_data[0];
+                past_illness["prev_start_date"] = prev_past_illness_data[1];
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/past_illness/update",
-                    data: JSON.stringify({"json_data": past_illness}),
+                    data: JSON.stringify(past_illness),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
-                        let past_illness_div = document.getElementsByName('div-past-illness-' + past_illness.old_diagnosis.replace(/ /g, '') + '-' + past_illness.old_start_date)[0]
+                        let past_illness_div = document.getElementsByName('div-past-illness-' + past_illness.prev_diagnosis.replace(/ /g, '') + '-' + past_illness.prev_start_date)[0]
                         past_illness_div.innerHTML = '<p><strong>' + past_illness.diagnosis  + '</strong> с <u><mark>' + past_illness.start_date + '</mark></u> по <u><mark>' + past_illness.end_date + '</mark></u> </p>\
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#pastIllnessModal" name="update-past-illness-' + past_illness.diagnosis.replace(/ /g, '') + '-' + past_illness.start_date + '-btn" onclick="update_past_illness(\'' + past_illness.diagnosis + '\', \'' + past_illness.start_date + '\')">Редактировать</button>\
@@ -829,18 +829,18 @@ function update_hospitalization(start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/hospitalization/get",
-        data: JSON.stringify({"json_data": hospitalization}),
+        url: "/medical_record/child/" + medcard_num + "/hospitalization/get_one",
+        data: JSON.stringify(hospitalization),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(hospitalization){
             hospitalization_modal_header.innerHTML = "Редактирование сведений о перенесенном заболевании";
             hospitalization_commit_modal_btn.value = 'update';
-            hospitalization_close_modal_btn.value = data.hospitalization.start_date;
-            hospitalization_diagnosis_modal_txt.value = data.hospitalization.diagnosis;
-            hospitalization_start_date_modal_dtpkr.value = data.hospitalization.start_date;
-            hospitalization_end_date_modal_dtpkr.value = data.hospitalization.end_date;
-            hospitalization_founding_modal_inpt.value = data.hospitalization.founding;
+            hospitalization_close_modal_btn.value = hospitalization.start_date;
+            hospitalization_diagnosis_modal_txt.value = hospitalization.diagnosis;
+            hospitalization_start_date_modal_dtpkr.value = hospitalization.start_date;
+            hospitalization_end_date_modal_dtpkr.value = hospitalization.end_date;
+            hospitalization_founding_modal_inpt.value = hospitalization.founding;
         }
     });    
 }
@@ -856,7 +856,7 @@ hospitalization_commit_modal_btn.addEventListener('click', () =>{
         "medcard_num": medcard_num,
         "diagnosis": hospitalization_diagnosis_modal_txt.value,
         "start_date": hospitalization_start_date_modal_dtpkr.value,
-        "end_date": hospitalization_end_date_modal_dtpkr.value,
+        "end_date": hospitalization_end_date_modal_dtpkr.value? hospitalization_end_date_modal_dtpkr.value : null,
         "founding": hospitalization_founding_modal_inpt.value
     }
     switch (hospitalization_commit_modal_btn.value) {
@@ -865,7 +865,7 @@ hospitalization_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/hospitalization/add",
-                data: JSON.stringify({"json_data": hospitalization}),
+                data: JSON.stringify(hospitalization),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -884,16 +884,16 @@ hospitalization_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                hospitalization["old_start_date"] = hospitalization_close_modal_btn.value;
+                hospitalization["prev_start_date"] = hospitalization_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/hospitalization/update",
-                    data: JSON.stringify({"json_data": hospitalization}),
+                    data: JSON.stringify(hospitalization),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
-                        let hospitalization_div = document.getElementsByName('div-hospitalization-' + hospitalization.old_start_date)[0]
+                        let hospitalization_div = document.getElementsByName('div-hospitalization-' + hospitalization.prev_start_date)[0]
                         hospitalization_div.innerHTML = '<p>С <u><mark>' + hospitalization.start_date + '</mark></u> по <u><mark>' + hospitalization.end_date + '</mark></u> <br>\
                         <strong>Диагноз, вид вмешательства: </strong><u><mark>' + hospitalization.diagnosis + '</mark></u> <br>\
                         <strong>Учреждение: </strong><u><mark>' + hospitalization.founding + '</mark></u></p>\
@@ -930,19 +930,19 @@ function update_spa_treatment(start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/spa_treatment/get",
-        data: JSON.stringify({"json_data": spa_treatment}),
+        url: "/medical_record/child/" + medcard_num + "/spa_treatment/get_one",
+        data: JSON.stringify(spa_treatment),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(spa_treatment){
             spa_treatment_modal_header.innerHTML = "Редактирование сведений о перенесенном заболевании";
             spa_treatment_commit_modal_btn.value = 'update';
-            spa_treatment_close_modal_btn.value = data.spa_treatment.start_date;
-            spa_treatment_diagnosis_modal_txt.value = data.spa_treatment.diagnosis;
-            spa_treatment_start_date_modal_dtpkr.value = data.spa_treatment.start_date;
-            spa_treatment_end_date_modal_dtpkr.value = data.spa_treatment.end_date;
-            spa_treatment_founding_modal_inpt.value = data.spa_treatment.founding_specialization;
-            spa_treatment_climatic_zone_modal_slct.value = data.spa_treatment.climatic_zone;
+            spa_treatment_close_modal_btn.value = spa_treatment.start_date;
+            spa_treatment_diagnosis_modal_txt.value = spa_treatment.diagnosis;
+            spa_treatment_start_date_modal_dtpkr.value = spa_treatment.start_date;
+            spa_treatment_end_date_modal_dtpkr.value = spa_treatment.end_date;
+            spa_treatment_founding_modal_inpt.value = spa_treatment.founding_specialization;
+            spa_treatment_climatic_zone_modal_slct.value = spa_treatment.climatic_zone;
         }
     });    
 }
@@ -958,7 +958,7 @@ spa_treatment_commit_modal_btn.addEventListener('click', () =>{
         "medcard_num": medcard_num,
         "diagnosis": spa_treatment_diagnosis_modal_txt.value,
         "start_date": spa_treatment_start_date_modal_dtpkr.value,
-        "end_date": spa_treatment_end_date_modal_dtpkr.value,
+        "end_date": spa_treatment_end_date_modal_dtpkr.value? spa_treatment_end_date_modal_dtpkr.value : null,
         "founding_specialization": spa_treatment_founding_modal_inpt.value,
         "climatic_zone": spa_treatment_climatic_zone_modal_slct.value
     }
@@ -968,7 +968,7 @@ spa_treatment_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/spa_treatment/add",
-                data: JSON.stringify({"json_data": spa_treatment}),
+                data: JSON.stringify(spa_treatment),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -996,12 +996,12 @@ spa_treatment_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                spa_treatment["old_start_date"] = spa_treatment_close_modal_btn.value;
+                spa_treatment["prev_start_date"] = spa_treatment_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/spa_treatment/update",
-                    data: JSON.stringify({"json_data": spa_treatment}),
+                    data: JSON.stringify(spa_treatment),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
@@ -1020,7 +1020,7 @@ spa_treatment_commit_modal_btn.addEventListener('click', () =>{
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#spaTreatmentModal" name="update-spa-treatment-' + spa_treatment.start_date + '-btn" onclick="update_spa_treatment(\'' + spa_treatment.start_date + '\')">Редактировать</button>\
                             <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-spa-treatment-' + spa_treatment.start_date + '-btn" onclick="delete_spa_treatment(\'' + spa_treatment.start_date + '\')">Удалить</button>\
                         </div>';
-                        let spa_treatment_div = document.getElementsByName('div-spa-treatment-' + spa_treatment.old_start_date)[0]
+                        let spa_treatment_div = document.getElementsByName('div-spa-treatment-' + spa_treatment.prev_start_date)[0]
                         spa_treatment_div.innerHTML = innerHTML;
                         spa_treatment_div.setAttribute('name', 'div-spa-treatment-' + spa_treatment.start_date) 
                     }
@@ -1054,25 +1054,25 @@ function update_medical_certificate(disease, cert_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/medical_certificate/get",
-        data: JSON.stringify({"json_data": medical_certificate}),
+        url: "/medical_record/child/" + medcard_num + "/medical_certificate/get_one",
+        data: JSON.stringify(medical_certificate),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(medical_certificate){
             medical_certificate_modal_header.innerHTML = 'Редактирование медицинской справки';
-            medical_certificate_disease_modal_inpt.value = data.medical_certificate.disease;
-            medical_certificate_start_date_modal_dtpkr.value = data.medical_certificate.start_date;
-            medical_certificate_end_date_modal_dtpkr.value = data.medical_certificate.end_date;
-            medical_certificate_sport_exemption_date_modal_dpkr.value = data.medical_certificate.sport_exemption_date;
-            medical_certificate_vac_exemption_date_modal_dpkr.value = data.medical_certificate.vac_exemption_date;
-            medical_certificate_doctor_modal_inpt.value = data.medical_certificate.doctor;
-            medical_certificate_cert_date_modal_dtpkr.value = data.medical_certificate.cert_date;
-            if (data.medical_certificate.infection_contact){
+            medical_certificate_disease_modal_inpt.value = medical_certificate.disease;
+            medical_certificate_start_date_modal_dtpkr.value = medical_certificate.start_date;
+            medical_certificate_end_date_modal_dtpkr.value = medical_certificate.end_date;
+            medical_certificate_sport_exemption_date_modal_dpkr.value = medical_certificate.sport_exemption_date;
+            medical_certificate_vac_exemption_date_modal_dpkr.value = medical_certificate.vac_exemption_date;
+            medical_certificate_doctor_modal_inpt.value = medical_certificate.doctor;
+            medical_certificate_cert_date_modal_dtpkr.value = medical_certificate.cert_date;
+            if (medical_certificate.infection_contact){
                 medical_certificate_infection_contact_modal_chk.checked = true
             } else {
                 medical_certificate_infection_contact_modal_chk.checked = false
             }
-            medical_certificate_close_modal_btn.value = data.medical_certificate.disease + '///' + data.medical_certificate.cert_date;
+            medical_certificate_close_modal_btn.value = medical_certificate.disease + '///' + medical_certificate.cert_date;
             medical_certificate_commit_modal_btn.value = "update";
         }
     });
@@ -1086,8 +1086,8 @@ medical_certificate_commit_modal_btn.addEventListener('click', () => {
         "start_date": medical_certificate_start_date_modal_dtpkr.value,
         "end_date": medical_certificate_end_date_modal_dtpkr.value,
         "infection_contact": medical_certificate_infection_contact_modal_chk.checked,
-        "sport_exemption_date": medical_certificate_sport_exemption_date_modal_dpkr.value,
-        "vac_exemption_date": medical_certificate_vac_exemption_date_modal_dpkr.value,
+        "sport_exemption_date": medical_certificate_sport_exemption_date_modal_dpkr.value? medical_certificate_sport_exemption_date_modal_dpkr.value : null,
+        "vac_exemption_date": medical_certificate_vac_exemption_date_modal_dpkr.value? medical_certificate_vac_exemption_date_modal_dpkr.value : null,
         "doctor": medical_certificate_doctor_modal_inpt.value
     };
     switch (medical_certificate_commit_modal_btn.value) {
@@ -1096,7 +1096,7 @@ medical_certificate_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/medical_certificate/add",
-                data: JSON.stringify({"json_data": medical_certificate}),
+                data: JSON.stringify(medical_certificate),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -1127,18 +1127,18 @@ medical_certificate_commit_modal_btn.addEventListener('click', () => {
             break;
 
             case 'update':
-                old_data = medical_certificate_close_modal_btn.value.split('///')
-                medical_certificate["old_disease"] = old_data[0];
-                medical_certificate["old_cert_date"] = old_data[1];
+                prev_data = medical_certificate_close_modal_btn.value.split('///')
+                medical_certificate["prev_disease"] = prev_data[0];
+                medical_certificate["prev_cert_date"] = prev_data[1];
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/medical_certificate/update",
-                    data: JSON.stringify({"json_data": medical_certificate}),
+                    data: JSON.stringify(medical_certificate),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
-                        let medical_certificates_div = document.getElementsByName('div-medical-certificate-' + medical_certificate.old_disease.replace(/ /g,'') + '-' + medical_certificate.old_cert_date)[0]
+                        let medical_certificates_div = document.getElementsByName('div-medical-certificate-' + medical_certificate.prev_disease.replace(/ /g,'') + '-' + medical_certificate.prev_cert_date)[0]
                         let innerHTML = '<p>С <u><mark>' + medical_certificate.start_date + '</mark></u> по <u><mark>' + medical_certificate.end_date + '</mark></u> перенес: <strong>' + medical_certificate.disease  + '</strong> </br>\
                         В контакте с инфекционными больными <u><mark>';
                         if (!medical_certificate.infection_contact){
@@ -1195,19 +1195,19 @@ function update_dispensary(start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/dispensary/get",
-        data: JSON.stringify({"json_data": dispensary}),
+        url: "/medical_record/child/" + medcard_num + "/dispensary/get_one",
+        data: JSON.stringify(dispensary),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(dispensary){
             dispensary_modal_header.innerHTML = "Редактирование сведений о перенесенном заболевании";
             dispensary_commit_modal_btn.value = 'update';
-            dispensary_close_modal_btn.value = data.dispensary.start_date;
-            dispensary_diagnosis_modal_inpt.value = data.dispensary.diagnosis;
-            dispensary_specialist_modal_inpt.value = data.dispensary.specialist;
-            dispensary_start_date_modal_dtpkr.value = data.dispensary.start_date;
-            dispensary_end_date_modal_dtpkr.value = data.dispensary.end_date;
-            dispensary_end_reason_modal_txt.value = data.dispensary.end_reason;
+            dispensary_close_modal_btn.value = dispensary.start_date;
+            dispensary_diagnosis_modal_inpt.value = dispensary.diagnosis;
+            dispensary_specialist_modal_inpt.value = dispensary.specialist;
+            dispensary_start_date_modal_dtpkr.value = dispensary.start_date;
+            dispensary_end_date_modal_dtpkr.value = dispensary.end_date;
+            dispensary_end_reason_modal_txt.value = dispensary.end_reason;
         }
     });    
 }
@@ -1233,7 +1233,7 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/dispensary/add",
-                data: JSON.stringify({"json_data": dispensary}),
+                data: JSON.stringify(dispensary),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -1262,12 +1262,12 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                dispensary["old_start_date"] = dispensary_close_modal_btn.value;
+                dispensary["prev_start_date"] = dispensary_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/dispensary/update",
-                    data: JSON.stringify({"json_data": dispensary}),
+                    data: JSON.stringify(dispensary),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
@@ -1287,7 +1287,7 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" name="update-dispensary-' + dispensary.start_date + '-btn" onclick="update_dispensary(\'' + dispensary.start_date + '\')">Редактировать</button>\
                             <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-dispensary-' + dispensary.start_date + '-btn" onclick="delete_dispensary(\'' + dispensary.start_date + '\')">Удалить</button>\
                         </div>';
-                        let dispensary_div = document.getElementsByName('div-dispensary-' + dispensary.old_start_date)[0]
+                        let dispensary_div = document.getElementsByName('div-dispensary-' + dispensary.prev_start_date)[0]
                         dispensary_div.innerHTML = innerHTML;
                         dispensary_div.setAttribute('name', 'div-dispensary-' + dispensary.start_date) 
                     }
@@ -1310,14 +1310,14 @@ function get_visit_specialist_control(start_dispanser_date){
         type: "POST",
         async: true,
         url: "/medical_record/child/" + medcard_num + "/visit_specialist_control/get_all",
-        data: JSON.stringify({"json_data": visit_specialist_control}),
+        data: JSON.stringify(visit_specialist_control),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(visit_specialist_control){
             visit_specialist_control_add_btn.value = start_dispanser_date;
             let visit_specialist_control_div = document.querySelector('#visit-specialist-control-main-div')
             innerHTML = ""
-            data.visit_specialist_control.forEach(element => {
+            visit_specialist_control.forEach(element => {
                 innerHTML += '<div name="div-visit-specialist-control-'+ element.assigned_date + '" class="col-12 mb-3">\
                 <p>Назначено: <u><mark>' + element.assigned_date + '</u></mark> Явка: <u><mark>'
                 if (element.fact_date) {
@@ -1362,7 +1362,7 @@ visit_specialist_control_commit_modal_btn.addEventListener('click', () => {
         "medcard_num": medcard_num,
         "start_dispanser_date": visit_specialist_control_add_btn.value,
         "assigned_date": visit_specialist_control_assigned_date_modal_dtpkr.value,
-        "fact_date": visit_specialist_control_fact_date_modal_dtpkr.value
+        "fact_date": visit_specialist_control_fact_date_modal_dtpkr.value? visit_specialist_control_fact_date_modal_dtpkr.value : null
     }
     switch (visit_specialist_control_commit_modal_btn.value) {
         case 'add':
@@ -1370,7 +1370,7 @@ visit_specialist_control_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/visit_specialist_control/add",
-                data: JSON.stringify({"json_data": visit_specialist_control}),
+                data: JSON.stringify(visit_specialist_control),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () =>{
@@ -1387,16 +1387,16 @@ visit_specialist_control_commit_modal_btn.addEventListener('click', () => {
             break;
 
             case 'update':
-                visit_specialist_control["old_assigned_date"] = visit_specialist_control_close_modal_btn.value 
+                visit_specialist_control["prev_assigned_date"] = visit_specialist_control_close_modal_btn.value? visit_specialist_control_close_modal_btn.value : null
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/visit_specialist_control/update",
-                    data: JSON.stringify({"json_data": visit_specialist_control}),
+                    data: JSON.stringify(visit_specialist_control),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () =>{
-                        let visit_specialist_control_div = document.getElementsByTagName('div-visit-specialist-control-'+ visit_specialist_control.old_assigned_date)[0];
+                        let visit_specialist_control_div = document.getElementsByTagName('div-visit-specialist-control-'+ visit_specialist_control.prev_assigned_date)[0];
                         visit_specialist_control_div.innerHTML = '<p>Назначено: <u><mark>' + visit_specialist_control.assigned_date + '</u></mark> Явка: ' + visit_specialist_control.fact_date + '</u></mark> </p>\
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
                         <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#visitSpecialistControlModal" name="update-visit-specialist-control-' + visit_specialist_control.assigned_date + '-btn" onclick="update_visit_specialist_control(\'' + visit_specialist_control.start_dispanser_date + '///' + visit_specialist_control.assigned_date + '///' + visit_specialist_control.fact_date +'\')">Редактировать</button>\
@@ -1430,16 +1430,16 @@ function update_deworming(deworming_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/deworming/get",
-        data: JSON.stringify({"json_data": deworming}),
+        url: "/medical_record/child/" + medcard_num + "/deworming/get_one",
+        data: JSON.stringify(deworming),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(deworming){
             deworming_modal_header.innerHTML = "Редактирование сведений о дегельминтизации";
             deworming_commit_modal_btn.value = 'update';
-            deworming_close_modal_btn.value = data.deworming.deworming_date;
-            deworming_date_modal_dtpkr.value = data.deworming.deworming_date;
-            deworming_result_modal_txt.value = data.deworming.result;
+            deworming_close_modal_btn.value = deworming.deworming_date;
+            deworming_date_modal_dtpkr.value = deworming.deworming_date;
+            deworming_result_modal_txt.value = deworming.result;
         }
     });    
 }
@@ -1462,7 +1462,7 @@ deworming_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/deworming/add",
-                data: JSON.stringify({"json_data": deworming}),
+                data: JSON.stringify(deworming),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -1482,12 +1482,12 @@ deworming_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                deworming["old_deworming_date"] = deworming_close_modal_btn.value;
+                deworming["prev_deworming_date"] = deworming_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/deworming/update",
-                    data: JSON.stringify({"json_data": deworming}),
+                    data: JSON.stringify(deworming),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
@@ -1498,7 +1498,7 @@ deworming_commit_modal_btn.addEventListener('click', () =>{
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dewormingModal" name="update-deworming-' + deworming.deworming_date + '-btn" onclick="update_deworming(\'' + deworming.deworming_date + '\')">Редактировать</button>\
                             <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-deworming-' + deworming.deworming_date + '-btn" onclick="delete_deworming(\'' + deworming.deworming_date + '\')">Удалить</button>\
                         </div>';
-                        let deworming_div = document.getElementsByName('div-deworming-' + deworming.old_deworming_date)[0]
+                        let deworming_div = document.getElementsByName('div-deworming-' + deworming.prev_deworming_date)[0]
                         deworming_div.innerHTML = innerHTML;
                         deworming_div.setAttribute('name', 'div-deworming-' + deworming.deworming_date) 
                     }
@@ -1529,17 +1529,17 @@ function update_oral_sanation(sanation_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/oral_sanation/get",
-        data: JSON.stringify({"json_data": oral_sanation}),
+        url: "/medical_record/child/" + medcard_num + "/oral_sanation/get_one",
+        data: JSON.stringify(oral_sanation),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(oral_sanation){
             oral_sanation_modal_header.innerHTML = "Редактирование сведений о санации полости рта";
             oral_sanation_commit_modal_btn.value = 'update';
-            oral_sanation_close_modal_btn.value = data.oral_sanation.sanation_date;
-            oral_sanation_date_modal_dtpkr.value = data.oral_sanation.sanation_date;
-            oral_sanation_dental_result_modal_txt.value = data.oral_sanation.dental_result;
-            oral_sanation_result_modal_txt.value = data.oral_sanation.sanation_result;
+            oral_sanation_close_modal_btn.value = oral_sanation.sanation_date;
+            oral_sanation_date_modal_dtpkr.value = oral_sanation.sanation_date;
+            oral_sanation_dental_result_modal_txt.value = oral_sanation.dental_result;
+            oral_sanation_result_modal_txt.value = oral_sanation.sanation_result;
         }
     });    
 }
@@ -1563,7 +1563,7 @@ oral_sanation_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/oral_sanation/add",
-                data: JSON.stringify({"json_data": oral_sanation}),
+                data: JSON.stringify(oral_sanation),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -1584,12 +1584,12 @@ oral_sanation_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                oral_sanation["old_sanation_date"] = oral_sanation_close_modal_btn.value;
+                oral_sanation["prev_sanation_date"] = oral_sanation_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/oral_sanation/update",
-                    data: JSON.stringify({"json_data": oral_sanation}),
+                    data: JSON.stringify(oral_sanation),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
@@ -1601,7 +1601,7 @@ oral_sanation_commit_modal_btn.addEventListener('click', () =>{
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#oralSanationModal" name="update-oral-sanation-' + oral_sanation.sanation_date + '-btn" onclick="update_oral_sanation(\'' + oral_sanation.sanation_date + '\')">Редактировать</button>\
                             <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-oral-sanation-' + oral_sanation.sanation_date + '-btn" onclick="delete_oral_sanation(\'' + oral_sanation.sanation_date + '\')">Удалить</button>\
                         </div>';
-                        let oral_sanation_div = document.getElementsByName('div-oral-sanation-' + oral_sanation.old_sanation_date)[0]
+                        let oral_sanation_div = document.getElementsByName('div-oral-sanation-' + oral_sanation.prev_sanation_date)[0]
                         oral_sanation_div.innerHTML = innerHTML;
                         oral_sanation_div.setAttribute('name', 'div-oral-sanation-' + oral_sanation.sanation_date) 
                     }
@@ -1634,20 +1634,20 @@ function update_prevaccination_checkup(examination_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/prevaccination_checkup/get",
-        data: JSON.stringify({"json_data": prevaccination_checkup}),
+        url: "/medical_record/child/" + medcard_num + "/prevaccination_checkup/get_one",
+        data: JSON.stringify(prevaccination_checkup),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(prevaccination_checkup){
             prevaccination_checkup_modal_header.innerHTML = "Редактирование сведений об осмотре";
             prevaccination_checkup_commit_modal_btn.value = 'update';
-            prevaccination_checkup_close_modal_btn.value = data.prevaccination_checkup.examination_date;
-            prevaccination_checkup_examination_date_modal_dtpkr.value = data.prevaccination_checkup.examination_date;
-            prevaccination_checkup_diagnosis_modal_inpt.value = data.prevaccination_checkup.diagnosis;
-            prevaccination_checkup_report_modal_slct.value = data.prevaccination_checkup.report;
-            prevaccination_checkup_vac_name_modal_slct.value = data.prevaccination_checkup.vac_name;
-            prevaccination_checkup_no_vac_date_modal_dtpkr.value = data.prevaccination_checkup.no_vac_date;
-            prevaccination_checkup_doctor_modal_inpt.value = data.prevaccination_checkup.doctor;            
+            prevaccination_checkup_close_modal_btn.value = prevaccination_checkup.examination_date;
+            prevaccination_checkup_examination_date_modal_dtpkr.value = prevaccination_checkup.examination_date;
+            prevaccination_checkup_diagnosis_modal_inpt.value = prevaccination_checkup.diagnosis;
+            prevaccination_checkup_report_modal_slct.value = prevaccination_checkup.report;
+            prevaccination_checkup_vac_name_modal_slct.value = prevaccination_checkup_vac_name_modal_slct.querySelector(`option[vac_id="${prevaccination_checkup.vac_name_id}"]`).value;
+            prevaccination_checkup_no_vac_date_modal_dtpkr.value = prevaccination_checkup.no_vac_date;
+            prevaccination_checkup_doctor_modal_inpt.value = prevaccination_checkup.doctor;            
         }
     });    
 }
@@ -1665,7 +1665,7 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
         "diagnosis": prevaccination_checkup_diagnosis_modal_inpt.value,
         "report": prevaccination_checkup_report_modal_slct.value,
         "vac_name_id": prevaccination_checkup_vac_name_modal_slct[prevaccination_checkup_vac_name_modal_slct.selectedIndex].getAttribute('vac_id'),
-        "no_vac_date": prevaccination_checkup_no_vac_date_modal_dtpkr.value,
+        "no_vac_date": prevaccination_checkup_no_vac_date_modal_dtpkr.value? prevaccination_checkup_no_vac_date_modal_dtpkr.value : null,
         "doctor":  prevaccination_checkup_doctor_modal_inpt.value
     };
     switch (prevaccination_checkup_commit_modal_btn.value) {
@@ -1674,12 +1674,12 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/prevaccination_checkup/add",
-                data: JSON.stringify({"json_data": prevaccination_checkup}),
+                data: JSON.stringify(prevaccination_checkup),
                 contentType: "application/json",
                 dataType: 'json',
                 success: function(prevaccination_checkup_data) {
                     innerHTML = '<div name="div-prevaccination-checkup-' + prevaccination_checkup.examination_date + '" class="col-12 mb-3">\
-                    <p><strong>' + prevaccination_checkup_data.vac_name + '</strong> Дата осмотра: <u><mark>' + prevaccination_checkup.examination_date + '</mark></u>, Возраст: <u><mark>' + prevaccination_checkup_data.age + '</mark></u>\
+                    <p><strong>' + prevaccination_checkup_vac_name_modal_slct.value + '</strong> Дата осмотра: <u><mark>' + prevaccination_checkup.examination_date + '</mark></u>, Возраст: <u><mark>' + prevaccination_checkup_data.age + '</mark></u>\
                     Диагноз: <u><mark>' + prevaccination_checkup.diagnosis + '</mark></u>, Заключение: <u><mark>' + prevaccination_checkup.report + '</mark></u> <br>'
                     if (prevaccination_checkup.no_vac_date){
                         innerHTML += '<strong>Мед. отвод до: </strong><u><mark>' + prevaccination_checkup.no_vac_date + '</mark></u> <br></br>'
@@ -1697,16 +1697,16 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                prevaccination_checkup["old_examination_date"] = prevaccination_checkup_close_modal_btn.value;
+                prevaccination_checkup["prev_examination_date"] = prevaccination_checkup_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/prevaccination_checkup/update",
-                    data: JSON.stringify({"json_data": prevaccination_checkup}),
+                    data: JSON.stringify(prevaccination_checkup),
                     contentType: "application/json",
                     dataType: 'json',
-                    success: function(prevaccination_checkup_data){
-                        innerHTML = '<p><strong>' + prevaccination_checkup_data.vac_name + '</strong> Дата осмотра: <u><mark>' + prevaccination_checkup.examination_date + '</mark></u>, Возраст: <u><mark>' + prevaccination_checkup_data.age + '</mark></u>\
+                    success: function(prevaccination_checkup_data){                        
+                        innerHTML = '<p><strong>' + prevaccination_checkup_vac_name_modal_slct.value + '</strong> Дата осмотра: <u><mark>' + prevaccination_checkup.examination_date + '</mark></u>, Возраст: <u><mark>' + prevaccination_checkup_data.age + '</mark></u>\
                         Диагноз: <u><mark>' + prevaccination_checkup.diagnosis + '</mark></u>, Заключение: <u><mark>' + prevaccination_checkup.report + '</mark></u> <br>'
                         if (prevaccination_checkup.no_vac_date){
                             innerHTML += '<strong>Мед. отвод до: </strong><u><mark>' + prevaccination_checkup.no_vac_date + '</mark></u> <br></br>'
@@ -1716,7 +1716,7 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#prevaccinationCheckupModal" name="update-prevaccination-checkup-' + prevaccination_checkup.examination_date + '-btn" onclick="update_prevaccination_checkup(\'' + prevaccination_checkup.examination_date + '\')">Редактировать</button>\
                             <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-prevaccination-checkup-' + prevaccination_checkup.examination_date + '-btn" onclick="delete_prevaccination_checkup(\'' + prevaccination_checkup.examination_date + '\')">Удалить</button>\
                         </div>';
-                        let prevaccination_checkup_div = document.getElementsByName('div-prevaccination-checkup-' + prevaccination_checkup.old_examination_date)[0]
+                        let prevaccination_checkup_div = document.getElementsByName('div-prevaccination-checkup-' + prevaccination_checkup.prev_examination_date)[0]
                         prevaccination_checkup_div.innerHTML = innerHTML;
                         prevaccination_checkup_div.setAttribute('name', 'div-prevaccination-checkup-' + prevaccination_checkup.examination_date) 
                     }
@@ -1749,22 +1749,22 @@ function update_prof_vaccination(vac_name_id, vac_type){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/prof_vaccination/get",
-        data: JSON.stringify({"json_data": prof_vaccination}),
+        url: "/medical_record/child/" + medcard_num + "/prof_vaccination/get_one",
+        data: JSON.stringify(prof_vaccination),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(prof_vaccination_data){
             prof_vaccination_modal_header.innerHTML = "Редактирование сведений об осмотре";
             prof_vaccination_commit_modal_btn.value = 'update';
-            prof_vaccination_close_modal_btn.value = data.vac_name_id + '///' + data.vac_type;
-            prof_vaccination_vac_name_modal_slct.value = data.vac_name;
-            prof_vaccination_vac_type_modal_slct.value = data.vac_type;
-            prof_vaccination_date_modal_dtpk.value = data.vac_date;
-            prof_vaccination_serial_modal_inpt.value = data.serial;
-            prof_vaccination_dose_modal_inpt.value = data.dose;
-            prof_vaccination_introduction_method_modal_slct.value = data.introduction_method;
-            prof_vaccination_reaction_modal_slct.value = data.reaction;
-            prof_vaccination_doctor_modal_inpt.value = data.doctor;
+            prof_vaccination_close_modal_btn.value = vac_name_id + '///' + vac_type;
+            prof_vaccination_vac_name_modal_slct.value = prof_vaccination_vac_name_modal_slct.querySelector(`option[vac_id="${prof_vaccination.vac_name_id}"]`).value;
+            prof_vaccination_vac_type_modal_slct.value = prof_vaccination_data.vac_type;
+            prof_vaccination_date_modal_dtpk.value = prof_vaccination_data.vac_date;
+            prof_vaccination_serial_modal_inpt.value = prof_vaccination_data.serial;
+            prof_vaccination_dose_modal_inpt.value = prof_vaccination_data.dose;
+            prof_vaccination_introduction_method_modal_slct.value = prof_vaccination_data.introduction_method;
+            prof_vaccination_reaction_modal_slct.value = prof_vaccination_data.reaction;
+            prof_vaccination_doctor_modal_inpt.value = prof_vaccination_data.doctor;
         }
     });    
 }
@@ -1779,7 +1779,6 @@ prof_vaccination_commit_modal_btn.addEventListener('click', () =>{
     var prof_vaccination = {
         "medcard_num": medcard_num,
         "vac_name_id": prof_vaccination_vac_name_modal_slct[prof_vaccination_vac_name_modal_slct.selectedIndex].getAttribute('vac_id'),
-        "vac_name": prof_vaccination_vac_name_modal_slct.value,
         "vac_type": prof_vaccination_vac_type_modal_slct.value,
         "vac_date": prof_vaccination_date_modal_dtpk.value,
         "serial":  prof_vaccination_serial_modal_inpt.value,
@@ -1794,12 +1793,12 @@ prof_vaccination_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/vaccination/add",
-                data: JSON.stringify({"json_data": prof_vaccination}),
+                data: JSON.stringify(prof_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
                     innerHTML = '<div name="div-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,'') + '" class="col-12 mb-3">\
-                    <p><strong>' + prof_vaccination.vac_name + '</strong> <strong>' + prof_vaccination.vac_type + '</strong> Дата: <u><mark>' + prof_vaccination.vac_date + '</mark></u>, \
+                    <p><strong>' + prof_vaccination_vac_name_modal_slct.value + '</strong> <strong>' + prof_vaccination.vac_type + '</strong> Дата: <u><mark>' + prof_vaccination.vac_date + '</mark></u>, \
                         серия: <u><mark>' + prof_vaccination.serial + '</mark></u>, доза: <u><mark>' + prof_vaccination.dose + '</mark></u>, \
                         способ введения: <u><mark>' + prof_vaccination.introduction_method + '</mark></u>, реакция: <u><mark>' + prof_vaccination.reaction + '</mark></u><br>\
                         Врач: <u><mark>' + prof_vaccination.doctor + '</mark></u>\
@@ -1817,17 +1816,17 @@ prof_vaccination_commit_modal_btn.addEventListener('click', () =>{
 
             case 'update':
                 let pk_data = prof_vaccination_close_modal_btn.value.split('///');
-                prof_vaccination["old_vac_name_id"] = pk_data[0];
-                prof_vaccination["old_vac_type"] = pk_data[1];
+                prof_vaccination["prev_vac_name_id"] = pk_data[0];
+                prof_vaccination["prev_vac_type"] = pk_data[1];
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/vaccination/update",
-                    data: JSON.stringify({"json_data": prof_vaccination}),
+                    data: JSON.stringify(prof_vaccination),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
-                        innerHTML = '<p><strong>' + prof_vaccination.vac_name + '</strong> <strong>' + prof_vaccination.vac_type + '</strong> Дата: <u><mark>' + prof_vaccination.vac_date + '</mark></u>, \
+                        innerHTML = '<p><strong>' + prof_vaccination_vac_name_modal_slct.value + '</strong> <strong>' + prof_vaccination.vac_type + '</strong> Дата: <u><mark>' + prof_vaccination.vac_date + '</mark></u>, \
                         серия: <u><mark>' + prof_vaccination.serial + '</mark></u>, доза: <u><mark>' + prof_vaccination.dose + '</mark></u>, \
                         способ введения: <u><mark>' + prof_vaccination.introduction_method + '</mark></u>, реакция: <u><mark>' + prof_vaccination.reaction + '</mark></u><br>\
                         Врач: <u><mark>' + prof_vaccination.doctor + '</mark></u>\
@@ -1836,7 +1835,7 @@ prof_vaccination_commit_modal_btn.addEventListener('click', () =>{
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#profVaccinationModal" name="update-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="update_prof_vaccination(\'' + prof_vaccination.vac_name_id + '\', \'' + prof_vaccination.vac_type + '\')">Редактировать</button>\
                             <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="delete_prof_vaccination(\'' + prof_vaccination.vac_name_id + '\', \'' + prof_vaccination.vac_type + '\')">Удалить</button>\
                         </div>';
-                        let prof_vaccination_div = document.getElementsByName('div-prof-vaccination-' + prof_vaccination.old_vac_name_id + '-' + prof_vaccination.old_vac_type.replace(/ /g,''))[0]
+                        let prof_vaccination_div = document.getElementsByName('div-prof-vaccination-' + prof_vaccination.prev_vac_name_id + '-' + prof_vaccination.prev_vac_type.replace(/ /g,''))[0]
                         prof_vaccination_div.innerHTML = innerHTML;
                         prof_vaccination_div.setAttribute('name', 'div-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,'')) 
                     }
@@ -1869,22 +1868,22 @@ function update_epid_vaccination(vac_name_id, vac_type){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/epid_vaccination/get",
-        data: JSON.stringify({"json_data": epid_vaccination}),
+        url: "/medical_record/child/" + medcard_num + "/epid_vaccination/get_one",
+        data: JSON.stringify(epid_vaccination),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(epid_vaccination){
             epid_vaccination_modal_header.innerHTML = "Редактирование сведений об осмотре";
             epid_vaccination_commit_modal_btn.value = 'update';
-            epid_vaccination_close_modal_btn.value = data.vac_name_id + '///' + data.vac_type;
-            epid_vaccination_vac_name_modal_slct.value = data.vac_name;
-            epid_vaccination_vac_type_modal_slct.value = data.vac_type;
-            epid_vaccination_date_modal_dtpk.value = data.vac_date;
-            epid_vaccination_serial_modal_inpt.value = data.serial;
-            epid_vaccination_dose_modal_inpt.value = data.dose;
-            epid_vaccination_introduction_method_modal_slct.value = data.introduction_method;
-            epid_vaccination_reaction_modal_slct.value = data.reaction;
-            epid_vaccination_doctor_modal_inpt.value = data.doctor;
+            epid_vaccination_close_modal_btn.value = epid_vaccination.vac_name_id + '///' + epid_vaccination.vac_type;
+            epid_vaccination_vac_name_modal_slct.value = epid_vaccination_vac_name_modal_slct.querySelector(`option[vac_id="${epid_vaccination.vac_name_id}"]`).value;
+            epid_vaccination_vac_type_modal_slct.value = epid_vaccination.vac_type;
+            epid_vaccination_date_modal_dtpk.value = epid_vaccination.vac_date;
+            epid_vaccination_serial_modal_inpt.value = epid_vaccination.serial;
+            epid_vaccination_dose_modal_inpt.value = epid_vaccination.dose;
+            epid_vaccination_introduction_method_modal_slct.value = epid_vaccination.introduction_method;
+            epid_vaccination_reaction_modal_slct.value = epid_vaccination.reaction;
+            epid_vaccination_doctor_modal_inpt.value = epid_vaccination.doctor;
         }
     });    
 }
@@ -1914,7 +1913,7 @@ epid_vaccination_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/vaccination/add",
-                data: JSON.stringify({"json_data": epid_vaccination}),
+                data: JSON.stringify(epid_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -1937,13 +1936,13 @@ epid_vaccination_commit_modal_btn.addEventListener('click', () =>{
 
             case 'update':
                 let pk_data = epid_vaccination_close_modal_btn.value.split('///');
-                epid_vaccination["old_vac_name_id"] = pk_data[0];
-                epid_vaccination["old_vac_type"] = pk_data[1];
+                epid_vaccination["prev_vac_name_id"] = pk_data[0];
+                epid_vaccination["prev_vac_type"] = pk_data[1];
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/vaccination/update",
-                    data: JSON.stringify({"json_data": epid_vaccination}),
+                    data: JSON.stringify(epid_vaccination),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
@@ -1956,7 +1955,7 @@ epid_vaccination_commit_modal_btn.addEventListener('click', () =>{
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#epidVaccinationModal" name="update-epid-vaccination-' + epid_vaccination.vac_name_id + '-' + epid_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="update_epid_vaccination(\'' + epid_vaccination.vac_name_id + '\', \'' + epid_vaccination.vac_type + '\')">Редактировать</button>\
                             <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-epid-vaccination-' + epid_vaccination.vac_name_id + '-' + epid_vaccination.vac_type.replace(/ /g,'') + '-btn" onclick="delete_epid_vaccination(\'' + epid_vaccination.vac_name_id + '\', \'' + epid_vaccination.vac_type + '\')">Удалить</button>\
                         </div>';
-                        let epid_vaccination_div = document.getElementsByName('div-epid-vaccination-' + epid_vaccination.old_vac_name_id + '-' + epid_vaccination.old_vac_type.replace(/ /g,''))[0]
+                        let epid_vaccination_div = document.getElementsByName('div-epid-vaccination-' + epid_vaccination.prev_vac_name_id + '-' + epid_vaccination.prev_vac_type.replace(/ /g,''))[0]
                         epid_vaccination_div.innerHTML = innerHTML;
                         epid_vaccination_div.setAttribute('name', 'div-epid-vaccination-' + epid_vaccination.vac_name_id + '-' + epid_vaccination.vac_type.replace(/ /g,'')) 
                     }
@@ -1988,20 +1987,20 @@ function update_gg_injection(vac_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/gg_injection/get",
-        data: JSON.stringify({"json_data": gg_injection}),
+        url: "/medical_record/child/" + medcard_num + "/gg_injection/get_one",
+        data: JSON.stringify(gg_injection),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(gg_injection){
             gg_injection_modal_header.innerHTML = "Редактирование сведений о введении гамма-глобулина";
             gg_injection_commit_modal_btn.value = 'update';
-            gg_injection_close_modal_btn.value = data.vac_date;
-            gg_injection_reason_modal_txt.value = data.reason;
-            gg_injection_date_modal_dtpk.value = data.vac_date;
-            gg_injection_serial_modal_inpt.value = data.serial;
-            gg_injection_dose_modal_inpt.value = data.dose;
-            gg_injection_reaction_modal_slct.value = data.reaction;
-            gg_injection_doctor_modal_inpt.value = data.doctor;
+            gg_injection_close_modal_btn.value = gg_injection.vac_date;
+            gg_injection_reason_modal_txt.value = gg_injection.reason;
+            gg_injection_date_modal_dtpk.value = gg_injection.vac_date;
+            gg_injection_serial_modal_inpt.value = gg_injection.serial;
+            gg_injection_dose_modal_inpt.value = gg_injection.dose;
+            gg_injection_reaction_modal_slct.value = gg_injection.reaction;
+            gg_injection_doctor_modal_inpt.value = gg_injection.doctor;
         }
     });    
 }
@@ -2028,7 +2027,7 @@ gg_injection_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/gg_injection/add",
-                data: JSON.stringify({"json_data": gg_injection}),
+                data: JSON.stringify(gg_injection),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -2050,12 +2049,12 @@ gg_injection_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                gg_injection["old_vac_date"] = gg_injection_close_modal_btn.value;
+                gg_injection["prev_vac_date"] = gg_injection_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/gg_injection/update",
-                    data: JSON.stringify({"json_data": gg_injection}),
+                    data: JSON.stringify(gg_injection),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
@@ -2068,7 +2067,7 @@ gg_injection_commit_modal_btn.addEventListener('click', () =>{
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#ggInjectionModal" name="update-gg-injection-' + gg_injection.vac_date + '-btn" onclick="update_gg_injection(\'' + gg_injection.vac_date + '\')">Редактировать</button>\
                             <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-gg-injection-' + gg_injection.vac_date + '-btn" onclick="delete_gg_injection(\'' + gg_injection.vac_date + '\')">Удалить</button>\
                         </div>';
-                        let gg_injection_div = document.getElementsByName('div-gg-injection-' + gg_injection.old_vac_date)[0]
+                        let gg_injection_div = document.getElementsByName('div-gg-injection-' + gg_injection.prev_vac_date)[0]
                         gg_injection_div.innerHTML = innerHTML;
                         gg_injection_div.setAttribute('name', 'div-gg-injection-' + gg_injection.vac_date) 
                     }
@@ -2096,16 +2095,16 @@ function update_mantoux_test(check_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/mantoux_test/get",
-        data: JSON.stringify({"json_data": mantoux_test}),
+        url: "/medical_record/child/" + medcard_num + "/mantoux_test/get_one",
+        data: JSON.stringify(mantoux_test),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(mantoux_test){
             mantoux_test_modal_header.innerHTML = "Редактирование сведений о реакции Манту";
             mantoux_test_commit_modal_btn.value = 'update';
-            mantoux_test_close_modal_btn.value = data.check_date;
-            mantoux_test_result_modal_slct.value = data.result;
-            mantoux_test_date_modal_dtpk.value = data.check_date;
+            mantoux_test_close_modal_btn.value = mantoux_test.check_date;
+            mantoux_test_result_modal_slct.value = mantoux_test.result;
+            mantoux_test_date_modal_dtpk.value = mantoux_test.check_date;
         }
     });    
 }
@@ -2128,7 +2127,7 @@ mantoux_test_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/mantoux_test/add",
-                data: JSON.stringify({"json_data": mantoux_test}),
+                data: JSON.stringify(mantoux_test),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -2148,12 +2147,12 @@ mantoux_test_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                mantoux_test["old_check_date"] = mantoux_test_close_modal_btn.value;
+                mantoux_test["prev_check_date"] = mantoux_test_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/mantoux_test/update",
-                    data: JSON.stringify({"json_data": mantoux_test}),
+                    data: JSON.stringify(mantoux_test),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
@@ -2164,7 +2163,7 @@ mantoux_test_commit_modal_btn.addEventListener('click', () =>{
                         <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#mantouxTestModal" name="update-mantoux-test-' + mantoux_test.check_date + '-btn" onclick="update_mantoux_test(\'' + mantoux_test.check_date + '\')">Редактировать</button>\
                         <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-mantoux-test-' + mantoux_test.check_date + '-btn" onclick="delete_mantoux_test(\'' + mantoux_test.check_date + '\')">Удалить</button>\
                     </div>';
-                        let mantoux_test_div = document.getElementsByName('div-mantoux-test-' + mantoux_test.old_check_date)[0]
+                        let mantoux_test_div = document.getElementsByName('div-mantoux-test-' + mantoux_test.prev_check_date)[0]
                         mantoux_test_div.innerHTML = innerHTML;
                         mantoux_test_div.setAttribute('name', 'div-mantoux-test-' + mantoux_test.check_date) 
                     }
@@ -2196,18 +2195,18 @@ function update_tub_vac(vac_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/tub_vac/get",
-        data: JSON.stringify({"json_data": tub_vac}),
+        url: "/medical_record/child/" + medcard_num + "/tub_vac/get_one",
+        data: JSON.stringify(tub_vac),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(tub_vac){
             tub_vac_modal_header.innerHTML = "Редактирование сведений о введении прививки против туберкулеза (БЦЖ)";
             tub_vac_commit_modal_btn.value = 'update';
-            tub_vac_close_modal_btn.value = data.vac_date;
-            tub_vac_date_modal_dtpk.value = data.vac_date;
-            tub_vac_serial_modal_inpt.value = data.serial;
-            tub_vac_dose_modal_inpt.value = data.dose;
-            tub_vac_doctor_modal_inpt.value = data.doctor;
+            tub_vac_close_modal_btn.value = tub_vac.vac_date;
+            tub_vac_date_modal_dtpk.value = tub_vac.vac_date;
+            tub_vac_serial_modal_inpt.value = tub_vac.serial;
+            tub_vac_dose_modal_inpt.value = tub_vac.dose;
+            tub_vac_doctor_modal_inpt.value = tub_vac.doctor;
         }
     });    
 }
@@ -2232,7 +2231,7 @@ tub_vac_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/tub_vac/add",
-                data: JSON.stringify({"json_data": tub_vac}),
+                data: JSON.stringify(tub_vac),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -2253,12 +2252,12 @@ tub_vac_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                tub_vac["old_vac_date"] = tub_vac_close_modal_btn.value;
+                tub_vac["prev_vac_date"] = tub_vac_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/tub_vac/update",
-                    data: JSON.stringify({"json_data": tub_vac}),
+                    data: JSON.stringify(tub_vac),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
@@ -2270,7 +2269,7 @@ tub_vac_commit_modal_btn.addEventListener('click', () =>{
                         <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#tubVacModal" name="update-tub-vac-' + tub_vac.vac_date + '-btn" onclick="update_tub_vac(\'' + tub_vac.vac_date + '\')">Редактировать</button>\
                         <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-tub-vac-' + tub_vac.vac_date + '-btn" onclick="delete_tub_vac(\'' + tub_vac.vac_date + '\')">Удалить</button>\
                     </div>';
-                        let tub_vac_div = document.getElementsByName('div-tub-vac-' + tub_vac.old_vac_date)[0]
+                        let tub_vac_div = document.getElementsByName('div-tub-vac-' + tub_vac.prev_vac_date)[0]
                         tub_vac_div.innerHTML = innerHTML;
                         tub_vac_div.setAttribute('name', 'div-tub-vac-' + tub_vac.vac_date) 
                     }
@@ -2320,39 +2319,39 @@ function update_medical_examination(period){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/medical_examination/get",
-        data: JSON.stringify({"json_data": medical_examination}),
+        url: "/medical_record/child/" + medcard_num + "/medical_examination/get_one",
+        data: JSON.stringify(medical_examination),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(medical_examination){
             medical_examination_modal_header.innerHTML = "Редактирование сведений о медицинском осмотре";
             medical_examination_commit_modal_btn.value = 'update';
-            medical_examination_close_modal_btn.value = data.period;
-            medical_examination_period_modal_slct.value = data.period;
-            medical_examination_date_modal_dtpk.value = data.examination_date;
-            medical_examination_height_modal_inpt.value = data.height;
-            medical_examination_weight_modal_inpt.value = data.weight;
-            medical_examination_complaints_modal_txt.value = data.complaints;
-            medical_examination_pediatrician_modal_txt.value = data.pediatrician;
-            medical_examination_orthopaedist_modal_txt.value = data.orthopaedist;
-            medical_examination_ophthalmologist_modal_txt.value = data.ophthalmologist;
-            medical_examination_otolaryngologist_modal_txt.value = data.otolaryngologist;
-            medical_examination_dermatologist_modal_txt.value = data.dermatologist;
-            medical_examination_neurologist_modal_txt.value = data.neurologist;
-            medical_examination_speech_therapist_modal_txt.value = data.speech_therapist;
-            medical_examination_denta_surgeon_modal_txt.value = data.denta_surgeon;
-            medical_examination_psychologist_modal_txt.value = data.psychologist;
-            medical_examination_other_doctors_modal_txt.value = data.other_doctors;
-            medical_examination_blood_test_modal_txt.value = data.blood_test;
-            medical_examination_urine_analysis_modal_txt.value = data.urine_analysis;
-            medical_examination_feces_analysis_modal_txt.value = data.feces_analysis;
-            medical_examination_general_diagnosis_modal_txt.value = data.general_diagnosis;
-            medical_examination_physical_development_modal_txt.value = data.physical_development;
-            medical_examination_mental_development_modal_txt.value = data.mental_development;
-            medical_examination_health_group_modal_slct.value = data.health_group;
-            medical_examination_sport_group_modal_slct.value = data.sport_group;
-            medical_examination_med_and_ped_conclusion_modal_txt.value = data.med_and_ped_conclusion;
-            medical_examination_recommendations_modal_txt.value = data.recommendations;
+            medical_examination_close_modal_btn.value = medical_examination.period;
+            medical_examination_period_modal_slct.value = medical_examination.period;
+            medical_examination_date_modal_dtpk.value = medical_examination.examination_date;
+            medical_examination_height_modal_inpt.value = medical_examination.height;
+            medical_examination_weight_modal_inpt.value = medical_examination.weight;
+            medical_examination_complaints_modal_txt.value = medical_examination.complaints;
+            medical_examination_pediatrician_modal_txt.value = medical_examination.pediatrician;
+            medical_examination_orthopaedist_modal_txt.value = medical_examination.orthopaedist;
+            medical_examination_ophthalmologist_modal_txt.value = medical_examination.ophthalmologist;
+            medical_examination_otolaryngologist_modal_txt.value = medical_examination.otolaryngologist;
+            medical_examination_dermatologist_modal_txt.value = medical_examination.dermatologist;
+            medical_examination_neurologist_modal_txt.value = medical_examination.neurologist;
+            medical_examination_speech_therapist_modal_txt.value = medical_examination.speech_therapist;
+            medical_examination_denta_surgeon_modal_txt.value = medical_examination.denta_surgeon;
+            medical_examination_psychologist_modal_txt.value = medical_examination.psychologist;
+            medical_examination_other_doctors_modal_txt.value = medical_examination.other_doctors;
+            medical_examination_blood_test_modal_txt.value = medical_examination.blood_test;
+            medical_examination_urine_analysis_modal_txt.value = medical_examination.urine_analysis;
+            medical_examination_feces_analysis_modal_txt.value = medical_examination.feces_analysis;
+            medical_examination_general_diagnosis_modal_txt.value = medical_examination.general_diagnosis;
+            medical_examination_physical_development_modal_txt.value = medical_examination.physical_development;
+            medical_examination_mental_development_modal_txt.value = medical_examination.mental_development;
+            medical_examination_health_group_modal_slct.value = medical_examination.health_group;
+            medical_examination_sport_group_modal_slct.value = medical_examination.sport_group;
+            medical_examination_med_and_ped_conclusion_modal_txt.value = medical_examination.med_and_ped_conclusion;
+            medical_examination_recommendations_modal_txt.value = medical_examination.recommendations;
         }
     });    
 }
@@ -2398,13 +2397,13 @@ medical_examination_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/medical_examination/add",
-                data: JSON.stringify({"json_data": medical_examination}),
+                data: JSON.stringify(medical_examination),
                 contentType: "application/json",
                 dataType: 'json',
-                success: (data) => {
+                success: (medical_examination_data) => {
                     innerHTML = '<div name="div-medical-examination-' + medical_examination.period.replace(/ /g,'') + '" class="col-12 mb-3">\
                     <p><strong>Период обследования: </strong><u><mark>' + medical_examination.period  + '</mark></u> <br>\
-                        Дата обследования: <u><mark>' + medical_examination.examination_date + '</mark></u> Возраст: <u><mark>' + data.age + '</mark></u><br>\
+                        Дата обследования: <u><mark>' + medical_examination.examination_date + '</mark></u> Возраст: <u><mark>' + medical_examination_data.age + '</mark></u><br>\
                         Длина тела, см: <u><mark>' + medical_examination.height + '</mark></u>, масса тела, кг: <u><mark>' + medical_examination.weight + '</mark></u><br>\
                         Жалобы: <u><mark>' + medical_examination.complaints + '</mark></u><br>\
                         Педиатр: <u><mark>' + medical_examination.pediatrician + '</mark></u><br>\
@@ -2440,17 +2439,17 @@ medical_examination_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                medical_examination["old_period"] = medical_examination_close_modal_btn.value;
+                medical_examination["prev_period"] = medical_examination_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/medical_examination/update",
-                    data: JSON.stringify({"json_data": medical_examination}),
+                    data: JSON.stringify(medical_examination),
                     contentType: "application/json",
                     dataType: 'json',
-                    success: (data) => {
+                    success: (medical_examination_data) => {
                         innerHTML = '<p><strong>Период обследования: </strong><u><mark>' + medical_examination.period  + '</mark></u> <br>\
-                        Дата обследования: <u><mark>' + medical_examination.examination_date + '</mark></u> Возраст: <u><mark>' + data.age + '</mark></u><br>\
+                        Дата обследования: <u><mark>' + medical_examination.examination_date + '</mark></u> Возраст: <u><mark>' + medical_examination_data.age + '</mark></u><br>\
                         Длина тела, см: <u><mark>' + medical_examination.height + '</mark></u>, масса тела, кг: <u><mark>' + medical_examination.weight + '</mark></u><br>\
                         Жалобы: <u><mark>' + medical_examination.complaints + '</mark></u><br>\
                         Педиатр: <u><mark>' + medical_examination.pediatrician + '</mark></u><br>\
@@ -2478,7 +2477,7 @@ medical_examination_commit_modal_btn.addEventListener('click', () =>{
                         <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#medicalExaminationModal" name="update-medical-examination-' + medical_examination.period.replace(/ /g,'') + '-btn" onclick="update_medical_examination(\'' + medical_examination.period + '\')">Редактировать</button>\
                         <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-medical-examination-' + medical_examination.period.replace(/ /g,'') + '-btn" onclick="delete_medical_examination(\'' + medical_examination.period + '\')">Удалить</button>\
                     </div>';
-                        let medical_examination_div = document.getElementsByName('div-medical-examination-' + medical_examination.old_period.replace(/ /g,''))[0]
+                        let medical_examination_div = document.getElementsByName('div-medical-examination-' + medical_examination.prev_period.replace(/ /g,''))[0]
                         medical_examination_div.innerHTML = innerHTML;
                         medical_examination_div.setAttribute('name', 'div-medical-examination-' + medical_examination.period.replace(/ /g,'')) 
                     }
@@ -2511,19 +2510,19 @@ function update_ongoing_medical_supervision(examination_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/ongoing_medical_supervision/get",
-        data: JSON.stringify({"json_data": oms}),
+        url: "/medical_record/child/" + medcard_num + "/ongoing_medical_supervision/get_one",
+        data: JSON.stringify(oms),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(oms){
             oms_modal_header.innerHTML = "Редактирование сведений о текущем медицинском обследовании";
             oms_commit_modal_btn.value = 'update';
-            oms_close_modal_btn.value = data.examination_date;
-            oms_examination_date_modal_dtpk.value = data.examination_date;
-            oms_examination_data_modal_txt.value = data.examination_data;
-            oms_diagnosis_modal_txt.value = data.diagnosis;
-            oms_prescription_modal_txt.value = data.prescription;
-            oms_doctor_modal_inpt.value = data.doctor;
+            oms_close_modal_btn.value = oms.examination_date;
+            oms_examination_date_modal_dtpk.value = oms.examination_date;
+            oms_examination_data_modal_txt.value = oms.examination_data;
+            oms_diagnosis_modal_txt.value = oms.diagnosis;
+            oms_prescription_modal_txt.value = oms.prescription;
+            oms_doctor_modal_inpt.value = oms.doctor;
         }
     });    
 }
@@ -2549,7 +2548,7 @@ oms_commit_modal_btn.addEventListener('click', () =>{
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/ongoing_medical_supervision/add",
-                data: JSON.stringify({"json_data": oms}),
+                data: JSON.stringify(oms),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -2572,12 +2571,12 @@ oms_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                oms["old_examination_date"] = oms_close_modal_btn.value;
+                oms["prev_examination_date"] = oms_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/ongoing_medical_supervision/update",
-                    data: JSON.stringify({"json_data": oms}),
+                    data: JSON.stringify(oms),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
@@ -2591,7 +2590,7 @@ oms_commit_modal_btn.addEventListener('click', () =>{
                         <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#omsModal" name="update-ongoing-medical-supervision-' + oms.examination_date + '-btn" onclick="update_ongoing_medical_supervision(\'' + oms.examination_date + '\')">Редактировать</button>\
                         <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-ongoing-medical-supervision-' + oms.examination_date + '-btn" onclick="delete_ongoing_medical_supervision(\'' + oms.examination_date + '\')">Удалить</button>\
                     </div>';
-                        let oms_div = document.getElementsByName('div-ongoing-medical-supervision-' + oms.old_examination_date)[0]
+                        let oms_div = document.getElementsByName('div-ongoing-medical-supervision-' + oms.prev_examination_date)[0]
                         oms_div.innerHTML = innerHTML;
                         oms_div.setAttribute('name', 'div-ongoing-medical-supervision-' + oms.examination_date) 
                     }
@@ -2626,41 +2625,41 @@ function update_screening(age){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/medical_record/child/" + medcard_num + "/screening/get",
-        data: JSON.stringify({"json_data": screening}),
+        url: "/medical_record/child/" + medcard_num + "/screening/get_one",
+        data: JSON.stringify(screening),
         contentType: "application/json",
         dataType: 'json',
-        success: function(data){
+        success: function(screening){
             screening_modal_header.innerHTML = "Редактирование скрининга";
             screening_commit_modal_btn.value = 'update';
-            screening_close_modal_btn.value = data.age;
-            screening_age_modal_slct.value = data.age;
-            screening_questionnaire_test_modal_slct.value = data.questionnaire_test;
-            screening_height_modal_inpt.value = data.height;
-            screening_weight_modal_inpt.value = data.weight;
-            screening_physical_development_modal_slct.value = data.physical_development;
-            screening_blood_pressures_modal_inpt.value = data.blood_pressures;
-            screening_carriage_modal_slct.value = data.carriage;
-            screening_foot_condition_modal_slct.value = data.foot_condition;
-            screening_sight_od_modal_inpt.value = data.sight_od;
-            screening_sight_os_modal_inpt.value = data.sight_os;
-            screening_visual_acuity_modal_slct.value = data.visual_acuity;
-            screening_malinovsky_test_modal_slct.value = data.malinovsky_test;
-            screening_binocular_vision_modal_slct.value = data.binocular_vision;
-            screening_hearing_acuteness_modal_slct.value = data.hearing_acuteness;
-            screening_dynammetry_left_modal_inpt.value = data.dynammetry_left;
-            screening_dynammetry_right_modal_inpt.value = data.dynammetry_right;
-            screening_physical_fitness_modal_slct.value = data.physical_fitness;
-            screening_protein_in_urine_modal_slct.value = data.protein_in_urine;
-            screening_glucose_in_urine_modal_slct.value = data.glucose_in_urine;
-            screening_biological_age_modal_slct.value = data.biological_age;
-            screening_speech_defects_modal_chck.value = data.speech_defects;
-            screening_kern_test_modal_inpt.value = data.kern_test;
-            screening_neurotic_disorders_modal_chck.value = data.neurotic_disorders;
-            screening_thinking_and_speech_disorders_modal_chck.value = data.thinking_and_speech_disorders;
-            screening_motor_development_disorders_modal_chck.value = data.motor_development_disorders;
-            screening_attention_and_memory_disorders_modal_chck.value = data.attention_and_memory_disorders;
-            screening_social_contacts_disorders_modal_chck.value = data.social_contacts_disorders;
+            screening_close_modal_btn.value = screening.age;
+            screening_age_modal_slct.value = screening.age;
+            screening_questionnaire_test_modal_slct.value = screening.questionnaire_test;
+            screening_height_modal_inpt.value = screening.height;
+            screening_weight_modal_inpt.value = screening.weight;
+            screening_physical_development_modal_slct.value = screening.physical_development;
+            screening_blood_pressures_modal_inpt.value = screening.blood_pressures;
+            screening_carriage_modal_slct.value = screening.carriage;
+            screening_foot_condition_modal_slct.value = screening.foot_condition;
+            screening_sight_od_modal_inpt.value = screening.sight_od;
+            screening_sight_os_modal_inpt.value = screening.sight_os;
+            screening_visual_acuity_modal_slct.value = screening.visual_acuity;
+            screening_malinovsky_test_modal_slct.value = screening.malinovsky_test;
+            screening_binocular_vision_modal_slct.value = screening.binocular_vision;
+            screening_hearing_acuteness_modal_slct.value = screening.hearing_acuteness;
+            screening_dynammetry_left_modal_inpt.value = screening.dynammetry_left;
+            screening_dynammetry_right_modal_inpt.value = screening.dynammetry_right;
+            screening_physical_fitness_modal_slct.value = screening.physical_fitness;
+            screening_protein_in_urine_modal_slct.value = screening.protein_in_urine;
+            screening_glucose_in_urine_modal_slct.value = screening.glucose_in_urine;
+            screening_biological_age_modal_slct.value = screening.biological_age;
+            screening_speech_defects_modal_chck.checked = screening.speech_defects;
+            screening_kern_test_modal_inpt.value = screening.kern_test;
+            screening_neurotic_disorders_modal_chck.checked = screening.neurotic_disorders;
+            screening_thinking_and_speech_disorders_modal_chck.checked = screening.thinking_and_speech_disorders;
+            screening_motor_development_disorders_modal_chck.checked = screening.motor_development_disorders;
+            screening_attention_and_memory_disorders_modal_chck.checked = screening.attention_and_memory_disorders;
+            screening_social_contacts_disorders_modal_chck.checked = screening.social_contacts_disorders;
         }
     });    
 }
@@ -2678,38 +2677,39 @@ screening_commit_modal_btn.addEventListener('click', () =>{
         "questionnaire_test": screening_questionnaire_test_modal_slct.value,
         "height": screening_height_modal_inpt.value,
         "weight": screening_weight_modal_inpt.value,
-        "physical_development": screening_physical_development_modal_slct.value,
-        "blood_pressures": screening_blood_pressures_modal_inpt.value,
-        "carriage": screening_carriage_modal_slct.value,
-        "foot_condition": screening_foot_condition_modal_slct.value,
+        "physical_development": screening_physical_development_modal_slct.value? screening_physical_development_modal_slct.value : null,
+        "blood_pressures": screening_blood_pressures_modal_inpt.value? screening_blood_pressures_modal_inpt.value : null,
+        "carriage": screening_carriage_modal_slct.value? screening_carriage_modal_slct.value : null,
+        "foot_condition": screening_foot_condition_modal_slct.value? screening_foot_condition_modal_slct.value : null,
         "sight_od": screening_sight_od_modal_inpt.value,
         "sight_os": screening_sight_os_modal_inpt.value,
-        "visual_acuity": screening_visual_acuity_modal_slct.value,
-        "malinovsky_test": screening_malinovsky_test_modal_slct.value,
-        "binocular_vision": screening_binocular_vision_modal_slct.value,
-        "hearing_acuteness": screening_hearing_acuteness_modal_slct.value,
+        "visual_acuity": screening_visual_acuity_modal_slct.value? screening_visual_acuity_modal_slct.value : null,
+        "malinovsky_test": screening_malinovsky_test_modal_slct.value? screening_malinovsky_test_modal_slct.value : null,
+        "binocular_vision": screening_binocular_vision_modal_slct.value? screening_binocular_vision_modal_slct.value : null,
+        "hearing_acuteness": screening_hearing_acuteness_modal_slct.value? screening_hearing_acuteness_modal_slct.value : null,
         "dynammetry_left": screening_dynammetry_left_modal_inpt.value,
         "dynammetry_right": screening_dynammetry_right_modal_inpt.value,
-        "physical_fitness": screening_physical_fitness_modal_slct.value,
-        "protein_in_urine": screening_protein_in_urine_modal_slct.value,
-        "glucose_in_urine": screening_glucose_in_urine_modal_slct.value,
-        "biological_age": screening_biological_age_modal_slct.value,
+        "physical_fitness": screening_physical_fitness_modal_slct.value? screening_physical_fitness_modal_slct.value : null,
+        "protein_in_urine": screening_protein_in_urine_modal_slct.value? screening_protein_in_urine_modal_slct.value : null,
+        "glucose_in_urine": screening_glucose_in_urine_modal_slct.value? screening_glucose_in_urine_modal_slct.value : null,
+        "biological_age": screening_biological_age_modal_slct.value? screening_biological_age_modal_slct.value : null,
         "speech_defects": screening_speech_defects_modal_chck.checked,
-        "kern_test": screening_kern_test_modal_inpt.value,
+        "kern_test": screening_kern_test_modal_inpt.value? screening_kern_test_modal_inpt.value : null,
         "neurotic_disorders": screening_neurotic_disorders_modal_chck.checked,
         "thinking_and_speech_disorders": screening_thinking_and_speech_disorders_modal_chck.checked,
         "motor_development_disorders": screening_motor_development_disorders_modal_chck.checked,
         "attention_and_memory_disorders": screening_attention_and_memory_disorders_modal_chck.checked,
-        "social_contacts_disorders": screening_social_contacts_disorders_modal_chck.checked
-        
+        "social_contacts_disorders": screening_social_contacts_disorders_modal_chck.checked,
+        "diseases_for_year": null
     };
     switch (screening_commit_modal_btn.value) {
         case 'add':
+            console.log(screening);
             $.ajax({
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/screening/add",
-                data: JSON.stringify({"json_data": screening}),
+                data: JSON.stringify(screening),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -2802,12 +2802,12 @@ screening_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                screening["old_age"] = screening_close_modal_btn.value;
+                screening["prev_age"] = screening_close_modal_btn.value;
                 $.ajax({
                     type: "POST",
                     async: true,
                     url: "/medical_record/child/" + medcard_num + "/screening/update",
-                    data: JSON.stringify({"json_data": screening}),
+                    data: JSON.stringify(screening),
                     contentType: "application/json",
                     dataType: 'json',
                     success: () => {
@@ -2891,7 +2891,7 @@ screening_commit_modal_btn.addEventListener('click', () =>{
                         <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-' + screening.age + '-btn" onclick="update_screening(\'' + screening.age + '\')">Редактировать</button>\
                         <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-screening-' + screening.age + '-btn" onclick="delete_screening(\'' + screening.age + '\')">Удалить</button>\
                     </div>';
-                        let screening_div = document.getElementsByName('div-screening-' + screening.old_age)[0]
+                        let screening_div = document.getElementsByName('div-screening-' + screening.prev_age)[0]
                         screening_div.innerHTML = innerHTML;
                         screening_div.setAttribute('name', 'div-screening-' + screening.age) 
                     }
@@ -2935,7 +2935,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/parent/delete",
-                data: JSON.stringify({"json_data": parent}),
+                data: JSON.stringify(parent),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -2969,7 +2969,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/extra_class/delete",
-                data: JSON.stringify({"json_data": extra_class}),
+                data: JSON.stringify(extra_class),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -2991,7 +2991,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/past_illness/delete",
-                data: JSON.stringify({"json_data": past_illness}),
+                data: JSON.stringify(past_illness),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3011,7 +3011,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/hospitalization/delete",
-                data: JSON.stringify({"json_data": hospitalization}),
+                data: JSON.stringify(hospitalization),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3031,7 +3031,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/spa_treatment/delete",
-                data: JSON.stringify({"json_data": spa_treatment}),
+                data: JSON.stringify(spa_treatment),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3053,7 +3053,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/medical_certificate/delete",
-                data: JSON.stringify({"json_data": medical_certificate}),
+                data: JSON.stringify(medical_certificate),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3073,7 +3073,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/dispensary/delete",
-                data: JSON.stringify({"json_data": dispensary}),
+                data: JSON.stringify(dispensary),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3094,7 +3094,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/visit_specialist_control/delete",
-                data: JSON.stringify({"json_data": visit_specialist_control}),
+                data: JSON.stringify(visit_specialist_control),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3114,7 +3114,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/deworming/delete",
-                data: JSON.stringify({"json_data": deworming}),
+                data: JSON.stringify(deworming),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3134,7 +3134,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/oral_sanation/delete",
-                data: JSON.stringify({"json_data": oral_sanation}),
+                data: JSON.stringify(oral_sanation),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3154,7 +3154,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/prevaccination_checkup/delete",
-                data: JSON.stringify({"json_data": prevaccination_checkup}),
+                data: JSON.stringify(prevaccination_checkup),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3176,7 +3176,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/vaccination/delete",
-                data: JSON.stringify({"json_data": prof_vaccination}),
+                data: JSON.stringify(prof_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3198,7 +3198,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/vaccination/delete",
-                data: JSON.stringify({"json_data": epid_vaccination}),
+                data: JSON.stringify(epid_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3218,7 +3218,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/gg_injection/delete",
-                data: JSON.stringify({"json_data": gg_injection}),
+                data: JSON.stringify(gg_injection),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3238,7 +3238,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/mantoux_test/delete",
-                data: JSON.stringify({"json_data": mantoux_test}),
+                data: JSON.stringify(mantoux_test),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3258,7 +3258,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/tub_vac/delete",
-                data: JSON.stringify({"json_data": tub_vac}),
+                data: JSON.stringify(tub_vac),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3278,7 +3278,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/medical_examination/delete",
-                data: JSON.stringify({"json_data": medical_examination}),
+                data: JSON.stringify(medical_examination),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3298,7 +3298,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/ongoing_medical_supervision/delete",
-                data: JSON.stringify({"json_data": oms}),
+                data: JSON.stringify(oms),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
@@ -3318,7 +3318,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/screening/delete",
-                data: JSON.stringify({"json_data": screening}),
+                data: JSON.stringify(screening),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {

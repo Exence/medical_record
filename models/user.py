@@ -11,18 +11,19 @@ import re
 
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 
-class UserBase(BaseModel):
+class UserPK(BaseModel):
     login: str
+
+class UserBase(UserPK):
     surname: str
     name: str
     patronymic: str
     access_level: str
     kindergarten_num: int
+    password_hash: str
 
 
 class UserCreate(UserBase):
-    password: str
-
     @validator("name")
     def validate_name(cls, value):
         if not LETTER_MATCH_PATTERN.match(value):
@@ -55,11 +56,11 @@ class UserCreate(UserBase):
             )
         return value
 
+class UserUpdate(UserCreate):
+    pass
 
 class User(UserBase):
-    password_hash: str
-    kindergarten_name: str
-    
+        
     class Config:
         orm_mode = True
 

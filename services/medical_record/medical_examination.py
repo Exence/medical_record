@@ -1,120 +1,90 @@
-import psycopg2
-
 from fastapi import (
     Depends,
+    HTTPException,
+    status,
 )
-from typing import (
-    Any,
-    )
 
-from database import (
-    get_connection,
-    execute_data_query,
-    execute_read_query_first,
-    execute_read_query_all,
-)
-from services.serialization import SerializationService
-from services.user import check_user_access
+from sqlalchemy.orm import Session
 
-from models.medical_examination import MedicalExamination
+from database import get_session
+from services.user import check_user_access_to_medcard
+
+from models.medical_examination import MedicalExaminationUpdate, MedicalExaminationCreate, MedicalExaminationPK
 from models.user import User
-from models.exceptions import exception_403
-
+from tables import MedicalExamination
 
 class MedicalExaminationService():
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
+
+    def _get_by_pk(self, medcard_num: int, period: str) -> MedicalExamination:
+        medical_examination = (
+            self.session
+            .query(MedicalExamination)
+            .filter_by(medcard_num=medcard_num,period=period)
+            .first()
+        )
+
+        if not medical_examination:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='MedicalExamination is not found'
+            )
+        return medical_examination
 
     def get_medical_examinations_by_medcard_num(self, user: User, medcard_num: int) -> list[MedicalExamination]:
-        if check_user_access(user=user, medcard_num=medcard_num):
-            query = f"""SELECT  * FROM medical_examinations WHERE medcard_num = {medcard_num} ORDER BY examination_date"""
-            selected_medical_examinations = execute_read_query_all(self.connection, query)
-            medical_examinations = []
-            for medical_examination in selected_medical_examinations:
-                medical_examinations.append(SerializationService.serialization_medical_examination(medical_examination))
-            return medical_examinations
-        raise exception_403 from None
-    
-    def get_medical_examination_by_pk(self, user: User, medical_examination_data: dict) -> MedicalExamination:
-        if check_user_access(user=user, medcard_num=medical_examination_data["medcard_num"]):
-            query = f"""SELECT * FROM medical_examinations WHERE medcard_num = '{medical_examination_data["medcard_num"]}' AND
-                                                                period = '{medical_examination_data["period"]}'"""
-            medical_examination = execute_read_query_first(self.connection, query)
-            return SerializationService.serialization_medical_examination(medical_examination)
-        raise exception_403 from None
-
-    def add_new_medical_examination(self, user: User, medical_examination: dict) -> int:
-        if check_user_access(user=user, medcard_num=medical_examination["medcard_num"]):
-            query = f"""INSERT INTO medical_examinations 
-                            VALUES (%(medcard_num)s,
-                                    %(period)s,
-                                    %(examination_date)s,
-                                    NULL,
-                                    %(height)s,
-                                    %(weight)s,
-                                    %(complaints)s,
-                                    %(pediatrician)s,
-                                    %(orthopaedist)s,
-                                    %(ophthalmologist)s,
-                                    %(otolaryngologist)s,
-                                    %(dermatologist)s,
-                                    %(neurologist)s,
-                                    %(speech_therapist)s,
-                                    %(denta_surgeon)s,
-                                    %(psychologist)s,
-                                    %(other_doctors)s,
-                                    %(blood_test)s,
-                                    %(urine_analysis)s,
-                                    %(feces_analysis)s,
-                                    %(general_diagnosis)s,
-                                    %(physical_development)s,
-                                    %(mental_development)s,
-                                    %(health_group)s,
-                                    %(sport_group)s,
-                                    %(med_and_ped_conclusion)s,
-                                    %(recommendations)s
-                                    )"""
-            execute_data_query(self.connection, query, medical_examination)
-            return self.get_medical_examination_by_pk(medical_examination).age
-        raise exception_403 from None
-    
-    def update_medical_examination(self, user: User, medical_examination: dict) -> int:
-        if check_user_access(user=user, medcard_num=medical_examination["medcard_num"]):
-            query = f"""UPDATE medical_examinations SET period = %(period)s,
-                                                        examination_date = %(examination_date)s,
-                                                        height = %(height)s,
-                                                        weight = %(weight)s,
-                                                        complaints = %(complaints)s,
-                                                        pediatrician = %(pediatrician)s,
-                                                        orthopaedist = %(orthopaedist)s,
-                                                        ophthalmologist = %(ophthalmologist)s,
-                                                        otolaryngologist = %(otolaryngologist)s,
-                                                        dermatologist = %(dermatologist)s,
-                                                        neurologist = %(neurologist)s,
-                                                        speech_therapist = %(speech_therapist)s,
-                                                        denta_surgeon = %(denta_surgeon)s,
-                                                        psychologist = %(psychologist)s,
-                                                        other_doctors = %(other_doctors)s,
-                                                        blood_test = %(blood_test)s,
-                                                        urine_analysis = %(urine_analysis)s,
-                                                        feces_analysis = %(feces_analysis)s,
-                                                        general_diagnosis = %(general_diagnosis)s,
-                                                        physical_development = %(physical_development)s,
-                                                        mental_development = %(mental_development)s,
-                                                        health_group = %(health_group)s,
-                                                        sport_group = %(sport_group)s,
-                                                        med_and_ped_conclusion = %(med_and_ped_conclusion)s,
-                                                        recommendations = %(recommendations)s
-                        WHERE   medcard_num = %(medcard_num)s AND
-                                period = %(old_period)s"""
-            execute_data_query(self.connection, query, medical_examination)
-            return self.get_medical_examination_by_pk(medical_examination).age
-        raise exception_403 from None
-
-    def delete_medical_examination(self, user: User, medical_examination: dict):
-        if check_user_access(user=user, medcard_num=medical_examination["medcard_num"]):
-            query = f"""DELETE FROM medical_examinations WHERE  medcard_num = %(medcard_num)s AND
-                                                        period = %(period)s"""
-            execute_data_query(self.connection, query, medical_examination)
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            query = (
+                self.session.query(MedicalExamination)
+                .filter_by(medcard_num=medcard_num)
+                .order_by(MedicalExamination.age)
+            )
+            medical_examinations = query.all()            
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return medical_examinations
+    
+    def get_medical_examination_by_pk(self, user: User, medical_examination_pk: MedicalExaminationPK):
+        if check_user_access_to_medcard(user=user, medcard_num=medical_examination_pk.medcard_num):
+            medical_examination = self._get_by_pk(medical_examination_pk.medcard_num, medical_examination_pk.period)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return medical_examination
+
+    def add_new_medical_examination(self, user: User, medical_examination_data: MedicalExaminationCreate):
+        if check_user_access_to_medcard(user=user, medcard_num=medical_examination_data.medcard_num):
+            medical_examination = MedicalExamination(**medical_examination_data.dict())
+            self.session.add(medical_examination)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return medical_examination
+
+    def update_medical_examination(self, user: User, medical_examination_data: MedicalExaminationUpdate):
+        if check_user_access_to_medcard(user=user, medcard_num=medical_examination_data.medcard_num):
+            medical_examination = self._get_by_pk(medical_examination_data.medcard_num, medical_examination_data.prev_period)
+            for field, value in medical_examination_data:
+                if field != 'prev_period':
+                    setattr(medical_examination, field, value)
+            self.session.commit()
+            return medical_examination
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+
+    def delete_medical_examination(self, user: User, medical_examination_pk: MedicalExaminationPK):
+        if check_user_access_to_medcard(user=user, medcard_num=medical_examination_pk.medcard_num):
+            medical_examination = self._get_by_pk(medical_examination_pk.medcard_num, medical_examination_pk.period)
+            self.session.delete(medical_examination)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )

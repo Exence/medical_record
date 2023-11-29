@@ -1,98 +1,86 @@
-import psycopg2
-
 from fastapi import (
     Depends,
+    HTTPException,
+    status,
 )
-from typing import Any
+from sqlalchemy.orm import Session
 
-from database import (
-    get_connection,
-    execute_data_query,
-    execute_read_query_first,
-    execute_read_query_all,
-)
+from database import get_session
+from services.user import check_user_access_to_medcard
 
-from models.parent import (
-    Parent,
-    ParentCreate,)
-
-
-def create_parent_tranzaction(connection: Any, parent: dict) -> bool:
-    try:
-        cursor = connection.cursor()
-        query = f"""INSERT INTO parents (surname, name, patronymic, birthday_year, education, phone_num)
-                    VALUES (%(surname)s, %(name)s, %(patronymic)s, %(birthday_year)s, %(education)s, %(phone_num)s)"""  
-        cursor.execute(query, parent)
-        query = f"""SELECT id FROM parents 
-            WHERE   surname = '{parent["surname"]}' AND 
-                    name = '{parent["name"]}' AND 
-                    patronymic = '{parent["patronymic"]}' AND 
-                    birthday_year = {parent["birthday_year"]} AND 
-                    education = '{parent["education"]}' AND 
-                    phone_num = {parent["phone_num"]}
-            """
-        cursor.execute(query)
-        parent_id = cursor.fetchone()[0]
-        query = f"""UPDATE childrens SET {parent["parent_type"]}_id = {parent_id} WHERE medcard_num = {parent["medcard_num"]}"""
-        cursor.execute(query)
-
-        connection.commit()
-        return parent_id
-        
-    except (Exception, psycopg2.DatabaseError) as error :
-        print ("Ошибка в транзакции. Отмена всех остальных операций транзакции", error)
-        connection.rollback()
-        return None
-    
-    finally:
-        if cursor:
-            cursor.close()
-
-def select_parent_id(cursor: Any, parent: ParentCreate) -> int:
-    query = f"""SELECT id FROM parents 
-            WHERE   surname = '{parent.surname}' AND 
-                    name = '{parent.name}' AND 
-                    patronymic = '{parent.patronymic}' AND 
-                    birthday_year = {parent.birthday_year} AND 
-                    education = '{parent.education}' AND 
-                    phone_num = {parent.phone_num}
-            """
-    cursor.execute(query)
-    return cursor.fetchone()[0]
-
-def get_parent_by_id(connection: Any, parent_id: int) -> Parent:
-    if not parent_id:
-        return None
-    query = f"""SELECT * FROM parents WHERE id = {parent_id}"""
-    parent = execute_read_query_first(connection, query)
-    return Parent(
-        id=parent[0],
-        surname=parent[1],
-        name=parent[2],
-        patronymic=parent[3],
-        birthday_year=parent[4],
-        education=parent[5],
-        phone_num=parent[6]
-    )
+from models.parent import ParentUpdate, ParentCreate
+from models.user import User
+from tables import Parent, Child
 
 class ParentService():
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
-        
-    def add_parent(self, parent: dict):
-        return create_parent_tranzaction(self.connection, parent)
-    
-    
-    def update_parent(self, parent: dict):
-        query = f"""UPDATE parents SET  surname = %(surname)s,
-                                        name = %(name)s,
-                                        patronymic = %(patronymic)s,
-                                        birthday_year = %(birthday_year)s,
-                                        education = %(education)s,
-                                        phone_num = %(phone_num)s
-                    WHERE id = %(id)s"""
-        execute_data_query(self.connection, query, parent)
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
 
-    def delete_parent(self, parent_data: dict):
-        query = f"DELETE FROM parents WHERE id = %(id)s"
-        execute_data_query(self.connection, query, parent_data)
+    def _get(self, parent_id: int) -> Parent:
+        parent = (
+            self.session
+            .query(Parent)
+            .filter_by(id=parent_id)
+            .first()
+        )
+
+        if not parent:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Parent is not found'
+            )
+        return parent
+    
+    def get_parent_by_id(self, user: User, medcard_num: int, parent_id: int):
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            parent = self._get(parent_id)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return parent
+
+    def add_new_parent(self, user: User, medcard_num: int, parent_data: ParentCreate):
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            transaction = self.session.begin()
+            try:
+                parent = Parent(**parent_data.dict())
+                self.session.add(parent)
+                child = (
+                    self.session
+                    .query(Child)
+                    .filter_by(medcard_num=medcard_num)
+                    .first()
+                )
+                setattr(child, f"{parent_data.parent_type}_id", parent.id)
+                transaction.commit()
+            except Exception as error:
+                print(error)
+                transaction.rollback()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return parent
+
+    def update_parent(self, user: User, medcard_num: int, parent_data: ParentUpdate):
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            parent = self._get(parent_data.id)
+            for field, value in parent_data:
+                setattr(parent, field, value)
+            self.session.commit()
+            return parent
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+
+    def delete_parent(self, user: User, medcard_num: int, parent_id: int):
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            parent = self._get(parent_id)
+            self.session.delete(parent)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )

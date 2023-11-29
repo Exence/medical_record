@@ -1,71 +1,90 @@
 from fastapi import (
     Depends,
+    HTTPException,
+    status,
 )
-from typing import (
-    Any,
-    )
 
-from database import (
-    get_connection,
-    execute_data_query,
-    execute_read_query_all,
-)
-from services.serialization import SerializationService
-from services.user import check_user_access
+from sqlalchemy.orm import Session
 
-from models.allergyes import Allergy, AllergyUpdate, AllergyCreate, AllergyPK
+from database import get_session
+from services.user import check_user_access_to_medcard
+
+from models.allergy import AllergyUpdate, AllergyCreate, AllergyPK
 from models.user import User
-from models.exceptions import exception_403
-
-
-def json_to_allergy_update(allergy_data: dict) -> AllergyUpdate:
-    return AllergyUpdate(**allergy_data)
- 
-def json_to_allergy_create(allergy_data: dict) -> AllergyCreate:
-    return AllergyCreate(**allergy_data)
-
-def json_to_allergy_pk(allergy_data: dict) -> AllergyPK:
-    return AllergyPK(**allergy_data)
+from tables import Allergy
 
 class AllergyService():
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
+
+    def _get_by_pk(self, medcard_num: int, allergen: str) -> Allergy:
+        allergy = (
+            self.session
+            .query(Allergy)
+            .filter_by(medcard_num=medcard_num,allergen=allergen)
+            .first()
+        )
+
+        if not allergy:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Allergy is not found'
+            )
+        return allergy
 
     def get_allergyes_by_medcard_num(self, user: User, medcard_num: int) -> list[Allergy]:
-        allergyes = []
-        if check_user_access(user=user, medcard_num=medcard_num):
-            query = f"""SELECT  * FROM allergyes WHERE medcard_num = {medcard_num} ORDER BY start_age"""
-            selected_allergyes = execute_read_query_all(self.connection, query)
-        
-            for allergy in selected_allergyes:
-                allergyes.append(SerializationService.serialization_allergy(allergy))
-        
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            query = (
+                self.session.query(Allergy)
+                .filter_by(medcard_num=medcard_num)
+                .order_by(Allergy.start_age)
+            )
+            allergyes = query.all()            
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
         return allergyes
-
-    def add_new_allergy(self, user: User, allergy: AllergyCreate):
-        if check_user_access(user=user, medcard_num=allergy.medcard_num):
-            query = f"""INSERT INTO allergyes (medcard_num, allergen, allergy_type, start_age, reaction_type, diagnosis_date, note)
-            VALUES ('{allergy.medcard_num}', '{allergy.allergen}', '{allergy.allergy_type}', '{allergy.start_age}', '{allergy.reaction_type}', '{allergy.diagnosis_date}', '{allergy.note}')"""
-            execute_data_query(self.connection, query, allergy)
+    
+    def get_allergy_by_pk(self, user: User, allergy_pk: AllergyPK):
+        if check_user_access_to_medcard(user=user, medcard_num=allergy_pk.medcard_num):
+            allergy = self._get_by_pk(allergy_pk.medcard_num, allergy_pk.allergen)
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return allergy
 
-    def update_allergy(self, user: User, allergy: AllergyUpdate):
-        if check_user_access(user=user, medcard_num=allergy.medcard_num):
-            query = f"""UPDATE allergyes SET    allergen = '{allergy.allergen}', 
-                                                allergy_type = '{allergy.allergy_type}', 
-                                                start_age = '{allergy.start_age}', 
-                                                reaction_type = '{allergy.reaction_type}', 
-                                                diagnosis_date = '{allergy.diagnosis_date}', 
-                                                note = '{allergy.note}'
-                        WHERE medcard_num = '{allergy.medcard_num}' AND allergen = '{allergy.prev_allergen}'"""
-            execute_data_query(self.connection, query, allergy)
+    def add_new_allergy(self, user: User, allergy_data: AllergyCreate):
+        if check_user_access_to_medcard(user=user, medcard_num=allergy_data.medcard_num):
+            allergy = Allergy(**allergy_data.dict())
+            self.session.add(allergy)
+            self.session.commit()            
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return allergy
 
-    def delete_allergy(self, user: User, allergy: AllergyPK):
-        if check_user_access(user=user, medcard_num=allergy.medcard_num):
-            query = f"DELETE FROM allergyes WHERE medcard_num = '{allergy.medcard_num}' AND allergen = '{allergy.allergen}'"
-            execute_data_query(self.connection, query, allergy)
+    def update_allergy(self, user: User, allergy_data: AllergyUpdate):
+        if check_user_access_to_medcard(user=user, medcard_num=allergy_data.medcard_num):
+            allergy = self._get_by_pk(allergy_data.medcard_num, allergy_data.prev_allergen)
+            for field, value in allergy_data:
+                if field != 'prev_allergen':
+                    setattr(allergy, field, value)
+            self.session.commit()
+            return allergy
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+
+    def delete_allergy(self, user: User, allergy_pk: AllergyPK):
+        if check_user_access_to_medcard(user=user, medcard_num=allergy_pk.medcard_num):
+            allergy = self._get_by_pk(allergy_pk.medcard_num, allergy_pk.allergen)
+            self.session.delete(allergy)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )

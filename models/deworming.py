@@ -1,14 +1,21 @@
 from datetime import date
+from enum import Enum
 from pydantic import (
     BaseModel,
     Field,
 )
 
 
-class DewormingBase(BaseModel):
+class dewormingResultKind(str, Enum):
+    POSITIVELY = 'Положительно'
+    NEGATIVE = 'Отрицательно'
+
+
+class DewormingPK(BaseModel):
     medcard_num: int = Field(...)
     deworming_date: date = Field(...)
-    result: str = Field(...)
+class DewormingBase(DewormingPK):    
+    result: dewormingResultKind = Field(...)
 
 class Deworming(DewormingBase):
     class Config:
@@ -16,3 +23,6 @@ class Deworming(DewormingBase):
 
 class DewormingCreate(DewormingBase):
     pass
+
+class DewormingUpdate(DewormingCreate):
+    prev_deworming_date: date = Field(...)

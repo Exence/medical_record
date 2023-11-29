@@ -11,9 +11,11 @@ from pydantic import (
 
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 
-class PrevaccinationCheckupBase(BaseModel):
+class PrevaccinationCheckupPK(BaseModel):
     medcard_num: int = Field(...)
     examination_date: date = Field(...)
+
+class PrevaccinationCheckupBase(PrevaccinationCheckupPK):
     age: int | None
     diagnosis: str = Field(...)
     report: str = Field(...)
@@ -36,6 +38,9 @@ class PrevaccinationCheckupCreate(PrevaccinationCheckupBase):
                 status_code=422, detail="Field doctor should contains only letters"
             )
         return value
+    
+class PrevaccinationCheckupUpdate(PrevaccinationCheckupCreate):
+    prev_examination_date: date = Field(...)
     
 class PrevaccinationCheckupView(PrevaccinationCheckupBase):
     vac_name: str

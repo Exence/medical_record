@@ -1,80 +1,90 @@
-import psycopg2
-
+from datetime import date
 from fastapi import (
     Depends,
+    HTTPException,
+    status,
 )
-from typing import (
-    Any,
-    )
+from sqlalchemy.orm import Session
 
-from database import (
-    get_connection,
-    execute_data_query,
-    execute_read_query_first,
-    execute_read_query_all,
-)
-from services.serialization import SerializationService
-from services.user import check_user_access
+from database import get_session
+from services.user import check_user_access_to_medcard
 
-from models.spa_treatment import SpaTreatment
+from models.spa_treatment import SpaTreatmentUpdate, SpaTreatmentCreate, SpaTreatmentPK
 from models.user import User
-from models.exceptions import exception_403
-
+from tables import SpaTreatment
 
 class SpaTreatmentService():
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
+
+    def _get_by_pk(self, medcard_num: int, start_date: date) -> SpaTreatment:
+        spa_treatment = (
+            self.session
+            .query(SpaTreatment)
+            .filter_by(medcard_num=medcard_num,start_date=start_date)
+            .first()
+        )
+
+        if not spa_treatment:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='SpaTreatment is not found'
+            )
+        return spa_treatment
 
     def get_spa_treatments_by_medcard_num(self, user: User, medcard_num: int) -> list[SpaTreatment]:
-        if check_user_access(user=user, medcard_num=medcard_num):
-            query = f"""SELECT  * FROM spa_treatments WHERE medcard_num = {medcard_num} ORDER BY start_date"""
-            selected_spa_treatments = execute_read_query_all(self.connection, query)
-            spa_treatments = []
-            for spa_treatment in selected_spa_treatments:
-                spa_treatments.append(SerializationService.serialization_spa_treatment(spa_treatment))
-            return spa_treatments
-        raise exception_403 from None
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            query = (
+                self.session.query(SpaTreatment)
+                .filter_by(medcard_num=medcard_num)
+                .order_by(SpaTreatment.start_date)
+            )
+            spa_treatments = query.all()            
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return spa_treatments
     
-    def get_spa_treatment_by_pk(self, user: User, spa_treatment_data: dict) -> SpaTreatment:
-        if check_user_access(user=user, medcard_num=spa_treatment_data["medcard_num"]):
-            query = f"""SELECT * FROM spa_treatments WHERE medcard_num = '{spa_treatment_data["medcard_num"]}' AND
-                                                            start_date = '{spa_treatment_data["start_date"]}'"""
-            spa_treatment = execute_read_query_first(self.connection, query)
-
-            return SerializationService.serialization_spa_treatment(spa_treatment)
-        raise exception_403 from None
-
-    def add_new_spa_treatment(self, user: User, spa_treatment: dict):
-        if check_user_access(user=user, medcard_num=spa_treatment["medcard_num"]):
-            if not spa_treatment["end_date"]:
-                spa_treatment["end_date"] = None
-
-            query = f"""INSERT INTO spa_treatments (medcard_num, start_date, end_date, diagnosis, founding_specialization, climatic_zone) 
-                            VALUES (%(medcard_num)s, %(start_date)s, %(end_date)s, %(diagnosis)s, %(founding_specialization)s, %(climatic_zone)s)"""
-            execute_data_query(self.connection, query, spa_treatment)
+    def get_spa_treatment_by_pk(self, user: User, spa_treatment_pk: SpaTreatmentPK):
+        if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_pk.medcard_num):
+            spa_treatment = self._get_by_pk(spa_treatment_pk.medcard_num, spa_treatment_pk.start_date)
         else:
-            raise exception_403 from None
-    
-    def update_spa_treatment(self, user: User, spa_treatment: dict):
-        if check_user_access(user=user, medcard_num=spa_treatment["medcard_num"]):
-            if not spa_treatment["end_date"]:
-                spa_treatment["end_date"] = None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return spa_treatment
 
-            query = f"""UPDATE  spa_treatments SET start_date = %(start_date)s, 
-                                                    end_date = %(end_date)s, 
-                                                    diagnosis = %(diagnosis)s,
-                                                    founding_specialization = %(founding_specialization)s,
-                                                    climatic_zone = %(climatic_zone)s
-                        WHERE   medcard_num = %(medcard_num)s AND
-                                start_date = %(old_start_date)s"""
-            execute_data_query(self.connection, query, spa_treatment)
+    def add_new_spa_treatment(self, user: User, spa_treatment_data: SpaTreatmentCreate):
+        if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_data.medcard_num):
+            spa_treatment = SpaTreatment(**spa_treatment_data.dict())
+            self.session.add(spa_treatment)
+            self.session.commit()            
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return spa_treatment
 
-    def delete_spa_treatment(self, user: User, spa_treatment: dict):
-        if check_user_access(user=user, medcard_num=spa_treatment["medcard_num"]):
-            query = f"""DELETE FROM spa_treatments WHERE  medcard_num = %(medcard_num)s AND
-                                                            start_date = %(start_date)s"""
-            execute_data_query(self.connection, query, spa_treatment)
+    def update_spa_treatment(self, user: User, spa_treatment_data: SpaTreatmentUpdate):
+        if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_data.medcard_num):
+            spa_treatment = self._get_by_pk(spa_treatment_data.medcard_num, spa_treatment_data.prev_start_date)
+            for field, value in spa_treatment_data:
+                if field != 'prev_start_date':
+                    setattr(spa_treatment, field, value)
+            self.session.commit()
+            return spa_treatment
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+
+    def delete_spa_treatment(self, user: User, spa_treatment_pk: SpaTreatmentPK):
+        if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_pk.medcard_num):
+            spa_treatment = self._get_by_pk(spa_treatment_pk.medcard_num, spa_treatment_pk.start_date)
+            self.session.delete(spa_treatment)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )

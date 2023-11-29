@@ -5,11 +5,14 @@ from pydantic import (
 )
 
 
-class PastIllnessBase(BaseModel):
+class PastIllnessPK(BaseModel):
     medcard_num: int = Field(...)
     start_date: date = Field(...)
-    end_date: date = Field(...)
     diagnosis: str = Field(...)
+
+class PastIllnessBase(PastIllnessPK):
+    end_date: date = Field(...)
+    
 
 class PastIllness(PastIllnessBase):
     class Config:
@@ -17,3 +20,7 @@ class PastIllness(PastIllnessBase):
 
 class PastIllnessCreate(PastIllnessBase):
     pass
+
+class PastIllnessUpdate(PastIllnessCreate):
+    prev_start_date: date = Field(...)
+    prev_diagnosis: str = Field(...)

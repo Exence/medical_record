@@ -1,80 +1,91 @@
-import psycopg2
-
+from datetime import date
 from fastapi import (
     Depends,
+    HTTPException,
+    status,
 )
-from typing import (
-    Any,
-    )
 
-from database import (
-    get_connection,
-    execute_data_query,
-    execute_read_query_first,
-    execute_read_query_all,
-)
-from services.serialization import SerializationService
-from services.user import check_user_access
+from sqlalchemy.orm import Session
 
-from models.dispensary import Dispensary
+from database import get_session
+from services.user import check_user_access_to_medcard
+
+from models.dispensary import DispensaryUpdate, DispensaryCreate, DispensaryPK
 from models.user import User
-from models.exceptions import exception_403
-
+from tables import Dispensary
 
 class DispensaryService():
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
+
+    def _get_by_pk(self, medcard_num: int, start_date: date) -> Dispensary:
+        dispensary = (
+            self.session
+            .query(Dispensary)
+            .filter_by(medcard_num=medcard_num,start_date=start_date)
+            .first()
+        )
+
+        if not dispensary:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Dispensary is not found'
+            )
+        return dispensary
 
     def get_dispensaryes_by_medcard_num(self, user: User, medcard_num: int) -> list[Dispensary]:
-        if check_user_access(user=user, medcard_num=medcard_num):
-            query = f"""SELECT  * FROM dispensaryes WHERE medcard_num = {medcard_num} ORDER BY start_date"""
-            selected_dispensaryes = execute_read_query_all(self.connection, query)
-            dispensaryes = []
-            for dispensary in selected_dispensaryes:
-                dispensaryes.append(SerializationService.serialization_dispensary(dispensary))
-            return dispensaryes
-        raise exception_403 from None
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            query = (
+                self.session.query(Dispensary)
+                .filter_by(medcard_num=medcard_num)
+                .order_by(Dispensary.start_date)
+            )
+            dispensaryes = query.all()            
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return dispensaryes
     
-    def get_dispensary_by_pk(self, user: User, dispensary_data: dict) -> Dispensary:
-        if check_user_access(user=user, medcard_num=dispensary_data["medcard_num"]):
-            query = f"""SELECT * FROM dispensaryes WHERE medcard_num = '{dispensary_data["medcard_num"]}' AND
-                                                            start_date = '{dispensary_data["start_date"]}'"""
-            dispensary = execute_read_query_first(self.connection, query)
-
-            return SerializationService.serialization_dispensary(dispensary)
-        raise exception_403 from None
-
-    def add_new_dispensary(self, user: User, dispensary: dict):
-        if check_user_access(user=user, medcard_num=dispensary["medcard_num"]):
-            if not dispensary["end_date"]:
-                dispensary["end_date"] = None
-
-            query = f"""INSERT INTO dispensaryes (medcard_num, start_date, end_date, diagnosis, specialist, end_reason) 
-                            VALUES (%(medcard_num)s, %(start_date)s, %(end_date)s, %(diagnosis)s, %(specialist)s, %(end_reason)s)"""
-            execute_data_query(self.connection, query, dispensary)
+    def get_dispensary_by_pk(self, user: User, dispensary_pk: DispensaryPK):
+        if check_user_access_to_medcard(user=user, medcard_num=dispensary_pk.medcard_num):
+            dispensary = self._get_by_pk(dispensary_pk.medcard_num, dispensary_pk.start_date)
         else:
-            raise exception_403 from None
-    
-    def update_dispensary(self, user: User, dispensary: dict):
-        if check_user_access(user=user, medcard_num=dispensary["medcard_num"]):
-            if not dispensary["end_date"]:
-                dispensary["end_date"] = None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return dispensary
 
-            query = f"""UPDATE  dispensaryes SET start_date = %(start_date)s, 
-                                                    end_date = %(end_date)s, 
-                                                    diagnosis = %(diagnosis)s,
-                                                    specialist = %(specialist)s,
-                                                    end_reason = %(end_reason)s
-                        WHERE   medcard_num = %(medcard_num)s AND
-                                start_date = %(old_start_date)s"""
-            execute_data_query(self.connection, query, dispensary)
+    def add_new_dispensary(self, user: User, dispensary_data: DispensaryCreate):
+        if check_user_access_to_medcard(user=user, medcard_num=dispensary_data.medcard_num):
+            dispensary = Dispensary(**dispensary_data.dict())
+            self.session.add(dispensary)
+            self.session.commit()            
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return dispensary
 
-    def delete_dispensary(self, user: User, dispensary: dict):
-        if check_user_access(user=user, medcard_num=dispensary["medcard_num"]):
-            query = f"""DELETE FROM dispensaryes WHERE  medcard_num = %(medcard_num)s AND
-                                                            start_date = %(start_date)s"""
-            execute_data_query(self.connection, query, dispensary)
+    def update_dispensary(self, user: User, dispensary_data: DispensaryUpdate):
+        if check_user_access_to_medcard(user=user, medcard_num=dispensary_data.medcard_num):
+            dispensary = self._get_by_pk(dispensary_data.medcard_num, dispensary_data.prev_start_date)
+            for field, value in dispensary_data:
+                if field != 'prev_start_date':
+                    setattr(dispensary, field, value)
+            self.session.commit()
+            return dispensary
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+
+    def delete_dispensary(self, user: User, dispensary_pk: DispensaryPK):
+        if check_user_access_to_medcard(user=user, medcard_num=dispensary_pk.medcard_num):
+            dispensary = self._get_by_pk(dispensary_pk.medcard_num, dispensary_pk.start_date)
+            self.session.delete(dispensary)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )

@@ -29,8 +29,7 @@ from services.medical_record.tub_vac import TuberculosisVaccinationService
 from services.medical_record.medical_examination import MedicalExaminationService
 from services.medical_record.ongoing_medical_supervision import OngoingMedicalSupervisionService
 from services.medical_record.screening import ScreeningService
-from services.medical_record.parent import get_parent_by_id
-from services.vac_name import get_vac_names_by_type
+from services.vac_name import VacNameService
 
 from api import router as api_router
 
@@ -55,6 +54,7 @@ def get_child_medcard(medcard_num: int, request: Request,
                       dispensary_service: DispensaryService = Depends(),
                       deworming_service: DewormingService = Depends(),
                       oral_sanation_service: OralSanationService = Depends(),
+                      vac_name_service: VacNameService = Depends(),
                       prevaccination_checkup_service: PrevaccinationCheckupService = Depends(),
                       vaccination_service: VaccinationService = Depends(),
                       gg_injection_service: GammaGlobulinInjectionService = Depends(),
@@ -63,10 +63,8 @@ def get_child_medcard(medcard_num: int, request: Request,
                       medical_examination_service: MedicalExaminationService = Depends(),
                       ongoing_medical_supervision_service: OngoingMedicalSupervisionService = Depends(),
                       screening_service: ScreeningService = Depends()):
-    child = service.get_child_by_medcard_num(medcard_num)
+    child = service.get_medcard_by_num(user=user, medcard_num=medcard_num)
     allergyes = allergy_service.get_allergyes_by_medcard_num(user=user, medcard_num=medcard_num)
-    father = get_parent_by_id(service.connection, child.father_id)
-    mother = get_parent_by_id(service.connection, child.mother_id)
     extra_classes = extra_class_service.get_extra_classes_by_medcard_num(user=user, medcard_num=medcard_num)
     past_illnesses = past_illness_service.get_past_illnesses_by_medcard_num(user=user, medcard_num=medcard_num)
     hospitalizations = hospitalization_service.get_hospitalizations_by_medcard_num(user=user, medcard_num=medcard_num)
@@ -75,8 +73,9 @@ def get_child_medcard(medcard_num: int, request: Request,
     dispensaryes = dispensary_service.get_dispensaryes_by_medcard_num(user=user, medcard_num=medcard_num)
     dewormings = deworming_service.get_dewormings_by_medcard_num(user=user, medcard_num=medcard_num)
     oral_sanations = oral_sanation_service.get_oral_sanations_by_medcard_num(user=user, medcard_num=medcard_num)
-    prof_vac_names = get_vac_names_by_type(service.connection, 'Профилактическая')
-    epid_vac_names = get_vac_names_by_type(service.connection, 'По показаниям')
+    vac_names = vac_name_service.get_all_vac_names_as_dict()
+    prof_vac_names = vac_name_service.get_vac_names_by_type('Профилактическая')
+    epid_vac_names = vac_name_service.get_vac_names_by_type('По показаниям')
     prevaccination_checkups = prevaccination_checkup_service.get_prevaccination_checkups_by_medcard_num(user=user, medcard_num=medcard_num)
     prof_vaccinations = vaccination_service.get_prof_vaccinations_by_medcard_num(user=user, medcard_num=medcard_num)
     epid_vaccinations = vaccination_service.get_epid_vaccinations_by_medcard_num(user=user, medcard_num=medcard_num)
@@ -90,8 +89,8 @@ def get_child_medcard(medcard_num: int, request: Request,
         "/medical_record/child/index.html", {"request": request, 
                                              "child": child, 
                                              "allergyes": allergyes, 
-                                             "father": father,
-                                             "mother": mother,
+                                             "father": child.father,
+                                             "mother": child.mother,
                                              "extra_classes": extra_classes,
                                              "past_illnesses": past_illnesses,
                                              "hospitalizations": hospitalizations,
@@ -103,6 +102,7 @@ def get_child_medcard(medcard_num: int, request: Request,
                                              "prof_vac_names": prof_vac_names,
                                              "epid_vac_names": epid_vac_names,
                                              "prevaccination_checkups": prevaccination_checkups,
+                                             "vac_names": vac_names,
                                              "prof_vaccinations": prof_vaccinations,
                                              "epid_vaccinations": epid_vaccinations,
                                              "gg_injections": gg_injections,

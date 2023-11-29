@@ -1,10 +1,6 @@
 from typing import Any
 
-from database import (
-      execute_read_query_first,
-      )
-
-from models.allergyes import Allergy
+from models.allergy import Allergy
 from models.child import (
     Child,
     CreateChildForm,
@@ -12,7 +8,7 @@ from models.child import (
     )
 from models.deworming import Deworming
 from models.dispensary import Dispensary
-from models.extra_classes import ExtraClass
+from models.extra_class import ExtraClass
 from models.gg_injection import GammaGlobulinInjection
 from models.hospitalization import Hospitalization
 from models.mantoux_test import MantouxTest
@@ -38,17 +34,12 @@ from models.vac_name import VacName
 from models.vaccination import Vaccination
 from models.visit_specialist_control import VisitSpecialistControl
 
-from services.kindergarten import get_kindergarten_name_by_num
 
 
 class SerializationService():
 
         @classmethod
         def serialization_user(cls, connection: Any, user_data: tuple) -> User:
-                cursor = connection.cursor()
-                kindergarten_name = get_kindergarten_name_by_num(cursor, user_data[6])
-                cursor.close()
-
                 return User (
                         login = user_data[0],
                         surname = user_data[1],
@@ -56,8 +47,7 @@ class SerializationService():
                         patronymic = user_data[3],
                         password_hash = user_data[4],
                         access_level = user_data[5],
-                        kindergarten_num = user_data[6],
-                        kindergarten_name = kindergarten_name
+                        kindergarten_num = user_data[6]
                 )
 
         @classmethod

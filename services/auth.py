@@ -14,18 +14,16 @@ from jose import (
 )
 from passlib.hash import bcrypt
 from pydantic import ValidationError
+from sqlalchemy.orm import Session
 
 from settings import settings
-from database import (
-    get_connection,
-    execute_read_query_first,
-)
+from database import get_session
+
 from models.auth import Token
-from models.user import User
+from models.user import User as UserModel
+from tables import User
 from services.oauth2_scheme import OAuth2PasswordBearerWithCookie
 from services.serialization import SerializationService
-
-from typing import Any
 
 
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl='/sign-in')
@@ -39,7 +37,7 @@ class AuthService():
         return bcrypt.verify(password + settings.password_salt, password_hash)
 
     @classmethod
-    def validate_token(cls, token: str) -> User:
+    def validate_token(cls, token: str) -> UserModel:
         exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Could not validate credentials',
@@ -59,7 +57,7 @@ class AuthService():
         user_data = payload.get('user')
         
         try:
-            user = User.parse_obj(user_data)
+            user = UserModel.parse_obj(user_data)
         except ValidationError:
             raise exception from None
         
@@ -84,8 +82,8 @@ class AuthService():
         )
         return Token(access_token=token)
 
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
 
     def authenticate_user(self, login: str, password: str) -> Token:
         exception = HTTPException(
@@ -95,13 +93,18 @@ class AuthService():
                 'WWW-Authenticate': 'bearer'
             },
         )
-        select_user = f"SELECT * FROM users WHERE login='{login.lower()}'"
-        query_user = execute_read_query_first(self.connection, select_user)
+        user = (
+            self.session
+            .query(User)
+            .filter_by(login=login.lower())
+            .first()
+        )
 
-        if not query_user:
+        user = UserModel(**user.__dict__)
+
+        if not user:
             raise exception
-        
-        user = SerializationService.serialization_user(self.connection, query_user)
+
 
         if not self.verify_password(password, user.password_hash):            
             raise exception

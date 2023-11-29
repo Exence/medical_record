@@ -10,9 +10,11 @@ from pydantic import (
 
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 
-class OngoingMedicalSupervisionBase(BaseModel):
+class OngoingMedicalSupervisionPK(BaseModel):
     medcard_num: int = Field(...)
     examination_date: date = Field(...)
+
+class OngoingMedicalSupervisionBase(OngoingMedicalSupervisionPK):
     examination_data: str = Field(...)
     diagnosis: str = Field(...)
     prescription: str | None
@@ -30,3 +32,6 @@ class OngoingMedicalSupervisionCreate(OngoingMedicalSupervisionBase):
                 status_code=422, detail="Field doctor should contains only letters"
             )
         return value
+    
+class OngoingMedicalSupervisionUpdate(OngoingMedicalSupervisionCreate):
+    prev_examination_date: date = Field(...)

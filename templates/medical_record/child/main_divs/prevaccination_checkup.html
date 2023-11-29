@@ -1,5 +1,5 @@
 <div name="div-prevaccination-checkup-{{ prevaccination_checkup.examination_date }}" class="col-12 mb-3">
-    <p><strong>{{ prevaccination_checkup.vac_name }}</strong> Дата осмотра: <u><mark>{{ prevaccination_checkup.examination_date.strftime("%d.%m.%Y") }}</mark></u>, Возраст: <u><mark>{{ prevaccination_checkup.age }}</mark></u>
+    <p><strong>{{ vac_names[prevaccination_checkup.vac_name_id].name }}</strong> Дата осмотра: <u><mark>{{ prevaccination_checkup.examination_date.strftime("%d.%m.%Y") }}</mark></u>, Возраст: <u><mark>{{ prevaccination_checkup.age }}</mark></u>
         Диагноз: <u><mark>{{ prevaccination_checkup.diagnosis }}</mark></u>, Заключение: <u><mark>{{ prevaccination_checkup.report }}</mark></u> <br>
     {% if prevaccination_checkup.no_vac_date %}
         <strong>Мед. отвод до: </strong><u><mark>{{ prevaccination_checkup.no_vac_date.strftime("%d.%m.%Y") }}</mark></u> <br>

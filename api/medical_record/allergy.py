@@ -2,14 +2,9 @@ from fastapi import (
     APIRouter,
     Depends,  
 )
-from models.allergyes import AllergyPK, AllergyCreate, AllergyUpdate
+from models.allergy import Allergy, AllergyPK, AllergyCreate, AllergyUpdate
 from models.user import User
-from services.medical_record.allergy import (
-    AllergyService, 
-    json_to_allergy_pk, 
-    json_to_allergy_create, 
-    json_to_allergy_update,
-)
+from services.medical_record.allergy import AllergyService
 from services.auth import get_current_user
 
 
@@ -18,28 +13,32 @@ router = APIRouter(
     tags=['Allergy']
 )
 
-@router.get('/get/')
+@router.get('/get_all', response_model=list[Allergy])
 async def get_allergyes_by_medcard_num(medcard_num: int,
                         user: User = Depends(get_current_user),
                         service: AllergyService = Depends()):
-    allergyes = service.get_allergyes_by_medcard_num(user=user, medcard_num=medcard_num)
-    return {"allergyes": allergyes}
+    return service.get_allergyes_by_medcard_num(user=user, medcard_num=medcard_num)
 
-@router.post('/add')
-async def add_allergy(allergy: AllergyCreate = Depends(json_to_allergy_create), 
+@router.post('/get_one', response_model=Allergy)
+async def get_allergy_by_pk(allergy_pk: AllergyPK, 
+                         user: User = Depends(get_current_user),
+                         service: AllergyService = Depends()):
+    return service.get_allergy_by_pk(user=user, allergy_pk=allergy_pk)
+
+@router.post('/add', response_model=Allergy)
+async def add_allergy(allergy_data: AllergyCreate, 
                       user: User = Depends(get_current_user),
                       service: AllergyService = Depends()):
-    service.add_new_allergy(user=user, allergy=allergy)
+    return service.add_new_allergy(user=user, allergy_data=allergy_data)
 
-@router.post('/update')
-async def update_allergy(allergy: AllergyUpdate = Depends(json_to_allergy_update), 
+@router.post('/update', response_model=Allergy)
+async def update_allergy(allergy_data: AllergyUpdate, 
                          user: User = Depends(get_current_user),
                          service: AllergyService = Depends()):
-    service.update_allergy(user=user, allergy=allergy)
+    return service.update_allergy(user=user, allergy_data=allergy_data)
 
 @router.post('/delete')
-async def delete_allergy(allergy: AllergyPK = Depends(json_to_allergy_pk), 
+async def delete_allergy(allergy_pk: AllergyPK, 
                          user: User = Depends(get_current_user),
                          service: AllergyService = Depends()):
-    service.delete_allergy(user=user, allergy=allergy)
-    
+    service.delete_allergy(user=user, allergy_pk=allergy_pk)

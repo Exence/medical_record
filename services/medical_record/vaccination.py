@@ -1,98 +1,144 @@
+from datetime import date
 from fastapi import (
     Depends,
+    HTTPException,
+    status,
 )
-from typing import (
-    Any,
-    )
+from sqlalchemy.orm import Session
 
-from database import (
-    get_connection,
-    execute_data_query,
-    execute_read_query_first,
-    execute_read_query_all,
-)
-from services.serialization import SerializationService
-from services.user import check_user_access
+from database import get_session
+from services.user import check_user_access_to_medcard
 
-from models.vaccination import Vaccination
+from models.vaccination import VaccinationUpdate, VaccinationCreate, VaccinationPK, VaccinationView
 from models.user import User
-from models.exceptions import exception_403
-
+from tables import Vaccination, ProfVaccination, EpidVaccination, VacName
 
 class VaccinationService():
-    def __init__(self, connection: Any = Depends(get_connection)):
-        self.connection = connection
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
 
-    def add_new_vaccination(self, user: User, vaccination: dict):
-        if check_user_access(user=user, medcard_num=vaccination["medcard_num"]):
-            query = f"""INSERT INTO vaccinations (medcard_num, vac_name_id, vac_type, vac_date, serial, dose, introduction_method, reaction, doctor) 
-                            VALUES (%(medcard_num)s, %(vac_name_id)s, %(vac_type)s, %(vac_date)s, %(serial)s, %(dose)s, %(introduction_method)s, %(reaction)s, %(doctor)s)"""
-            execute_data_query(self.connection, query, vaccination)
+    def _get_by_pk(self, medcard_num: int, vac_name_id: int, vac_type: str) -> Vaccination:
+        vaccination = (
+            self.session
+            .query(Vaccination)
+            .filter_by(medcard_num=medcard_num, vac_name_id=vac_name_id, vac_type=vac_type)
+            .first()
+        )
+
+        if not vaccination:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Vaccination is not found'
+            )
+        return vaccination
+
+    def get_vaccinations_by_medcard_num(self, user: User, medcard_num: int) -> list[Vaccination]:
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            query = (
+                self.session.query(Vaccination)
+                .join(VacName, Vaccination.vac_name_id == VacName.id)
+                .filter_by(medcard_num=medcard_num)
+                .order_by(VacName.name)
+                .order_by(Vaccination.vac_date)
+            )
+            vaccinations = query.all()            
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return vaccinations
     
-    def update_vaccination(self, user: User, vaccination: dict):
-        if check_user_access(user=user, medcard_num=vaccination["medcard_num"]):
-            query = f"""UPDATE vaccinations SET vac_name_id = %(vac_name_id)s, 
-                                                vac_type = %(vac_type)s,
-                                                vac_date = %(vac_date)s,
-                                                serial = %(serial)s, 
-                                                dose = %(dose)s,
-                                                introduction_method = %(introduction_method)s,
-                                                reaction = %(reaction)s, 
-                                                doctor = %(doctor)s
-                        WHERE   medcard_num = %(medcard_num)s AND
-                                vac_name_id = %(old_vac_name_id)s AND
-                                vac_type = %(old_vac_type)s"""
-            execute_data_query(self.connection, query, vaccination)
+    def get_vaccination_by_pk(self, user: User, vaccination_pk: VaccinationPK):
+        if check_user_access_to_medcard(user=user, medcard_num=vaccination_pk.medcard_num):
+            vaccination = self._get_by_pk(vaccination_pk.medcard_num, vaccination_pk.vac_name_id, vaccination_pk.vac_type)
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return vaccination
 
-    def delete_vaccination(self, user: User, vaccination: dict):
-        if check_user_access(user=user, medcard_num=vaccination["medcard_num"]):
-            query = f"""DELETE FROM vaccinations WHERE  medcard_num = %(medcard_num)s AND
-                                                        vac_name_id = %(vac_name_id)s AND
-                                                        vac_type = %(vac_type)s"""
-            execute_data_query(self.connection, query, vaccination)
+    def add_new_vaccination(self, user: User, vaccination_data: VaccinationCreate):
+        if check_user_access_to_medcard(user=user, medcard_num=vaccination_data.medcard_num):
+            vaccination = Vaccination(**vaccination_data.dict())
+            self.session.add(vaccination)
+            self.session.commit()            
         else:
-            raise exception_403 from None
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return vaccination
+
+    def update_vaccination(self, user: User, vaccination_data: VaccinationUpdate):
+        if check_user_access_to_medcard(user=user, medcard_num=vaccination_data.medcard_num):
+            vaccination = self._get_by_pk(vaccination_data.medcard_num, vaccination_data.prev_vac_name_id, vaccination_data.prev_vac_type)
+            for field, value in vaccination_data:
+                if not field in ['prev_vac_name_id', 'prev_vac_type']:
+                    setattr(vaccination, field, value)
+            self.session.commit()
+            return vaccination
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+
+    def delete_vaccination(self, user: User, vaccination_pk: VaccinationPK):
+        if check_user_access_to_medcard(user=user, medcard_num=vaccination_pk.medcard_num):
+            vaccination = self._get_by_pk(vaccination_pk.medcard_num, vaccination_pk.vac_name_id, vaccination_pk.vac_type)
+            self.session.delete(vaccination)
+            self.session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
 
     
-    def get_prof_vaccinations_by_medcard_num(self, user: User, medcard_num: int) -> list[Vaccination]:
-        if check_user_access(user=user, medcard_num=medcard_num):
-            query = f"""SELECT  * FROM prof_vaccinations WHERE medcard_num = {medcard_num}"""
-            selected_prof_vaccinations = execute_read_query_all(self.connection, query)
-            prof_vaccinations = []
-            for prof_vaccination in selected_prof_vaccinations:
-                prof_vaccinations.append(SerializationService.serialization_vaccination(prof_vaccination))
-            return prof_vaccinations
-        raise exception_403 from None
+    def get_prof_vaccination_by_pk(self, user: User, prof_vaccination_pk: VaccinationPK) -> ProfVaccination:
+        if check_user_access_to_medcard(user=user, medcard_num=prof_vaccination_pk.medcard_num):
+            prof_vaccination = (
+            self.session
+            .query(ProfVaccination)
+            .filter_by(medcard_num=prof_vaccination_pk.medcard_num, vac_name_id=prof_vaccination_pk.vac_name_id, vac_type=prof_vaccination_pk.vac_type)
+            .first()
+        )
+
+        if not prof_vaccination:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Prof vaccination is not found'
+            )
+        return prof_vaccination
     
-    def get_prof_vaccination_by_pk(self, user: User, prof_vaccination_data: dict) -> Vaccination:
-        if check_user_access(user=user, medcard_num=prof_vaccination_data["medcard_num"]):
-            query = f"""SELECT * FROM prof_vaccinations WHERE medcard_num = '{prof_vaccination_data["medcard_num"]}' AND
-                                                              vac_name_id = '{prof_vaccination_data["vac_name_id"]}' AND
-                                                              vac_type = '{prof_vaccination_data["vac_type"]}'"""
-            prof_vaccination = execute_read_query_first(self.connection, query)
-            return SerializationService.serialization_vaccination(prof_vaccination)
-        raise exception_403 from None
+    def get_prof_vaccinations_by_medcard_num(self, user: User, medcard_num: int) -> list[ProfVaccination]:
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            return (
+            self.session
+            .query(ProfVaccination)
+            .filter_by(medcard_num=medcard_num)
+            .all()
+        )
     
 
-    def get_epid_vaccinations_by_medcard_num(self, user: User, medcard_num: int) -> list[Vaccination]:
-        if check_user_access(user=user, medcard_num=medcard_num):
-            query = f"""SELECT  * FROM epid_vaccinations WHERE medcard_num = {medcard_num}"""
-            selected_epid_vaccinations = execute_read_query_all(self.connection, query)
-            epid_vaccinations = []
-            for epid_vaccination in selected_epid_vaccinations:
-                epid_vaccinations.append(SerializationService.serialization_vaccination(epid_vaccination))
-            return epid_vaccinations
-        raise exception_403 from None
+    def get_epid_vaccinations_by_medcard_num(self, user: User, medcard_num: int) -> list[EpidVaccination]:
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            return (
+            self.session
+            .query(EpidVaccination)
+            .filter_by(medcard_num=medcard_num)
+            .all()
+        )
     
-    def get_epid_vaccination_by_pk(self, user: User, epid_vaccination_data: dict) -> Vaccination:
-        if check_user_access(user=user, medcard_num=epid_vaccination_data["medcard_num"]):
-            query = f"""SELECT * FROM epid_vaccinations WHERE medcard_num = '{epid_vaccination_data["medcard_num"]}' AND
-                                                              vac_name_id = '{epid_vaccination_data["vac_name_id"]}' AND
-                                                              vac_type = '{epid_vaccination_data["vac_type"]}'"""
-            epid_vaccination = execute_read_query_first(self.connection, query)
-            return SerializationService.serialization_vaccination(epid_vaccination)
-        raise exception_403 from None
+    def get_epid_vaccination_by_pk(self, user: User, epid_vaccination_pk: VaccinationPK) -> EpidVaccination:
+        if check_user_access_to_medcard(user=user, medcard_num=epid_vaccination_pk.medcard_num):
+            epid_vaccination = (
+            self.session
+            .query(EpidVaccination)
+            .filter_by(medcard_num=epid_vaccination_pk.medcard_num, vac_name_id=epid_vaccination_pk.vac_name_id, vac_type=epid_vaccination_pk.vac_type)
+            .first()
+        )
+
+        if not epid_vaccination:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Epid vaccination is not found'
+            )
+        return epid_vaccination

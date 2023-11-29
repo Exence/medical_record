@@ -19,7 +19,7 @@ from services.auth import (
 )
 
 from services.report import ReportService
-from services.vac_name import VacNameSevice
+from services.vac_name import VacNameService
 
 
 router = APIRouter(
@@ -29,10 +29,10 @@ router = APIRouter(
 templates = Jinja2Templates(directory="templates")
 
 @router.get('/tuberculin/{start_date}/{end_date}')
-def get_tub_diagnostic_report(start_date: date, end_date:date, request: Request, service: ReportService = Depends()):
-    tub_positive_childrens = service.get_childrens_by_mantoux_test_result('Положительно', start_date, end_date)
-    tub_doubtful_childrens = service.get_childrens_by_mantoux_test_result('Сомнительно', start_date, end_date)
-    tub_negative_childrens = service.get_childrens_by_mantoux_test_result('Отрицательно', start_date, end_date)
+def get_tub_diagnostic_report(start_date: date, end_date:date, request: Request, service: ReportService = Depends(), user: User = Depends(get_current_user)):
+    tub_positive_childrens = service.get_childrens_by_mantoux_test_result(user, 'Положительно', start_date, end_date)
+    tub_doubtful_childrens = service.get_childrens_by_mantoux_test_result(user, 'Сомнительно', start_date, end_date)
+    tub_negative_childrens = service.get_childrens_by_mantoux_test_result(user, 'Отрицательно', start_date, end_date)
     positive = len(tub_positive_childrens)
     doubtful = len(tub_doubtful_childrens)
     negative = len(tub_negative_childrens)
@@ -56,9 +56,10 @@ def get_tub_diagnostic_report(start_date: date, end_date:date, request: Request,
 def get_vac_report(request: Request, 
                    form_data: VacReport = Depends(VacReport.as_form), 
                    report_service: ReportService = Depends(),
-                   vac_name_service: VacNameSevice = Depends()):
-    vaccinated_childrens = report_service.get_childrens_by_vaccine(form_data)
-    vac_name = vac_name_service.get_vac_name_by_id(form_data.vac_name_id)
+                   vac_name_service: VacNameService = Depends(),
+                   user: User = Depends(get_current_user)):
+    vaccinated_childrens = report_service.get_childrens_by_vaccine(user, form_data)
+    vac_name = vac_name_service.get_vac_name_by_pk({id: form_data.vac_name_id})
     vaccination = {
         "vac_name": vac_name.name,
         "vac_type": form_data.vac_type,

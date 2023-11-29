@@ -6,9 +6,12 @@ from fastapi import (
 )
 from fastapi.templating import Jinja2Templates
 
-from models.child import CreateChildForm
-from models.child import ChildEdit
-from services.medical_record.medical_record import MedicalRecordService, json_to_child_edit
+from models.child import ChildEdit, ChildCreate
+from models.user import User
+
+from services.auth import get_current_user
+from services.kindergarten import KindergartenService
+from services.medical_record.medical_record import MedicalRecordService
 
 from .child.child import router as child_router
 
@@ -29,15 +32,15 @@ def show_create_medcard_form(request: Request):
 
 @router.post('/create')
 def create_user(request: Request, 
-                form_data: CreateChildForm = Depends(CreateChildForm.as_form),
+                child_data: ChildCreate,
                 service: MedicalRecordService = Depends(), 
-                access_token: str | None = Cookie(default=None)):
+                user: User = Depends(get_current_user)):
     """
     Процедура добавления новой медкарты на ребенка
     """
     msg = ""
     error = ""
-    if service.create_new_medcard(form_data, access_token):
+    if service.add_new_medcard(user=user, child_data=child_data):
         msg = "Новая медкарта успешно добавлена в систему"
     else:
         error = "Ошибка работы с БД при добавлении медкарты. Медкарта НЕ добавлена!"
@@ -46,17 +49,23 @@ def create_user(request: Request,
                 )
 
 @router.get('/all')
-def show_all_medcards(request: Request, service: MedicalRecordService = Depends()):
-    kindergartens = service.get_all_childrens()
+def show_all_medcards(request: Request,
+                      service: KindergartenService = Depends(),
+                      user: User = Depends(get_current_user)):
+    kindergartens = service.get_all_accessible_kindergartens_with_childrens(user)
     return templates.TemplateResponse(
         "/medical_record/all/index.html", {"request": request, "kindergartens": kindergartens}
     )
 
 @router.get('/child/get/{medcard_num}')
-async def get_child(medcard_num: int, service: MedicalRecordService = Depends()):
-    child = service.get_child_by_medcard_num(medcard_num)
+async def get_child(medcard_num: int,
+                    service: MedicalRecordService = Depends(),
+                    user: User = Depends(get_current_user)):
+    child = service.get_medcard_by_num(user=user, medcard_num=medcard_num)
     return child
 
 @router.post('/child/update')
-async def update_child(child_data: ChildEdit = Depends(json_to_child_edit),  service: MedicalRecordService = Depends()):
-    service.update_child(child_data)
+async def update_child(medcard_data: ChildEdit,
+                       service: MedicalRecordService = Depends(),
+                       user: User = Depends(get_current_user)):
+    service.update_medcard(user=user, medcard_data=medcard_data)
