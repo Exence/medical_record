@@ -1,5 +1,5 @@
 from datetime import (
-    datetime, 
+    datetime,
     timedelta,
 )
 from fastapi import (
@@ -23,17 +23,18 @@ from models.auth import Token
 from models.user import User as UserModel
 from tables import User
 from services.oauth2_scheme import OAuth2PasswordBearerWithCookie
-from services.serialization import SerializationService
 
 
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl='/sign-in')
 
+
 def get_current_user(access_token: str = Depends(oauth2_scheme)) -> User:
     return AuthService.validate_token(access_token)
 
+
 class AuthService():
     @classmethod
-    def verify_password(cls, password: str, password_hash: str) -> bool:        
+    def verify_password(cls, password: str, password_hash: str) -> bool:
         return bcrypt.verify(password + settings.password_salt, password_hash)
 
     @classmethod
@@ -53,14 +54,14 @@ class AuthService():
             )
         except JWTError:
             raise exception from None
-        
+
         user_data = payload.get('user')
-        
+
         try:
             user = UserModel.parse_obj(user_data)
         except ValidationError:
             raise exception from None
-        
+
         return user
 
     @classmethod
@@ -105,8 +106,7 @@ class AuthService():
         if not user:
             raise exception
 
-
-        if not self.verify_password(password, user.password_hash):            
+        if not self.verify_password(password, user.password_hash):
             raise exception
 
         return self.create_token(user)

@@ -17,14 +17,17 @@ class AllergyBase(AllergyPK):
     start_age: int = Field(...)
     reaction_type: str = Field(...)
     diagnosis_date: date = Field(...)
-    note: str | None    
+    note: str | None
+
 
 class AllergyCreate(AllergyBase):
     pass
 
+
 class Allergy(AllergyBase):
     class Config:
         orm_mode = True
+
 
 class AllergyCreate(AllergyBase):
     @validator("allergy_type")
@@ -34,6 +37,7 @@ class AllergyCreate(AllergyBase):
                 status_code=422, detail="Allergy type should be in ['Вакцинальная',  'Лекарственная',  'Аллергические заболевания']"
             )
         return value
+
 
 class AllergyUpdate(AllergyCreate):
     prev_allergen: str = Field(...)

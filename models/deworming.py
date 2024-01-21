@@ -14,15 +14,20 @@ class dewormingResultKind(str, Enum):
 class DewormingPK(BaseModel):
     medcard_num: int = Field(...)
     deworming_date: date = Field(...)
-class DewormingBase(DewormingPK):    
+
+
+class DewormingBase(DewormingPK):
     result: dewormingResultKind = Field(...)
+
 
 class Deworming(DewormingBase):
     class Config:
         orm_mode = True
 
+
 class DewormingCreate(DewormingBase):
     pass
+
 
 class DewormingUpdate(DewormingCreate):
     prev_deworming_date: date = Field(...)

@@ -11,7 +11,8 @@ from services.user import check_user_access_to_medcard
 
 from models.child import ChildCreate, ChildEdit
 from models.user import User
-from tables import Child, Parent
+from tables import Child
+
 
 class MedicalRecordService():
     def __init__(self, session: Session = Depends(get_session)):
@@ -31,7 +32,7 @@ class MedicalRecordService():
                 detail='child is not found'
             )
         return medcard
-    
+
     def get_medcard_by_num(self, user: User, medcard_num: int) -> Child:
         if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
             medcard = self._get(medcard_num)
@@ -45,7 +46,7 @@ class MedicalRecordService():
         medcard = Child(**child_data.dict())
         self.session.add(medcard)
         self.session.commit()
-        return medcard        
+        return medcard
 
     def update_medcard(self, user: User, medcard_data: ChildEdit):
         if check_user_access_to_medcard(user=user, medcard_num=medcard_data.medcard_num):

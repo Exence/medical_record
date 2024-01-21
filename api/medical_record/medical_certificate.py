@@ -1,6 +1,6 @@
 from fastapi import (
     APIRouter,
-    Depends,  
+    Depends,
 )
 from models.medical_certificate import (
     MedicalCertificatePK,
@@ -18,32 +18,38 @@ router = APIRouter(
     tags=['Medical Certificate']
 )
 
+
 @router.get('/get_all', response_model=list[MedicalCertificate])
 async def get_extra_cas_by_medcard_num(medcard_num: int,
-                        user: User = Depends(get_current_user),
-                        service: MedicalCertificateService = Depends()):
+                                       user: User = Depends(get_current_user),
+                                       service: MedicalCertificateService = Depends()):
     return service.get_medical_certificates_by_medcard_num(user=user, medcard_num=medcard_num)
 
+
 @router.post('/get_one', response_model=MedicalCertificate)
-async def get_medical_certificate_by_pk(medical_certificate_pk: MedicalCertificatePK, 
-                         user: User = Depends(get_current_user),
-                         service: MedicalCertificateService = Depends()):
+async def get_medical_certificate_by_pk(medical_certificate_pk: MedicalCertificatePK,
+                                        user: User = Depends(get_current_user),
+                                        service: MedicalCertificateService = Depends()):
     return service.get_medical_certificate_by_pk(user=user, medical_certificate_pk=medical_certificate_pk)
 
+
 @router.post('/add', response_model=MedicalCertificate)
-async def add_medical_certificate(medical_certificate_data: MedicalCertificateCreate, 
-                      user: User = Depends(get_current_user),
-                      service: MedicalCertificateService = Depends()):
+async def add_medical_certificate(medical_certificate_data: MedicalCertificateCreate,
+                                  user: User = Depends(get_current_user),
+                                  service: MedicalCertificateService = Depends()):
     return service.add_new_medical_certificate(user=user, medical_certificate_data=medical_certificate_data)
 
+
 @router.post('/update', response_model=MedicalCertificate)
-async def update_medical_certificate(medical_certificate_data: MedicalCertificateUpdate, 
-                         user: User = Depends(get_current_user),
-                         service: MedicalCertificateService = Depends()):
+async def update_medical_certificate(medical_certificate_data: MedicalCertificateUpdate,
+                                     user: User = Depends(get_current_user),
+                                     service: MedicalCertificateService = Depends()):
     return service.update_medical_certificate(user=user, medical_certificate_data=medical_certificate_data)
 
+
 @router.post('/delete')
-async def delete_medical_certificate(medical_certificate_pk: MedicalCertificatePK, 
-                         user: User = Depends(get_current_user),
-                         service: MedicalCertificateService = Depends()):
-    service.delete_medical_certificate(user=user, medical_certificate_pk=medical_certificate_pk)
+async def delete_medical_certificate(medical_certificate_pk: MedicalCertificatePK,
+                                     user: User = Depends(get_current_user),
+                                     service: MedicalCertificateService = Depends()):
+    service.delete_medical_certificate(
+        user=user, medical_certificate_pk=medical_certificate_pk)

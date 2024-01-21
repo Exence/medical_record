@@ -17,10 +17,11 @@ router = APIRouter(
     tags=['Sign in']
 )
 
+
 @router.post('/', response_model=Token)
 async def sign_in(form_data: OAuth2PasswordRequestForm = Depends(),
                   service: AuthService = Depends()) -> Token:
     return service.authenticate_user(
-                login=form_data.username,
-                password=form_data.password
-            )
+        login=form_data.username,
+        password=form_data.password
+    )

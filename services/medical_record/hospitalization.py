@@ -13,6 +13,7 @@ from models.hospitalization import HospitalizationUpdate, HospitalizationCreate,
 from models.user import User
 from tables import Hospitalization
 
+
 class HospitalizationService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -21,7 +22,7 @@ class HospitalizationService():
         hospitalization = (
             self.session
             .query(Hospitalization)
-            .filter_by(medcard_num=medcard_num,start_date=start_date)
+            .filter_by(medcard_num=medcard_num, start_date=start_date)
             .first()
         )
 
@@ -39,16 +40,17 @@ class HospitalizationService():
                 .filter_by(medcard_num=medcard_num)
                 .order_by(Hospitalization.start_date)
             )
-            hospitalizations = query.all()            
+            hospitalizations = query.all()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
         return hospitalizations
-    
+
     def get_hospitalization_by_pk(self, user: User, hospitalization_pk: HospitalizationPK):
         if check_user_access_to_medcard(user=user, medcard_num=hospitalization_pk.medcard_num):
-            hospitalization = self._get_by_pk(hospitalization_pk.medcard_num, hospitalization_pk.start_date)
+            hospitalization = self._get_by_pk(
+                hospitalization_pk.medcard_num, hospitalization_pk.start_date)
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -59,7 +61,7 @@ class HospitalizationService():
         if check_user_access_to_medcard(user=user, medcard_num=hospitalization_data.medcard_num):
             hospitalization = Hospitalization(**hospitalization_data.dict())
             self.session.add(hospitalization)
-            self.session.commit()            
+            self.session.commit()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -68,7 +70,8 @@ class HospitalizationService():
 
     def update_hospitalization(self, user: User, hospitalization_data: HospitalizationUpdate):
         if check_user_access_to_medcard(user=user, medcard_num=hospitalization_data.medcard_num):
-            hospitalization = self._get_by_pk(hospitalization_data.medcard_num, hospitalization_data.prev_start_date)
+            hospitalization = self._get_by_pk(
+                hospitalization_data.medcard_num, hospitalization_data.prev_start_date)
             for field, value in hospitalization_data:
                 if field != 'prev_start_date':
                     setattr(hospitalization, field, value)
@@ -81,7 +84,8 @@ class HospitalizationService():
 
     def delete_hospitalization(self, user: User, hospitalization_pk: HospitalizationPK):
         if check_user_access_to_medcard(user=user, medcard_num=hospitalization_pk.medcard_num):
-            hospitalization = self._get_by_pk(hospitalization_pk.medcard_num, hospitalization_pk.start_date)
+            hospitalization = self._get_by_pk(
+                hospitalization_pk.medcard_num, hospitalization_pk.start_date)
             self.session.delete(hospitalization)
             self.session.commit()
         else:

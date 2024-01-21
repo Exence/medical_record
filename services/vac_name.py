@@ -13,6 +13,7 @@ from models.vac_name import VacNameUpdate, VacNameCreate, VacNamePK, VacNameDict
 from models.user import User
 from tables import VacName
 
+
 class VacNameService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -31,7 +32,7 @@ class VacNameService():
                 detail='Vac Name is not found'
             )
         return vac_name
-    
+
     def get_all_vac_names_as_dict(self) -> dict[VacNameDict]:
         query = (
             self.session
@@ -40,14 +41,14 @@ class VacNameService():
         )
         vac_names = dict()
         for vac in query:
-            vac_names[vac.id] = VacNameDict(name=vac.name,vac_type=vac.vac_type)
-        
+            vac_names[vac.id] = VacNameDict(
+                name=vac.name, vac_type=vac.vac_type)
+
         return vac_names
-         
 
     def get_vac_name_by_pk(self, vac_name_pk: VacNamePK) -> VacName:
         return self._get_by_pk(vac_name_pk.id)
-    
+
     def get_vac_names_by_type(self, vac_type: str) -> list[VacName]:
         return (
             self.session
@@ -61,7 +62,7 @@ class VacNameService():
         if user.access_level in ['admin', 'db_admin']:
             vac_name = vac_name(**vac_name_data.dict())
             self.session.add(vac_name)
-            self.session.commit()            
+            self.session.commit()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN

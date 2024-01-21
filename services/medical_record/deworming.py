@@ -13,6 +13,7 @@ from models.deworming import DewormingUpdate, DewormingCreate, DewormingPK
 from models.user import User
 from tables import Deworming
 
+
 class DewormingService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -21,7 +22,7 @@ class DewormingService():
         deworming = (
             self.session
             .query(Deworming)
-            .filter_by(medcard_num=medcard_num,deworming_date=deworming_date)
+            .filter_by(medcard_num=medcard_num, deworming_date=deworming_date)
             .first()
         )
 
@@ -39,16 +40,17 @@ class DewormingService():
                 .filter_by(medcard_num=medcard_num)
                 .order_by(Deworming.deworming_date)
             )
-            dewormings = query.all()            
+            dewormings = query.all()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
         return dewormings
-    
+
     def get_deworming_by_pk(self, user: User, deworming_pk: DewormingPK):
         if check_user_access_to_medcard(user=user, medcard_num=deworming_pk.medcard_num):
-            deworming = self._get_by_pk(deworming_pk.medcard_num, deworming_pk.deworming_date)
+            deworming = self._get_by_pk(
+                deworming_pk.medcard_num, deworming_pk.deworming_date)
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -59,7 +61,7 @@ class DewormingService():
         if check_user_access_to_medcard(user=user, medcard_num=deworming_data.medcard_num):
             deworming = Deworming(**deworming_data.dict())
             self.session.add(deworming)
-            self.session.commit()            
+            self.session.commit()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -68,7 +70,8 @@ class DewormingService():
 
     def update_deworming(self, user: User, deworming_data: DewormingUpdate):
         if check_user_access_to_medcard(user=user, medcard_num=deworming_data.medcard_num):
-            deworming = self._get_by_pk(deworming_data.medcard_num, deworming_data.prev_deworming_date)
+            deworming = self._get_by_pk(
+                deworming_data.medcard_num, deworming_data.prev_deworming_date)
             for field, value in deworming_data:
                 if field != 'prev_deworming_date':
                     setattr(deworming, field, value)
@@ -81,7 +84,8 @@ class DewormingService():
 
     def delete_deworming(self, user: User, deworming_pk: DewormingPK):
         if check_user_access_to_medcard(user=user, medcard_num=deworming_pk.medcard_num):
-            deworming = self._get_by_pk(deworming_pk.medcard_num, deworming_pk.deworming_date)
+            deworming = self._get_by_pk(
+                deworming_pk.medcard_num, deworming_pk.deworming_date)
             self.session.delete(deworming)
             self.session.commit()
         else:

@@ -11,12 +11,11 @@ from passlib.hash import bcrypt
 from typing import Any
 
 from models.user import (
-        CreateUserForm,
-        UserCreate
+    CreateUserForm,
+    UserCreate
 )
 
 from services.auth import AuthService
-from services.serialization import SerializationService
 
 from settings import settings
 
@@ -24,24 +23,25 @@ from tables import Child, Kindergarten, User
 
 
 def check_user_access_to_medcard(user: User, medcard_num: int, session: Session = Depends(get_session)) -> bool:
-        if user.access_level == 'user':
-            medcard = (
-                session
-                .query(Child)
-                .filter_by(medcard_num=medcard_num)
-                .first()
-            )
-            return medcard.kindergarten_num == user.kindergarten_num
-        return True
+    if user.access_level == 'user':
+        medcard = (
+            session
+            .query(Child)
+            .filter_by(medcard_num=medcard_num)
+            .first()
+        )
+        return medcard.kindergarten_num == user.kindergarten_num
+    return True
+
 
 class UserService():
     @classmethod
     def get_hashed_password(cls, password: str) -> str:
         return bcrypt.encrypt(password + settings.password_salt)
-    
+
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
-    
+
     def create_new_user(self, form_data: CreateUserForm, access_token: str) -> None:
         current_user = AuthService.validate_token(access_token)
         if not current_user.access_level in ['admin', 'db_admin']:

@@ -13,6 +13,7 @@ from models.medical_examination import MedicalExaminationUpdate, MedicalExaminat
 from models.user import User
 from tables import MedicalExamination
 
+
 class MedicalExaminationService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -21,7 +22,7 @@ class MedicalExaminationService():
         medical_examination = (
             self.session
             .query(MedicalExamination)
-            .filter_by(medcard_num=medcard_num,period=period)
+            .filter_by(medcard_num=medcard_num, period=period)
             .first()
         )
 
@@ -39,16 +40,17 @@ class MedicalExaminationService():
                 .filter_by(medcard_num=medcard_num)
                 .order_by(MedicalExamination.age)
             )
-            medical_examinations = query.all()            
+            medical_examinations = query.all()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
         return medical_examinations
-    
+
     def get_medical_examination_by_pk(self, user: User, medical_examination_pk: MedicalExaminationPK):
         if check_user_access_to_medcard(user=user, medcard_num=medical_examination_pk.medcard_num):
-            medical_examination = self._get_by_pk(medical_examination_pk.medcard_num, medical_examination_pk.period)
+            medical_examination = self._get_by_pk(
+                medical_examination_pk.medcard_num, medical_examination_pk.period)
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -57,7 +59,8 @@ class MedicalExaminationService():
 
     def add_new_medical_examination(self, user: User, medical_examination_data: MedicalExaminationCreate):
         if check_user_access_to_medcard(user=user, medcard_num=medical_examination_data.medcard_num):
-            medical_examination = MedicalExamination(**medical_examination_data.dict())
+            medical_examination = MedicalExamination(
+                **medical_examination_data.dict())
             self.session.add(medical_examination)
             self.session.commit()
         else:
@@ -68,7 +71,8 @@ class MedicalExaminationService():
 
     def update_medical_examination(self, user: User, medical_examination_data: MedicalExaminationUpdate):
         if check_user_access_to_medcard(user=user, medcard_num=medical_examination_data.medcard_num):
-            medical_examination = self._get_by_pk(medical_examination_data.medcard_num, medical_examination_data.prev_period)
+            medical_examination = self._get_by_pk(
+                medical_examination_data.medcard_num, medical_examination_data.prev_period)
             for field, value in medical_examination_data:
                 if field != 'prev_period':
                     setattr(medical_examination, field, value)
@@ -81,7 +85,8 @@ class MedicalExaminationService():
 
     def delete_medical_examination(self, user: User, medical_examination_pk: MedicalExaminationPK):
         if check_user_access_to_medcard(user=user, medcard_num=medical_examination_pk.medcard_num):
-            medical_examination = self._get_by_pk(medical_examination_pk.medcard_num, medical_examination_pk.period)
+            medical_examination = self._get_by_pk(
+                medical_examination_pk.medcard_num, medical_examination_pk.period)
             self.session.delete(medical_examination)
             self.session.commit()
         else:

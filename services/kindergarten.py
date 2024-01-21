@@ -13,6 +13,7 @@ from models.user import User
 
 from tables import Kindergarten, Child
 
+
 class KindergartenService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -32,23 +33,35 @@ class KindergartenService():
             )
         return kindergarten
 
-    def get_all_kindergartens(self) -> list[Kindergarten]:        
+    def get_all_kindergartens(self) -> list[Kindergarten]:
         query = (
             self.session.query(Kindergarten)
             .order_by(Kindergarten.number)
         )
-        kindergartens = query.all()            
-        
+        kindergartens = query.all()
+
         return kindergartens
-    
+
     def get_kindergarten_by_num(self, kindergarten_num: int):
         return self._get(kindergarten_num)
+
+    def get_kindergartens_by_user_access(self, user: User) -> list[Kindergarten]:
+        query = (
+            self.session.query(Kindergarten)
+            .order_by(Kindergarten.name)
+            .filter(Kindergarten.name != 'admins')
+        )
+        if user.access_level == 'user':
+            query.filter_by(number=user.kindergarten_num)
+        kindergartens = query.all()
+
+        return kindergartens
 
     def add_new_kindergarten(self, user: User, kindergarten_data: KindergartenCreate):
         if user.access_level == 'admin' or user.access_level == 'db_admin':
             kindergarten = kindergarten(**kindergarten_data.dict())
             self.session.add(kindergarten)
-            self.session.commit()            
+            self.session.commit()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -77,7 +90,7 @@ class KindergartenService():
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
-    
+
     def get_medcards_by_kindergarten_num(self, user: User, kindergarten_num: int) -> list[Child]:
         if user.access_level == 'admin' or user.access_level == 'db_admin' or user.kindergarten_num == kindergarten_num:
             medcards = (
@@ -97,16 +110,19 @@ class KindergartenService():
                                         user: User,
                                         kindergarten_num: int
                                         ) -> KindergartenWithChildrens:
-        childrens = self.get_medcards_by_kindergarten_num(user=user, kindergarten_num=kindergarten_num)
+        childrens = self.get_medcards_by_kindergarten_num(
+            user=user, kindergarten_num=kindergarten_num)
         kindergarten_with_childrens = KindergartenWithChildrens(groups=dict())
         for child in childrens:
             child = ChildModel(**child.__dict__)
-            if not  kindergarten_with_childrens['groups'].get(f"{child.group_num}"):
-                kindergarten_with_childrens['groups'][f"{child.group_num}"] = [child]
+            if not kindergarten_with_childrens['groups'].get(f"{child.group_num}"):
+                kindergarten_with_childrens['groups'][f"{
+                    child.group_num}"] = [child]
             else:
-                kindergarten_with_childrens['groups'][f"{child.group_num}"].append(child)
+                kindergarten_with_childrens['groups'][f"{
+                    child.group_num}"].append(child)
         return kindergarten_with_childrens
-    
+
     def get_all_accessible_kindergartens_with_childrens(self, user: User) -> list[KindergartenWithChildrens]:
         if user.access_level == 'user':
             return self.get_kindergarten_with_childrens(user=user, kindergarten_num=user.kindergarten_num)
@@ -115,6 +131,7 @@ class KindergartenService():
             kindergartens_with_childrens = []
             for kindergarten in kindergartens:
                 kindergartens_with_childrens.append(
-                    self.get_kindergarten_with_childrens(user=user, kindergarten_num=kindergarten.number)
+                    self.get_kindergarten_with_childrens(
+                        user=user, kindergarten_num=kindergarten.number)
                 )
         return kindergartens_with_childrens

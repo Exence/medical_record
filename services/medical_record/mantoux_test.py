@@ -13,6 +13,7 @@ from models.mantoux_test import MantouxTestUpdate, MantouxTestCreate, MantouxTes
 from models.user import User
 from tables import MantouxTest
 
+
 class MantouxTestService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -21,7 +22,7 @@ class MantouxTestService():
         mantoux_test = (
             self.session
             .query(MantouxTest)
-            .filter_by(medcard_num=medcard_num,check_date=check_date)
+            .filter_by(medcard_num=medcard_num, check_date=check_date)
             .first()
         )
 
@@ -39,16 +40,17 @@ class MantouxTestService():
                 .filter_by(medcard_num=medcard_num)
                 .order_by(MantouxTest.check_date)
             )
-            mantoux_tests = query.all()            
+            mantoux_tests = query.all()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
         return mantoux_tests
-    
+
     def get_mantoux_test_by_pk(self, user: User, mantoux_test_pk: MantouxTestPK):
         if check_user_access_to_medcard(user=user, medcard_num=mantoux_test_pk.medcard_num):
-            mantoux_test = self._get_by_pk(mantoux_test_pk.medcard_num, mantoux_test_pk.check_date)
+            mantoux_test = self._get_by_pk(
+                mantoux_test_pk.medcard_num, mantoux_test_pk.check_date)
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -59,7 +61,7 @@ class MantouxTestService():
         if check_user_access_to_medcard(user=user, medcard_num=mantoux_test_data.medcard_num):
             mantoux_test = MantouxTest(**mantoux_test_data.dict())
             self.session.add(mantoux_test)
-            self.session.commit()            
+            self.session.commit()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -68,7 +70,8 @@ class MantouxTestService():
 
     def update_mantoux_test(self, user: User, mantoux_test_data: MantouxTestUpdate):
         if check_user_access_to_medcard(user=user, medcard_num=mantoux_test_data.medcard_num):
-            mantoux_test = self._get_by_pk(mantoux_test_data.medcard_num, mantoux_test_data.prev_check_date)
+            mantoux_test = self._get_by_pk(
+                mantoux_test_data.medcard_num, mantoux_test_data.prev_check_date)
             for field, value in mantoux_test_data:
                 if field != 'prev_check_date':
                     setattr(mantoux_test, field, value)
@@ -81,7 +84,8 @@ class MantouxTestService():
 
     def delete_mantoux_test(self, user: User, mantoux_test_pk: MantouxTestPK):
         if check_user_access_to_medcard(user=user, medcard_num=mantoux_test_pk.medcard_num):
-            mantoux_test = self._get_by_pk(mantoux_test_pk.medcard_num, mantoux_test_pk.check_date)
+            mantoux_test = self._get_by_pk(
+                mantoux_test_pk.medcard_num, mantoux_test_pk.check_date)
             self.session.delete(mantoux_test)
             self.session.commit()
         else:

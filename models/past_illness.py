@@ -10,16 +10,19 @@ class PastIllnessPK(BaseModel):
     start_date: date = Field(...)
     diagnosis: str = Field(...)
 
+
 class PastIllnessBase(PastIllnessPK):
     end_date: date = Field(...)
-    
+
 
 class PastIllness(PastIllnessBase):
     class Config:
         orm_mode = True
 
+
 class PastIllnessCreate(PastIllnessBase):
     pass
+
 
 class PastIllnessUpdate(PastIllnessCreate):
     prev_start_date: date = Field(...)

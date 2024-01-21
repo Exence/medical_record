@@ -21,6 +21,7 @@ router = APIRouter(
 )
 templates = Jinja2Templates(directory="templates")
 
+
 @router.post('/')
 async def sign_in(
     response: Response,
@@ -39,8 +40,9 @@ async def sign_in(
         current_user = service.validate_token(jwt_token.access_token)
         msg = "Успешный вход"
         response = templates.TemplateResponse(
-                    "cabinet/index.html", {"request": request, "msg": msg, "user": current_user}
-                )
+            "cabinet/index.html", {"request": request,
+                                   "msg": msg, "user": current_user}
+        )
         response.set_cookie(
             key="access_token", value=f"{jwt_token.token_type} {jwt_token.access_token}", httponly=True
         )
@@ -51,6 +53,7 @@ async def sign_in(
             "login_page/index.html", {"request": request, "error": error}
         )
 
+
 @router.get('/user', response_model=User)
 def get_user(user: User = Depends(get_current_user)):
     """
@@ -58,11 +61,12 @@ def get_user(user: User = Depends(get_current_user)):
     """
     return user
 
+
 @router.get('/leave')
-def delete_cookies( response: Response, request: Request,):
+def delete_cookies(response: Response, request: Request,):
     msg = "Выход успешно выполнен"
     response = templates.TemplateResponse(
-                "login_page/index.html", {"request": request, "msg": msg}
-            )
+        "login_page/index.html", {"request": request, "msg": msg}
+    )
     response.delete_cookie(key="access_token")
     return response

@@ -10,10 +10,9 @@
                     <label for="kindergarten_name" class="form-label">Детский сад</label>
                     <div class="">
                         <select class="form-select" name="kindergarten_name" id="kindergarten_name" required>
-                            <option selected> МБДОУ Детский сад №1</option>
-                            <option> МБДОУ Детский сад №2</option>
-                            <option> МБДОУ Детский сад №3</option>
-                            <option> МБДОУ Детский сад №4</option>
+                            {% for kindergarten in kindergartens %}
+                                {% include '/medical_record/child/main_divs/kindergarten_name.html' %}
+                            {% endfor %}
                         </select>
                     </div>
                 </div>

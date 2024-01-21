@@ -13,6 +13,7 @@ from models.spa_treatment import SpaTreatmentUpdate, SpaTreatmentCreate, SpaTrea
 from models.user import User
 from tables import SpaTreatment
 
+
 class SpaTreatmentService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -21,7 +22,7 @@ class SpaTreatmentService():
         spa_treatment = (
             self.session
             .query(SpaTreatment)
-            .filter_by(medcard_num=medcard_num,start_date=start_date)
+            .filter_by(medcard_num=medcard_num, start_date=start_date)
             .first()
         )
 
@@ -39,16 +40,17 @@ class SpaTreatmentService():
                 .filter_by(medcard_num=medcard_num)
                 .order_by(SpaTreatment.start_date)
             )
-            spa_treatments = query.all()            
+            spa_treatments = query.all()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
         return spa_treatments
-    
+
     def get_spa_treatment_by_pk(self, user: User, spa_treatment_pk: SpaTreatmentPK):
         if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_pk.medcard_num):
-            spa_treatment = self._get_by_pk(spa_treatment_pk.medcard_num, spa_treatment_pk.start_date)
+            spa_treatment = self._get_by_pk(
+                spa_treatment_pk.medcard_num, spa_treatment_pk.start_date)
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -59,7 +61,7 @@ class SpaTreatmentService():
         if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_data.medcard_num):
             spa_treatment = SpaTreatment(**spa_treatment_data.dict())
             self.session.add(spa_treatment)
-            self.session.commit()            
+            self.session.commit()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -68,7 +70,8 @@ class SpaTreatmentService():
 
     def update_spa_treatment(self, user: User, spa_treatment_data: SpaTreatmentUpdate):
         if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_data.medcard_num):
-            spa_treatment = self._get_by_pk(spa_treatment_data.medcard_num, spa_treatment_data.prev_start_date)
+            spa_treatment = self._get_by_pk(
+                spa_treatment_data.medcard_num, spa_treatment_data.prev_start_date)
             for field, value in spa_treatment_data:
                 if field != 'prev_start_date':
                     setattr(spa_treatment, field, value)
@@ -81,7 +84,8 @@ class SpaTreatmentService():
 
     def delete_spa_treatment(self, user: User, spa_treatment_pk: SpaTreatmentPK):
         if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_pk.medcard_num):
-            spa_treatment = self._get_by_pk(spa_treatment_pk.medcard_num, spa_treatment_pk.start_date)
+            spa_treatment = self._get_by_pk(
+                spa_treatment_pk.medcard_num, spa_treatment_pk.start_date)
             self.session.delete(spa_treatment)
             self.session.commit()
         else:

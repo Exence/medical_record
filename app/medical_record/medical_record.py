@@ -24,16 +24,18 @@ router.include_router(child_router)
 
 templates = Jinja2Templates(directory="templates")
 
+
 @router.get('/create')
 def show_create_medcard_form(request: Request):
     return templates.TemplateResponse(
         "/medical_record/create/index.html", {"request": request}
     )
 
+
 @router.post('/create')
-def create_user(request: Request, 
+def create_user(request: Request,
                 child_data: ChildCreate,
-                service: MedicalRecordService = Depends(), 
+                service: MedicalRecordService = Depends(),
                 user: User = Depends(get_current_user)):
     """
     Процедура добавления новой медкарты на ребенка
@@ -45,17 +47,22 @@ def create_user(request: Request,
     else:
         error = "Ошибка работы с БД при добавлении медкарты. Медкарта НЕ добавлена!"
     return templates.TemplateResponse(
-                    "/medical_record/create/index.html", {"request": request, "msg": msg, "error": error}
-                )
+        "/medical_record/create/index.html", {
+            "request": request, "msg": msg, "error": error}
+    )
+
 
 @router.get('/all')
 def show_all_medcards(request: Request,
                       service: KindergartenService = Depends(),
                       user: User = Depends(get_current_user)):
-    kindergartens = service.get_all_accessible_kindergartens_with_childrens(user)
+    kindergartens = service.get_all_accessible_kindergartens_with_childrens(
+        user)
     return templates.TemplateResponse(
-        "/medical_record/all/index.html", {"request": request, "kindergartens": kindergartens}
+        "/medical_record/all/index.html", {"request": request,
+                                           "kindergartens": kindergartens}
     )
+
 
 @router.get('/child/get/{medcard_num}')
 async def get_child(medcard_num: int,
@@ -63,6 +70,7 @@ async def get_child(medcard_num: int,
                     user: User = Depends(get_current_user)):
     child = service.get_medcard_by_num(user=user, medcard_num=medcard_num)
     return child
+
 
 @router.post('/child/update')
 async def update_child(medcard_data: ChildEdit,

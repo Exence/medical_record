@@ -15,6 +15,7 @@ from models.past_illness import PastIllnessUpdate, PastIllnessCreate, PastIllnes
 from models.user import User
 from tables import PastIllness
 
+
 class PastIllnessService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -41,16 +42,17 @@ class PastIllnessService():
                 .filter_by(medcard_num=medcard_num)
                 .order_by(PastIllness.start_date)
             )
-            past_illnesses = query.all()            
+            past_illnesses = query.all()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
         return past_illnesses
-    
+
     def get_past_illness_by_pk(self, user: User, past_illness_pk: PastIllnessPK):
         if check_user_access_to_medcard(user=user, medcard_num=past_illness_pk.medcard_num):
-            past_illness = self._get_by_pk(medcard_num=past_illness_pk.medcard_num, start_date=past_illness_pk.start_date, diagnosis=past_illness_pk.diagnosis)
+            past_illness = self._get_by_pk(medcard_num=past_illness_pk.medcard_num,
+                                           start_date=past_illness_pk.start_date, diagnosis=past_illness_pk.diagnosis)
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -61,7 +63,7 @@ class PastIllnessService():
         if check_user_access_to_medcard(user=user, medcard_num=past_illness_data.medcard_num):
             past_illness = PastIllness(**past_illness_data.dict())
             self.session.add(past_illness)
-            self.session.commit()            
+            self.session.commit()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -70,7 +72,8 @@ class PastIllnessService():
 
     def update_past_illness(self, user: User, past_illness_data: PastIllnessUpdate):
         if check_user_access_to_medcard(user=user, medcard_num=past_illness_data.medcard_num):
-            past_illness = self._get_by_pk(past_illness_data.medcard_num, past_illness_data.prev_start_date, past_illness_data.prev_diagnosis)
+            past_illness = self._get_by_pk(
+                past_illness_data.medcard_num, past_illness_data.prev_start_date, past_illness_data.prev_diagnosis)
             for field, value in past_illness_data:
                 if field != 'prev_start_date' and field != 'prev_diagnosis':
                     setattr(past_illness, field, value)
@@ -83,7 +86,8 @@ class PastIllnessService():
 
     def delete_past_illness(self, user: User, past_illness_pk: PastIllnessPK):
         if check_user_access_to_medcard(user=user, medcard_num=past_illness_pk.medcard_num):
-            past_illness = self._get_by_pk(past_illness_pk.medcard_num, past_illness_pk.start_date, past_illness_pk.diagnosis)
+            past_illness = self._get_by_pk(
+                past_illness_pk.medcard_num, past_illness_pk.start_date, past_illness_pk.diagnosis)
             self.session.delete(past_illness)
             self.session.commit()
         else:

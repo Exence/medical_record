@@ -13,6 +13,7 @@ from models.gg_injection import GammaGlobulinInjectionUpdate, GammaGlobulinInjec
 from models.user import User
 from tables import GammaGlobulinInjection
 
+
 class GammaGlobulinInjectionService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -21,7 +22,7 @@ class GammaGlobulinInjectionService():
         gg_injection = (
             self.session
             .query(GammaGlobulinInjection)
-            .filter_by(medcard_num=medcard_num,vac_date=vac_date)
+            .filter_by(medcard_num=medcard_num, vac_date=vac_date)
             .first()
         )
 
@@ -39,16 +40,17 @@ class GammaGlobulinInjectionService():
                 .filter_by(medcard_num=medcard_num)
                 .order_by(GammaGlobulinInjection.vac_date)
             )
-            gg_injections = query.all()            
+            gg_injections = query.all()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
         return gg_injections
-    
+
     def get_gg_injection_by_pk(self, user: User, gg_injection_pk: GammaGlobulinInjectionPK):
         if check_user_access_to_medcard(user=user, medcard_num=gg_injection_pk.medcard_num):
-            gg_injection = self._get_by_pk(gg_injection_pk.medcard_num, gg_injection_pk.vac_date)
+            gg_injection = self._get_by_pk(
+                gg_injection_pk.medcard_num, gg_injection_pk.vac_date)
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -59,7 +61,7 @@ class GammaGlobulinInjectionService():
         if check_user_access_to_medcard(user=user, medcard_num=gg_injection_data.medcard_num):
             gg_injection = GammaGlobulinInjection(**gg_injection_data.dict())
             self.session.add(gg_injection)
-            self.session.commit()            
+            self.session.commit()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -68,7 +70,8 @@ class GammaGlobulinInjectionService():
 
     def update_gg_injection(self, user: User, gg_injection_data: GammaGlobulinInjectionUpdate):
         if check_user_access_to_medcard(user=user, medcard_num=gg_injection_data.medcard_num):
-            gg_injection = self._get_by_pk(gg_injection_data.medcard_num, gg_injection_data.prev_vac_date)
+            gg_injection = self._get_by_pk(
+                gg_injection_data.medcard_num, gg_injection_data.prev_vac_date)
             for field, value in gg_injection_data:
                 if field != 'prev_vac_date':
                     setattr(gg_injection, field, value)
@@ -81,7 +84,8 @@ class GammaGlobulinInjectionService():
 
     def delete_gg_injection(self, user: User, gg_injection_pk: GammaGlobulinInjectionPK):
         if check_user_access_to_medcard(user=user, medcard_num=gg_injection_pk.medcard_num):
-            gg_injection = self._get_by_pk(gg_injection_pk.medcard_num, gg_injection_pk.vac_date)
+            gg_injection = self._get_by_pk(
+                gg_injection_pk.medcard_num, gg_injection_pk.vac_date)
             self.session.delete(gg_injection)
             self.session.commit()
         else:

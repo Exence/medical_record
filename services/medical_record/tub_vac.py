@@ -13,6 +13,7 @@ from models.tub_vac import TuberculosisVaccinationUpdate, TuberculosisVaccinatio
 from models.user import User
 from tables import TuberculosisVaccination
 
+
 class TuberculosisVaccinationService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -21,7 +22,7 @@ class TuberculosisVaccinationService():
         tub_vac = (
             self.session
             .query(TuberculosisVaccination)
-            .filter_by(medcard_num=medcard_num,vac_date=vac_date)
+            .filter_by(medcard_num=medcard_num, vac_date=vac_date)
             .first()
         )
 
@@ -39,16 +40,17 @@ class TuberculosisVaccinationService():
                 .filter_by(medcard_num=medcard_num)
                 .order_by(TuberculosisVaccination.vac_date)
             )
-            tub_vacs = query.all()            
+            tub_vacs = query.all()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
         return tub_vacs
-    
+
     def get_tub_vac_by_pk(self, user: User, tub_vac_pk: TuberculosisVaccinationPK):
         if check_user_access_to_medcard(user=user, medcard_num=tub_vac_pk.medcard_num):
-            tub_vac = self._get_by_pk(tub_vac_pk.medcard_num, tub_vac_pk.vac_date)
+            tub_vac = self._get_by_pk(
+                tub_vac_pk.medcard_num, tub_vac_pk.vac_date)
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -59,7 +61,7 @@ class TuberculosisVaccinationService():
         if check_user_access_to_medcard(user=user, medcard_num=tub_vac_data.medcard_num):
             tub_vac = TuberculosisVaccination(**tub_vac_data.dict())
             self.session.add(tub_vac)
-            self.session.commit()            
+            self.session.commit()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -68,7 +70,8 @@ class TuberculosisVaccinationService():
 
     def update_tub_vac(self, user: User, tub_vac_data: TuberculosisVaccinationUpdate):
         if check_user_access_to_medcard(user=user, medcard_num=tub_vac_data.medcard_num):
-            tub_vac = self._get_by_pk(tub_vac_data.medcard_num, tub_vac_data.prev_vac_date)
+            tub_vac = self._get_by_pk(
+                tub_vac_data.medcard_num, tub_vac_data.prev_vac_date)
             for field, value in tub_vac_data:
                 if field != 'prev_vac_date':
                     setattr(tub_vac, field, value)
@@ -81,7 +84,8 @@ class TuberculosisVaccinationService():
 
     def delete_tub_vac(self, user: User, tub_vac_pk: TuberculosisVaccinationPK):
         if check_user_access_to_medcard(user=user, medcard_num=tub_vac_pk.medcard_num):
-            tub_vac = self._get_by_pk(tub_vac_pk.medcard_num, tub_vac_pk.vac_date)
+            tub_vac = self._get_by_pk(
+                tub_vac_pk.medcard_num, tub_vac_pk.vac_date)
             self.session.delete(tub_vac)
             self.session.commit()
         else:

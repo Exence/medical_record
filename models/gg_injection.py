@@ -13,9 +13,11 @@ from pydantic import (
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 REACTION_MATCH_PATTERN = re.compile(r"^(Не|За)медленная$")
 
+
 class GammaGlobulinInjectionPK(BaseModel):
     medcard_num: int = Field(...)
     vac_date: date = Field(...)
+
 
 class GammaGlobulinInjectionBase(GammaGlobulinInjectionPK):
     reason: str = Field(...)
@@ -24,9 +26,11 @@ class GammaGlobulinInjectionBase(GammaGlobulinInjectionPK):
     reaction: str = Field(...)
     doctor: str = Field(..., max_length=200)
 
+
 class GammaGlobulinInjection(GammaGlobulinInjectionBase):
     class Config:
         orm_mode = True
+
 
 class GammaGlobulinInjectionCreate(GammaGlobulinInjectionBase):
     @validator("reaction")
@@ -36,7 +40,7 @@ class GammaGlobulinInjectionCreate(GammaGlobulinInjectionBase):
                 status_code=422, detail="Reaction should be 'Немедленная' or 'Замедленная'"
             )
         return value
-    
+
     @validator("doctor")
     def validate_doctor(cls, value):
         if not LETTER_MATCH_PATTERN_WITH_SPACE.match(value):
@@ -44,6 +48,7 @@ class GammaGlobulinInjectionCreate(GammaGlobulinInjectionBase):
                 status_code=422, detail="Field doctor should contains only letters"
             )
         return value
-    
+
+
 class GammaGlobulinInjectionUpdate(GammaGlobulinInjectionCreate):
     prev_vac_date: date = Field(...)
