@@ -11,7 +11,7 @@ from services.user import check_user_access_to_medcard
 
 from models.child import ChildCreate, ChildEdit
 from models.user import User
-from tables import Child
+from tables import Child, ChildWithParents
 
 
 class MedicalRecordService():
@@ -69,3 +69,24 @@ class MedicalRecordService():
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
+
+    def get_all_medcards(self, user: User) -> list[Child]:
+        medcards = (
+                self.session
+                .query(Child)
+                .filter_by(kindergarten_num=user.kindergarten_num)
+                .order_by(Child.group_num)
+                .all()
+            )
+        return medcards
+    
+    def get_childrens_with_parents(self, user: User) -> list[ChildWithParents]:
+        childrens_with_parents = (
+                self.session
+                .query(ChildWithParents)
+                .filter_by(kindergarten_num=user.kindergarten_num)
+                .order_by(ChildWithParents.group_num)
+                .all()
+            )
+        print(childrens_with_parents)
+        return childrens_with_parents

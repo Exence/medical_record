@@ -34,7 +34,6 @@ async def sign_in(
     """
     try:
         jwt_token = service.authenticate_user(
-            login=form_data.username,
             password=form_data.password
         )
         current_user = service.validate_token(jwt_token.access_token)

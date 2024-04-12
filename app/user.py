@@ -8,8 +8,6 @@ from fastapi import (
 )
 from fastapi.templating import Jinja2Templates
 
-from models.user import CreateUserForm
-
 from services.user import (
     AuthService,
     UserService,
@@ -27,26 +25,6 @@ templates = Jinja2Templates(directory="templates")
 def show_create_user_form(request: Request):
     return templates.TemplateResponse(
         "/admins/users/create/index.html", {"request": request}
-    )
-
-
-@router.post('/create')
-def create_user(request: Request,
-                form_data: CreateUserForm = Depends(CreateUserForm.as_form),
-                service: UserService = Depends(),
-                access_token: str | None = Cookie(default=None)):
-    """
-    Процедура добавления нового Пользователя
-    """
-    msg = ""
-    error = ""
-    if service.create_new_user(form_data, access_token):
-        msg = "Пользователь успешно добавлен в систему"
-    else:
-        error = "Ошибка работы с БД при добавлении пользователя"
-    return templates.TemplateResponse(
-        "/admins/users/create/index.html", {
-            "request": request, "msg": msg, "error": error}
     )
 
 

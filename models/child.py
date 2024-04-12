@@ -15,20 +15,19 @@ LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 
 
-class ParentModel(BaseModel):
-    surname: str = Field(..., max_length=150)
-    name: str = Field(..., max_length=150)
-    patronymic: str = Field(..., max_length=150)
-    birthday_year: int = Field(..., gt=1900)
-    education: str = Field(...)
-    phone_num: int = Field(..., gt=80000000000, lt=90000000000)
 
 
 class ChildPK(BaseModel):
     medcard_num: int = Field(...)
 
+class ParentsIds(BaseModel):
+    father_id: int | None
+    mother_id: int | None
+
+
 
 class ChildBase(BaseModel):
+    kindergarten_num: int = Field(..., gt=-1, lt=1000)
     surname: str = Field(..., max_length=150)
     name: str = Field(..., max_length=150)
     patronymic: str = Field(..., max_length=150)
@@ -39,16 +38,25 @@ class ChildBase(BaseModel):
     clinic: str = Field(..., max_length=200)
     edu_type: str = Field(default='ДДУ', max_length=25)
     entering_date: date = Field(...)
-    father: ParentModel | None
-    mother: ParentModel | None
     family_characteristics: str = Field(...)
     family_microclimate: str = Field(...)
     rest_and_class_opportunities: str = Field(...)
-    case_history: str
+    case_history: str | None
 
 
-class ChildView(ChildPK, ChildBase):
-    kindergarten_name: str | None
+class ChildWithParentsView(ChildPK, ChildBase):
+    father_surname: str | None = Field(max_length=150)
+    father_name: str | None = Field(max_length=150)
+    father_patronymic: str | None = Field(max_length=150)
+    father_birthday_year: int | None = Field(gt=1900)
+    father_education: str | None = Field()
+    father_phone_num: int | None = Field(gt=80000000000, lt=90000000000)
+    mother_surname: str | None = Field(max_length=150)
+    mother_name: str | None = Field(max_length=150)
+    mother_patronymic: str | None = Field(..., max_length=150)
+    mother_birthday_year: int | None = Field(..., gt=1900)
+    mother_education: str | None = Field()
+    mother_phone_num: int | None = Field(gt=80000000000, lt=90000000000)
 
 
 class ChildEdit(ChildPK, ChildBase):
@@ -58,8 +66,7 @@ class ChildEdit(ChildPK, ChildBase):
         orm_mode = True
 
 
-class Child(ChildPK, ChildBase):
-    kindergarten_num: int = Field(..., gt=-1, lt=1000)
+class Child(ChildPK, ChildBase, ParentsIds):
 
     class Config:
         orm_mode = True

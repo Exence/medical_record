@@ -72,7 +72,7 @@ class AuthService():
             'iat': now,
             'nbf': now,
             'exp': now + timedelta(settings.jwt_expiration),
-            'sub': str(user_data.login),
+            'sub': str(user_data.kindergarten_num),
             'user': user_data.dict(),
         }
 
@@ -86,7 +86,7 @@ class AuthService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def authenticate_user(self, login: str, password: str) -> Token:
+    def authenticate_user(self, password: str) -> Token:
         exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Incorrect login or password',
@@ -97,7 +97,6 @@ class AuthService():
         user = (
             self.session
             .query(User)
-            .filter_by(login=login.lower())
             .first()
         )
 

@@ -2,7 +2,7 @@ from pydantic import (
     BaseModel,
     Field,
 )
-from models.child import Child
+from models.child import ChildWithParentsView
 from typing import TypedDict
 
 
@@ -25,4 +25,4 @@ class KindergartenUpdate(KindergartenBase):
 
 
 class KindergartenWithChildrens(TypedDict):
-    groups: dict[list[Child]]
+    groups: dict[list[ChildWithParentsView]]

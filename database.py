@@ -4,7 +4,7 @@ from settings import settings as s
 
 
 engine = create_engine(
-    f"postgresql://{s.db_user}:{s.db_password}@{s.db_host}:{s.db_port}/{s.db_name}"
+    f"sqlite:///medical_record.db"
 )
 
 Session = sessionmaker(

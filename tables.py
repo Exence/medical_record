@@ -8,7 +8,7 @@ class Child(BaseTable):
     __tablename__ = 'childrens'
 
     medcard_num = sa.Column(sa.Integer, primary_key=True)
-    kindergarten_num = sa.Column(sa.Integer, primary_key=True)
+    kindergarten_num = sa.Column(sa.Integer)
     surname = sa.Column(sa.String)
     name = sa.Column(sa.String)
     patronymic = sa.Column(sa.String)
@@ -19,12 +19,45 @@ class Child(BaseTable):
     clinic = sa.Column(sa.String)
     edu_type = sa.Column(sa.String)
     entering_date = sa.Column(sa.Date)
-    father = sa.Column(sa.JSON, nullable=True)
-    mother = sa.Column(sa.JSON, nullable=True)
+    father_id = sa.Column(sa.Integer, nullable=True)
+    mother_id = sa.Column(sa.Integer, nullable=True)
     family_characteristics = sa.Column(sa.String)
     family_microclimate = sa.Column(sa.String)
     rest_and_class_opportunities = sa.Column(sa.String)
-    case_history = sa.Column(sa.String)
+    case_history = sa.Column(sa.String, nullable=True)
+
+class ChildWithParents(BaseTable):
+    __tablename__ = 'childrens_with_parents_view'
+
+    medcard_num = sa.Column(sa.Integer, primary_key=True)
+    kindergarten_num = sa.Column(sa.Integer)
+    surname = sa.Column(sa.String)
+    name = sa.Column(sa.String)
+    patronymic = sa.Column(sa.String)
+    birthday = sa.Column(sa.Date)
+    sex = sa.Column(sa.String)
+    group_num = sa.Column(sa.Integer)
+    address = sa.Column(sa.String)
+    clinic = sa.Column(sa.String)
+    edu_type = sa.Column(sa.String)
+    entering_date = sa.Column(sa.Date)
+    father_surname = sa.Column(sa.String)
+    father_name = sa.Column(sa.String)
+    father_patronymic = sa.Column(sa.String)
+    father_birthday_year = sa.Column(sa.Integer)
+    father_education = sa.Column(sa.String)
+    father_phone_num = sa.Column(sa.BigInteger)
+    mother_surname = sa.Column(sa.String)
+    mother_name = sa.Column(sa.String)
+    mother_patronymic = sa.Column(sa.String)
+    mother_birthday_year = sa.Column(sa.Integer)
+    mother_education = sa.Column(sa.String)
+    mother_phone_num = sa.Column(sa.BigInteger)
+    family_characteristics = sa.Column(sa.String)
+    family_microclimate = sa.Column(sa.String)
+    rest_and_class_opportunities = sa.Column(sa.String)
+    case_history = sa.Column(sa.String, nullable=True)
+
 
 class Allergy(BaseTable):
     __tablename__ = 'allergyes'
@@ -255,13 +288,12 @@ class TuberculosisVaccination(BaseTable):
 class User(BaseTable):
     __tablename__ = 'users'
 
-    login = sa.Column(sa.String, primary_key=True)
+    kindergarten_num = sa.Column(sa.Integer, primary_key=True)
+    kindergarten_name = sa.Column(sa.String) 
     password_hash = sa.Column(sa.String)
     surname = sa.Column(sa.String)
     name = sa.Column(sa.String)
     patronymic = sa.Column(sa.String)
-    access_level = sa.Column(sa.String)
-    kindergarten_num = sa.Column(sa.Integer)
 
 class VacName(BaseTable):
     __tablename__ = 'vac_names'

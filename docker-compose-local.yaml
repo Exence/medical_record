@@ -12,6 +12,17 @@ services:
       - "5432:5432"
     networks:
     - custom
+  pgadmin4:
+    image: elestio/pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@medical.ru
+      PGADMIN_DEFAULT_PASSWORD: "123"
+      PGADMIN_LISTEN_PORT: 8080
+    volumes:
+      - "./demobase.sql:/home/demobase.sql"
+    ports:
+      - "8080:8080"
 networks:
   custom:
     driver: bridge
