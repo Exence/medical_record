@@ -109,6 +109,7 @@ class VaccinationService():
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail='Prof vaccination is not found'
             )
+        print(prof_vaccination)
         return prof_vaccination
 
     def get_prof_vaccinations_by_medcard_num(self, user: User, medcard_num: int) -> list[ProfVaccination]:

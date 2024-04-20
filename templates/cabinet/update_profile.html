@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	<title>Редактирование профиля</title>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Редактирование профиля</h2>
+  <form action="/update_profile" method="post">
+      <div class="form-group">
+          <label for="kindergarten_num">Номер детского сада</label>
+          <input type="text" class="form-control" id="kindergarten_num" name="kindergarten_num" value="{{ user.kindergarten_num }}" readonly>
+      </div>
+
+      <div class="form-group">
+          <label for="kindergarten_name">Название детского сада</label>
+          <input type="text" class="form-control" id="kindergarten_name" name="kindergarten_name" value="{{ user.kindergarten_name }}" readonly>
+      </div>
+
+      <div class="form-group">
+          <label for="surname">Фамилия</label>
+          <input type="text" class="form-control" id="surname" name="surname" value="{{ user.surname }}">
+      </div>
+
+      <div class="form-group">
+          <label for="name">Имя</label>
+          <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}">
+      </div>
+
+      <div class="form-group">
+          <label for="patronymic">Отчество</label>
+          <input type="text" class="form-control" id="patronymic" name="patronymic" value="{{ user.patronymic }}">
+      </div>
+
+      <div class="form-group">
+          <label for="password">Пароль</label>
+          <input type="password" class="form-control" id="password" name="password">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+  </form>
+</div>
+{% endblock %}

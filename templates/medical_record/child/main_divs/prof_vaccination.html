@@ -1,5 +1,5 @@
 <div name="div-prof-vaccination-{{ prof_vaccination.vac_name_id }}-{{ prof_vaccination.vac_type.replace(' ','') }}" class="col-12 mb-3">
-    <p><strong>{{ vac_names[prof_vaccination.vac_name_id].name }}</strong> <strong>{{ prof_vaccination.vac_type }}</strong> Дата: <u><mark>{{ prof_vaccination.vac_date.strftime("%d.%m.%Y") }}</mark></u>, 
+    <p><strong>{{ prof_vaccination.vac_name }}</strong> <strong>{{ prof_vaccination.vac_type }}</strong> Дата: <u><mark>{{ prof_vaccination.vac_date.strftime("%d.%m.%Y") }}</mark></u>, 
         серия: <u><mark>{{ prof_vaccination.serial }}</mark></u>, доза: <u><mark>{{ prof_vaccination.dose }}</mark></u>, 
         способ введения: <u><mark>{{ prof_vaccination.introduction_method }}</mark></u>, реакция: <u><mark>{{ prof_vaccination.reaction }}</mark></u><br>
         Врач: <u><mark>{{ prof_vaccination.doctor }}</mark></u>

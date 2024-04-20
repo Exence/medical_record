@@ -14,10 +14,15 @@ from pydantic import (
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 
 
-class PatentType(str, Enum):
+class ParentType(str, Enum):
     MOTHER = 'mother'
-    FATHET = 'father'
+    FATHER = 'father'
 
+class ParentTypeRequest(BaseModel):
+    parent_type: ParentType
+
+class ParentPK(BaseModel):
+    id: int = Field(...)
 
 class ParentBase(BaseModel):
     surname: str = Field(..., max_length=150)
@@ -28,13 +33,16 @@ class ParentBase(BaseModel):
     phone_num: int = Field(..., gt=80000000000, lt=90000000000)
 
 
-class Parent(ParentBase):
+class Parent(ParentPK, ParentBase):
     class Config:
         orm_mode = True
 
 
 class ParentCreate(ParentBase):
-    parent_type: PatentType = Field(...)
+    parent_type: ParentType = Field(...)
+
+class ParentUpdate(ParentPK, ParentCreate):
+    pass
 
     @validator("name")
     def validate_name(cls, value):
@@ -70,7 +78,3 @@ class ParentCreate(ParentBase):
 
     def to_tuple(self):
         return (self.surname, self.name, self.patronymic, self.birthday_year, self.education, self.phone_num, )
-
-
-class ParentUpdate(ParentCreate):
-    pass

@@ -60,14 +60,14 @@
         <div id="anamnes-collapse" class="accordion-collapse collapse" aria-labelledby="anamnes-header">
           <div class="accordion-body">
             <div name="father-main-div">
-              {% if child.father %}
+              {% if child.father_id %}
                 {% include '/medical_record/child/main_divs/father.html' %} 
               {% else %}
                 <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" name="add-father-btn" onclick="father_add_btn_click()">Добавить сведения об отце</button>
               {% endif %}
             </div>
             <div name="mother-main-div">
-              {% if child.mother %}
+              {% if child.mother_id %}
                 {% include '/medical_record/child/main_divs/mother.html' %} 
               {% else %}
                 <button type="button" class="btn btn-outline-primary my-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" name="add-mother-btn" onclick="mother_add_btn_click()">Добавить сведения о матери</button>

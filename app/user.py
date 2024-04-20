@@ -37,10 +37,21 @@ def show_all_users(request: Request, service: UserService = Depends()):
 
 
 @router.get('/cabinet')
-def show_all_users(request: Request,
+def show_cabinet(request: Request,
                    service: AuthService = Depends(),
                    access_token: str | None = Cookie(default=None)):
-    current_user = service.validate_token(access_token)
+    jwt_token = access_token.split()[1]
+    current_user = service.validate_token(jwt_token)
     return templates.TemplateResponse(
-        "/cabinet/index.html", {"request": request, "user": current_user}
+        "cabinet/index.html", {"request": request, "user": current_user}
     )
+
+router.get('/update_profile')
+def show_update_user_form(request: Request,
+                   service: AuthService = Depends(),
+                   access_token: str | None = Cookie(default=None)):
+    jwt_token = access_token.split()[1]
+    current_user = service.validate_token(jwt_token)
+    return templates.TemplateResponse(
+        "cabinet/update_profile.html", {"request": request, "user": current_user}
+    ) 

@@ -88,5 +88,4 @@ class MedicalRecordService():
                 .order_by(ChildWithParents.group_num)
                 .all()
             )
-        print(childrens_with_parents)
         return childrens_with_parents

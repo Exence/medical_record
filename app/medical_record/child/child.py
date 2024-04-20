@@ -12,10 +12,10 @@ from models.user import User
 
 from services.auth import get_current_user
 from services.medical_record.medical_record import MedicalRecordService
-from services.kindergarten import KindergartenService
 from services.medical_record.allergy import AllergyService
 from services.medical_record.extra_class import ExtraClassService
 from services.medical_record.past_illness import PastIllnessService
+from services.medical_record.parent import ParentService
 from services.medical_record.hospitalization import HospitalizationService
 from services.medical_record.spa_treatment import SpaTreatmentService
 from services.medical_record.medical_certificate import MedicalCertificateService
@@ -47,7 +47,7 @@ templates = Jinja2Templates(directory="templates")
 def get_child_medcard(medcard_num: int, request: Request,
                       user: User = Depends(get_current_user),
                       service: MedicalRecordService = Depends(),
-                      kindergarten_service: KindergartenService = Depends(),
+                      parents_service: ParentService = Depends(),
                       allergy_service: AllergyService = Depends(),
                       extra_class_service: ExtraClassService = Depends(),
                       past_illness_service: PastIllnessService = Depends(),
@@ -67,8 +67,8 @@ def get_child_medcard(medcard_num: int, request: Request,
                       ongoing_medical_supervision_service: OngoingMedicalSupervisionService = Depends(),
                       screening_service: ScreeningService = Depends()):
     child = service.get_medcard_by_num(user=user, medcard_num=medcard_num)
-    kindergartens = kindergarten_service.get_kindergartens_by_user_access(
-        user=user)
+    father, mother = parents_service.get_parents_by_medcard_num(user=user, medcard_num=medcard_num,medcard_service=service)
+    kindergartens = [{"number": user.kindergarten_num, "name": user.kindergarten_name}]
     allergyes = allergy_service.get_allergyes_by_medcard_num(
         user=user, medcard_num=medcard_num)
     extra_classes = extra_class_service.get_extra_classes_by_medcard_num(
@@ -113,8 +113,8 @@ def get_child_medcard(medcard_num: int, request: Request,
                                              "child": child,
                                              "kindergartens": kindergartens,
                                              "allergyes": allergyes,
-                                             "father": child.father,
-                                             "mother": child.mother,
+                                             "father": father,
+                                             "mother": mother,
                                              "extra_classes": extra_classes,
                                              "past_illnesses": past_illnesses,
                                              "hospitalizations": hospitalizations,

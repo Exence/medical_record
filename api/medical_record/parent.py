@@ -7,11 +7,12 @@ from models.child import ChildPK
 from models.parent import (
     Parent,
     ParentCreate,
-    PatentType,
+    ParentTypeRequest,
     ParentUpdate,
 )
 from models.user import User
 from services.medical_record.parent import ParentService
+from services.medical_record.medical_record import MedicalRecordService
 from services.auth import get_current_user
 
 
@@ -22,7 +23,7 @@ router = APIRouter(
 
 
 @router.post('/get_one', response_model=Parent)
-async def get_parent_by_type(parent_type: PatentType,
+async def get_parent_by_type(parent_type: ParentTypeRequest,
                              medcard_num: int,
                              user: User = Depends(get_current_user),
                              service: ParentService = Depends()):
@@ -35,24 +36,22 @@ async def add_parent(parent_data: ParentCreate,
                      medcard_num: int,
                      user: User = Depends(get_current_user),
                      service: ParentService = Depends()):
-    child_pk = ChildPK(medcard_num=medcard_num)
-    return service.add_or_update_parent(user=user, child_pk=child_pk, parent_data=parent_data)
+    return service.add_new_parent(user=user, medcard_num=medcard_num, parent_data=parent_data)
 
 
 @router.post('/update', response_model=Parent)
-async def update_parent(parent_data: ParentCreate,
+async def update_parent(parent_data: ParentUpdate,
                         medcard_num: int,
                         user: User = Depends(get_current_user),
                         service: ParentService = Depends()):
-    child_pk = ChildPK(medcard_num=medcard_num)
-    return service.add_or_update_parent(user=user, child_pk=child_pk, parent_data=parent_data)
+    return service.update_parent(user=user, medcard_num=medcard_num, parent_data=parent_data)
 
 
 @router.post('/delete')
-async def delete_parent(parent_type: PatentType,
+async def delete_parent(parent_type_request: ParentTypeRequest,
                         medcard_num: int,
                         user: User = Depends(get_current_user),
-                        service: ParentService = Depends()):
-    child_pk = ChildPK(medcard_num=medcard_num)
-    service.delete_parent(user=user, child_pk=child_pk,
-                          parent_type=parent_type)
+                        service: ParentService = Depends(),
+                        medcard_service: MedicalRecordService = Depends()):
+    service.delete_parent_by_type(user=user, medcard_num=medcard_num,
+                          parent_type=parent_type_request.parent_type, medcard_service=medcard_service)

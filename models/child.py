@@ -10,6 +10,8 @@ from pydantic import (
 )
 from datetime import date
 
+from models.parent import Parent
+
 
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
@@ -67,7 +69,9 @@ class ChildEdit(ChildPK, ChildBase):
 
 
 class Child(ChildPK, ChildBase, ParentsIds):
-
+    father: Parent
+    mother: Parent
+    
     class Config:
         orm_mode = True
 

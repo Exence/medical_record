@@ -457,6 +457,8 @@ function delete_allergy(allergen_name){
 
 
 /*PARENTS*/
+var isFather = true; // For check parent type
+
 function parent_add_set_info(){
     parent_commit_modal_btn.value = 'add';
     parent_surname_inpt.value = "";
@@ -469,36 +471,39 @@ function parent_add_set_info(){
 
 function father_add_btn_click(){
     parent_modal_header.innerHTML = 'Добавить сведения об отце';
-    parent_close_modal_btn.value = 'father';
+    isFather = true;
     parent_add_set_info();
 }
 
 function mother_add_btn_click() {
     parent_modal_header.innerHTML = 'Добавить сведения о матери';
-    parent_close_modal_btn.value = 'mother';
+    isFather = false;
     parent_add_set_info();
 }
 
 function parent_update_set_info(unsplit_data){
     parent_data = unsplit_data.split('///');
-    parent_surname_inpt.value = parent_data[0];
-    parent_name_inpt.value = parent_data[1];
-    parent_patronymic_inpt.value = parent_data[2];
-    parent_birthday_year_dtpkr.value = parent_data[3];
-    parent_edu_slct.value = parent_data[4].trim();
-    parent_phone_inpt.value = parent_data[5].slice(1,11);
+    parent_close_modal_btn.value = parent_data[0]; 
+    parent_surname_inpt.value = parent_data[1];
+    parent_name_inpt.value = parent_data[2];
+    parent_patronymic_inpt.value = parent_data[3];
+    parent_birthday_year_dtpkr.value = parent_data[4];
+    parent_edu_slct.value = parent_data[5].trim();
+    parent_phone_inpt.value = parent_data[6].slice(1,11);
     parent_commit_modal_btn.value = 'update';
 }
 
 function father_update_btn_click(){
     parent_modal_header.innerHTML = 'Редактирование сведений об отце';
-    let father_update_btn = document.getElementsByName('update-father-btn')[0]
+    const father_update_btn = document.getElementsByName('update-father-btn')[0]
+    isFather = true;
     parent_update_set_info(father_update_btn.value);
 }
 
 function mother_update_btn_click(){
     parent_modal_header.innerHTML = 'Редактирование сведений о матери';
-    let mother_update_btn = document.getElementsByName('update-mother-btn')[0];
+    const mother_update_btn = document.getElementsByName('update-mother-btn')[0];
+    isFather = false;
     parent_update_set_info(mother_update_btn.value);
 }
 
@@ -510,11 +515,11 @@ parent_commit_modal_btn.addEventListener('click', () => {
         "birthday_year": parent_birthday_year_dtpkr.value,
         "education": parent_edu_slct.value,
         "phone_num": '8' + parent_phone_inpt.value,
-        "header": parent_modal_header.innerHTML
+        "header": parent_modal_header.innerHTML,
+        "parent_type": isFather? 'father' : 'mother'
     };
     switch (parent_commit_modal_btn.value) {
         case 'add':
-            parent["parent_type"] = parent_close_modal_btn.value;
             $.ajax({
                 type: "POST",
                 async: true,
@@ -525,26 +530,26 @@ parent_commit_modal_btn.addEventListener('click', () => {
                 success: function(parent_data) {
                     switch (parent.parent_type) {
                         case 'father':
-                            father_div = document.getElementsByName('father-main-div')[0]
-                            father_div.innerHTML = '<div name="div-father" class="col-12 mb-3">\
+                            const father_div = document.getElementsByName('father-main-div')[0]
+                            father_div.innerHTML = '<div name="div-father-' + parent_data.id + '" class="col-12 mb-3">\
                             <p><strong>Отец: </strong> <u><mark>' + parent.surname + ' ' +  parent.name + ' ' +  parent.patronymic+ ', ' +  parent.birthday_year + 'г.р.</mark></u>, образование: <u><mark>' +  parent.education + '</mark></u> </br>\
                             <strong>тел.: </strong> <u><mark>' + parent.phone_num + '</mark></u>\
                             </p>\
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
-                                <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" name="update-father-btn" value="' + parent.surname + '///' + parent.name + '///' + parent.patronymic + '///' + parent.birthday_year + '///' + parent.education + '///' + parent.phone_num +'" onclick="father_update_btn_click()">Редактировать</button>\
+                                <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" name="update-father-btn" value="' + parent_data.id + '///' + parent.surname + '///' + parent.name + '///' + parent.patronymic + '///' + parent.birthday_year + '///' + parent.education + '///' + parent.phone_num +'" onclick="father_update_btn_click()">Редактировать</button>\
                                 <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-father-btn" onclick="delete_parent(\'father\')">Удалить</button>\
                             </div>\
                             </div>'
                             break;
                         
                         case 'mother':
-                            mother_div = document.getElementsByName('mother-main-div')[0]
-                            mother_div.innerHTML = '<div name="div-mother" class="col-12 mb-3">\
+                            const mother_div = document.getElementsByName('mother-main-div')[0]
+                            mother_div.innerHTML = '<div name="div-mother-' + parent_data.id + '" class="col-12 mb-3">\
                             <p><strong>Мать: </strong> <u><mark>' + parent.surname + ' ' +  parent.name + ' ' +  parent.patronymic+ ', ' +  parent.birthday_year + 'г.р.</mark></u>, образование: <u><mark>' +  parent.education + '</mark></u> </br>\
                             <strong>тел.: </strong> <u><mark>' + parent.phone_num + '</mark></u>\
                             </p>\
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
-                                <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" name="update-mother-btn" value="' + parent.surname + '///' + parent.name + '///' + parent.patronymic + '///' + parent.birthday_year + '///' + parent.education + '///' + parent.phone_num +'" onclick="mother_update_btn_click()">Редактировать</button>\
+                                <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#parentModal" name="update-mother-btn" value="' + parent_data.id + '///' + parent.surname + '///' + parent.name + '///' + parent.patronymic + '///' + parent.birthday_year + '///' + parent.education + '///' + parent.phone_num +'" onclick="mother_update_btn_click()">Редактировать</button>\
                                 <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-mother-btn" onclick="delete_parent(\'mother\')">Удалить</button>\
                             </div>\
                             </div>'
@@ -560,6 +565,7 @@ parent_commit_modal_btn.addEventListener('click', () => {
         
         
         case 'update':
+            parent['id'] = parent_close_modal_btn.value;
             $.ajax({
                 type: "POST",
                 async: true,
@@ -570,7 +576,7 @@ parent_commit_modal_btn.addEventListener('click', () => {
                 success: () => {
                     switch (parent.header) {
                         case 'Редактирование сведений об отце':
-                            father_div = document.getElementsByName('div-father')[0]
+                            const father_div = document.getElementsByName('div-father-' + parent.id)[0]
                             father_div.innerHTML = '<p><strong>Отец: </strong> <u><mark>' + parent.surname + ' ' +  parent.name+ ' ' +  parent.patronymic+ ', ' +  parent.birthday_year + 'г.р.</mark></u>, образование: <u><mark>' +  parent.education + '</mark></u> </br>\
                             <strong>тел.: </strong> <u><mark>' + parent.phone_num + '</mark></u>\
                             </p>\
@@ -581,7 +587,7 @@ parent_commit_modal_btn.addEventListener('click', () => {
                             break;
                         
                         case 'Редактирование сведений о матери':
-                            mother_div = document.getElementsByName('div-mother')[0]
+                            const mother_div = document.getElementsByName('div-mother-' + parent.id)[0]
                             mother_div.innerHTML = '<p><strong>Мать: </strong> <u><mark>' + parent.surname + ' ' +  parent.name+ ' ' +  parent.patronymic+ ', ' +  parent.birthday_year + 'г.р.</mark></u>, образование: <u><mark>' +  parent.education + '</mark></u> </br>\
                             <strong>тел.: </strong> <u><mark>' + parent.phone_num + '</mark></u>\
                             </p>\
@@ -750,7 +756,7 @@ past_illness_commit_modal_btn.addEventListener('click', () =>{
         "medcard_num": medcard_num,
         "diagnosis": past_illness_diagnosis_modal_inpt.value,
         "start_date": past_illness_start_date_modal_dtpkr.value,
-        "end_date": past_illness_end_date_modal_dtpkr.value? past_illness_end_date_modal_dtpkr.value : null
+        "end_date": past_illness_end_date_modal_dtpkr.value?? null
     }
     switch (past_illness_commit_modal_btn.value) {
         case 'add':
@@ -2920,11 +2926,15 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break;
 
         case 'delete_parent':
+            const parent_type = {"parent_type": close_delete_modal_btn.value}
+            console.log(parent_type);
             $.ajax({
                 type: "POST",
                 async: true,
                 url: "/medical_record/child/" + medcard_num + "/parent/delete",
-                data: close_delete_modal_btn.value,
+                data: JSON.stringify(parent_type),
+                contentType: "application/json",
+                dataType: 'json',
                 success: () => {
                     switch (delete_modal_header.innerHTML) {
                         case 'Удалить сведения об отце':

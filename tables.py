@@ -1,5 +1,6 @@
 import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 
 BaseTable = declarative_base()
@@ -19,12 +20,16 @@ class Child(BaseTable):
     clinic = sa.Column(sa.String)
     edu_type = sa.Column(sa.String)
     entering_date = sa.Column(sa.Date)
-    father_id = sa.Column(sa.Integer, nullable=True)
-    mother_id = sa.Column(sa.Integer, nullable=True)
+    father_id = sa.Column(sa.Integer, sa.ForeignKey('parents.id', ondelete='SET NULL'), nullable=True)
+    mother_id = sa.Column(sa.Integer, sa.ForeignKey('parents.id', ondelete='SET NULL'), nullable=True)
     family_characteristics = sa.Column(sa.String)
     family_microclimate = sa.Column(sa.String)
     rest_and_class_opportunities = sa.Column(sa.String)
     case_history = sa.Column(sa.String, nullable=True)
+
+    father = relationship("Parent", foreign_keys="[Child.father_id]", primaryjoin="Parent.id == Child.father_id")
+    mother = relationship("Parent", foreign_keys="[Child.mother_id]", primaryjoin="Parent.id == Child.mother_id")
+
 
 class ChildWithParents(BaseTable):
     __tablename__ = 'childrens_with_parents_view'
@@ -70,12 +75,14 @@ class Allergy(BaseTable):
     diagnosis_date = sa.Column(sa.Date)
     note = sa.Column(sa.String, nullable=True)
 
+
 class Deworming(BaseTable):
     __tablename__ = 'dewormings'
 
     medcard_num = sa.Column(sa.Integer, primary_key=True)
     deworming_date = sa.Column(sa.Date, primary_key=True)
     result = sa.Column(sa.String)
+
 
 class Dispensary(BaseTable):
     __tablename__ = 'dispensaryes'
@@ -87,6 +94,7 @@ class Dispensary(BaseTable):
     end_date = sa.Column(sa.Date, nullable=True)
     end_reason = sa.Column(sa.String, nullable=True)
 
+
 class ExtraClass(BaseTable):
     __tablename__ = 'extra_classes'
 
@@ -94,6 +102,7 @@ class ExtraClass(BaseTable):
     classes_type = sa.Column(sa.String, primary_key=True)
     age = sa.Column(sa.Integer, primary_key=True)
     hours_on_week = sa.Column(sa.Integer)
+
 
 class GammaGlobulinInjection(BaseTable):
     __tablename__ = 'gamma_globulin_injections'
@@ -106,6 +115,7 @@ class GammaGlobulinInjection(BaseTable):
     reaction = sa.Column(sa.String)
     doctor = sa.Column(sa.String)
 
+
 class Hospitalization(BaseTable):
     __tablename__ = 'hospitalizations'
 
@@ -115,11 +125,13 @@ class Hospitalization(BaseTable):
     diagnosis = sa.Column(sa.String)
     founding = sa.Column(sa.String)
 
+
 class Kindergarten(BaseTable):
     __tablename__ = 'kindergartens'
 
     number = sa.Column(sa.Integer, primary_key=True)
     name = sa.Column(sa.String)
+
 
 class MantouxTest(BaseTable):
     __tablename__ = 'mantoux_tests'
@@ -127,6 +139,7 @@ class MantouxTest(BaseTable):
     medcard_num = sa.Column(sa.Integer, primary_key=True)
     check_date = sa.Column(sa.Date, primary_key=True)
     result = sa.Column(sa.String)
+
 
 class MedicalCertificate(BaseTable):
     __tablename__ = 'medical_certificates'
@@ -140,6 +153,7 @@ class MedicalCertificate(BaseTable):
     sport_exemption_date = sa.Column(sa.Date, nullable=True)
     vac_exemption_date = sa.Column(sa.Date, nullable=True)
     doctor = sa.Column(sa.String)
+
 
 class MedicalExamination(BaseTable):
     __tablename__ = 'medical_examinations'
@@ -172,6 +186,7 @@ class MedicalExamination(BaseTable):
     med_and_ped_conclusion = sa.Column(sa.String, nullable=True)
     recommendations = sa.Column(sa.String, nullable=True)
 
+
 class OngoingMedicalSupervision(BaseTable):
     __tablename__ = 'ongoing_medical_supervisions'
     medcard_num = sa.Column(sa.Integer, primary_key=True)
@@ -181,6 +196,7 @@ class OngoingMedicalSupervision(BaseTable):
     prescription = sa.Column(sa.String, nullable=True)
     doctor = sa.Column(sa.String)
 
+
 class OralSanation(BaseTable):
     __tablename__ = 'oral_sanations'
 
@@ -188,6 +204,7 @@ class OralSanation(BaseTable):
     sanation_date = sa.Column(sa.Date, primary_key=True)
     dental_result = sa.Column(sa.String)
     sanation_result = sa.Column(sa.String)
+
 
 class Parent(BaseTable):
     __tablename__ = 'parents'
@@ -200,6 +217,7 @@ class Parent(BaseTable):
     education = sa.Column(sa.String)
     phone_num = sa.Column(sa.BigInteger)
 
+
 class PastIllness(BaseTable):
     __tablename__ = 'past_illnesses'
 
@@ -207,6 +225,7 @@ class PastIllness(BaseTable):
     start_date = sa.Column(sa.Date, primary_key=True)
     diagnosis = sa.Column(sa.String, primary_key=True)
     end_date = sa.Column(sa.Date)
+
 
 class PrevaccinationCheckup(BaseTable):
     __tablename__ = 'prevaccination_checkups'
@@ -220,6 +239,7 @@ class PrevaccinationCheckup(BaseTable):
     no_vac_date = sa.Column(sa.Date, nullable=True)
     doctor = sa.Column(sa.String)
 
+
 class PrevaccinationCheckupView(BaseTable):
     __tablename__ = 'prevaccination_checkups_view'
 
@@ -231,6 +251,7 @@ class PrevaccinationCheckupView(BaseTable):
     report = sa.Column(sa.String)
     no_vac_date = sa.Column(sa.Date, nullable=True)
     doctor = sa.Column(sa.String)
+
 
 class Screening(BaseTable):
     __tablename__ = 'screenings'
@@ -266,6 +287,7 @@ class Screening(BaseTable):
     social_contacts_disorders = sa.Column(sa.Boolean, nullable=True)
     diseases_for_year = sa.Column(sa.Integer, nullable=True)
 
+
 class SpaTreatment(BaseTable):
     __tablename__ = 'spa_treatments'
 
@@ -276,6 +298,7 @@ class SpaTreatment(BaseTable):
     founding_specialization = sa.Column(sa.String)
     climatic_zone = sa.Column(sa.String)
 
+
 class TuberculosisVaccination(BaseTable):
     __tablename__ = 'tuberculosis_vaccinations'
 
@@ -284,6 +307,7 @@ class TuberculosisVaccination(BaseTable):
     serial = sa.Column(sa.String)
     dose = sa.Column(sa.Numeric(5,2))
     doctor = sa.Column(sa.String)
+
 
 class User(BaseTable):
     __tablename__ = 'users'
@@ -295,12 +319,14 @@ class User(BaseTable):
     name = sa.Column(sa.String)
     patronymic = sa.Column(sa.String)
 
+
 class VacName(BaseTable):
     __tablename__ = 'vac_names'
 
     id = sa.Column(sa.Integer, primary_key=True)
     name = sa.Column(sa.String)
     vac_type = sa.Column(sa.String)
+
 
 class Vaccination(BaseTable):
     __tablename__ = 'vaccinations'
@@ -315,33 +341,36 @@ class Vaccination(BaseTable):
     reaction = sa.Column(sa.String)
     doctor = sa.Column(sa.String)
 
+
 class ProfVaccination(BaseTable):
     __tablename__ = 'prof_vaccinations'
 
     medcard_num = sa.Column(sa.Integer, primary_key=True)
     vac_name_id = sa.Column(sa.Integer, primary_key=True)
+    vac_name = sa.Column(sa.String)
     vac_type = sa.Column(sa.String, primary_key=True)
-    name = sa.Column(sa.String)
     vac_date = sa.Column(sa.Date)
     serial = sa.Column(sa.String)
     dose = sa.Column(sa.Numeric(5,2))
     introduction_method = sa.Column(sa.String)
     reaction = sa.Column(sa.String)
     doctor = sa.Column(sa.String)
+
 
 class EpidVaccination(BaseTable):
     __tablename__ = 'epid_vaccinations'
 
     medcard_num = sa.Column(sa.Integer, primary_key=True)
     vac_name_id = sa.Column(sa.Integer, primary_key=True)
+    vac_name = sa.Column(sa.String)
     vac_type = sa.Column(sa.String, primary_key=True)
-    name = sa.Column(sa.String)
     vac_date = sa.Column(sa.Date)
     serial = sa.Column(sa.String)
     dose = sa.Column(sa.Numeric(5,2))
     introduction_method = sa.Column(sa.String)
     reaction = sa.Column(sa.String)
     doctor = sa.Column(sa.String)
+
 
 class VisitSpecialistControl(BaseTable):
     __tablename__ = 'visit_specialist_controls'
@@ -350,4 +379,3 @@ class VisitSpecialistControl(BaseTable):
     start_dispanser_date = sa.Column(sa.Date, primary_key=True)
     assigned_date = sa.Column(sa.Date, primary_key=True)
     fact_date = sa.Column(sa.Date, nullable=True)
-

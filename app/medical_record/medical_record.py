@@ -58,7 +58,6 @@ def show_all_medcards(request: Request,
                       user: User = Depends(get_current_user)):
     kindergarten = service.get_kindergarten_with_childrens(
         user)
-    print(kindergarten)
     return templates.TemplateResponse(
         "/medical_record/all/index.html", {"request": request,
                                            "kindergarten": kindergarten}

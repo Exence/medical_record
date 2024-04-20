@@ -51,7 +51,7 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(UserCreate):
-    pass
+    prev_kindergarten_num: int
 
 
 class User(UserBase):
