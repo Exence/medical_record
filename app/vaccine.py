@@ -27,5 +27,5 @@ templates = Jinja2Templates(directory="templates")
 
 @router.post('/get_all')
 async def get_all_vaccine(service: VacNameService = Depends()):
-    vac_names = service.get_all_vac_names()
+    vac_names = service.get_all_vac_names_as_dict()
     return vac_names

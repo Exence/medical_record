@@ -16,7 +16,7 @@ class ReportService():
         self.session = session
 
     def get_childrens_by_mantoux_test_result(self, user: User, mantoux_test_result: str, start_date: date, end_date: date) -> list[Child]:
-        if not user.access_level in ['admin', 'db_admin']:
+        if not user:
             childrens = (
                 self.session
                 .query(Child)
@@ -37,7 +37,7 @@ class ReportService():
         )
 
     def get_childrens_by_vaccine(self, user: User, vac: VacReport) -> list[Child]:
-        if not user.access_level in ['admin', 'db_admin']:
+        if not user:
             childrens = (
                 self.session
                 .query(Child)

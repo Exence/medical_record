@@ -23,6 +23,7 @@ from models.auth import Token
 from models.user import User as UserModel
 from tables import User
 from services.oauth2_scheme import OAuth2PasswordBearerWithCookie
+from services.user import UserService
 
 
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl='/sign-in')
@@ -67,7 +68,6 @@ class AuthService():
     @classmethod
     def create_token(cls, user_data: User) -> Token:
         now = datetime.utcnow()
-
         payload = {
             'iat': now,
             'nbf': now,
@@ -75,7 +75,6 @@ class AuthService():
             'sub': str(user_data.kindergarten_num),
             'user': user_data.dict(),
         }
-
         token = jwt.encode(
             payload,
             settings.jwt_secret,
@@ -83,13 +82,14 @@ class AuthService():
         )
         return Token(access_token=token)
 
-    def __init__(self, session: Session = Depends(get_session)):
+    def __init__(self, session: Session = Depends(get_session), user_service: UserService = Depends()):
         self.session = session
+        self.user_service = user_service
 
     def authenticate_user(self, password: str) -> Token:
         exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Incorrect login or password',
+            detail='Incorrect password',
             headers={
                 'WWW-Authenticate': 'bearer'
             },
@@ -99,6 +99,9 @@ class AuthService():
             .query(User)
             .first()
         )
+
+        if not user:
+            user = self.user_service.add_new_user()
 
         user = UserModel(**user.__dict__)
 

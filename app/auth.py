@@ -47,7 +47,7 @@ async def sign_in(
         )
         return response
     except:
-        error = "Ошибка авторизации! Проверьте правильность логина/пароля!"
+        error = "Ошибка авторизации! Проверьте правильность пароля!"
         return templates.TemplateResponse(
             "login_page/index.html", {"request": request, "error": error}
         )

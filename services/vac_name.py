@@ -59,8 +59,8 @@ class VacNameService():
         )
 
     def add_new_vac_name(self, user: User, vac_name_data: VacNameCreate):
-        if user.access_level in ['admin', 'db_admin']:
-            vac_name = vac_name(**vac_name_data.dict())
+        if user:
+            vac_name = VacName(**vac_name_data.dict())
             self.session.add(vac_name)
             self.session.commit()
         else:
@@ -70,7 +70,7 @@ class VacNameService():
         return vac_name
 
     def update_vac_name(self, user: User, vac_name_data: VacNameUpdate):
-        if user.access_level in ['admin', 'db_admin']:
+        if user:
             vac_name = self._get_by_pk(vac_name_data.id)
             for field, value in vac_name_data:
                 setattr(vac_name, field, value)
@@ -82,7 +82,7 @@ class VacNameService():
             )
 
     def delete_vac_name(self, user: User, vac_name_pk: VacNamePK):
-        if user.access_level in ['admin', 'db_admin']:
+        if user:
             vac_name = self._get_by_pk(vac_name_pk.id)
             self.session.delete(vac_name)
             self.session.commit()

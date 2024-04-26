@@ -13,13 +13,41 @@
 				{{ msg }}
 			</div>
 		{% endif %}
-        <h3 class="text-left">Здравствуйте, <strong>{{ user.name }} {{ user.patronymic }}</strong> </h3>
+		<div class="container mt-4">
+      <h3 class="text-left">Здравствуйте, <strong>{{ user.name }} {{ user.patronymic }}</strong> </h3>
+			<div class="row">
+					<div class="col-md-6">
+							<div class="card">
+									<div class="card-body">
+										<div class="d-inline">
+											<h5 class="card-title align-text-top">Информация
+												<a href="/users/update_profile" class="btn btn-outline-secondary btn-sm pull-right">&#9998;</a>
+											</h5>
+										</div>
+										<p class="card-text"><b>Номер ДДУ:</b> {{ user.kindergarten_num }}</p>
+										<p class="card-text"><b>Наименование ДДУ:</b> {{ user.kindergarten_name }}</p>
+										<p class="card-text"><b>Фамилия:</b> {{ user.surname }}</p>
+										<p class="card-text"><b>Имя:</b> {{ user.name }}</p>
+										<p class="card-text"><b>Отчество:</b> {{ user.patronymic }}</p>
+									</div>
+							</div>
+					</div>
+					<div class="col-md-6">
+						<div class="card">
+								<div class="card-body">
+										<h5 class="card-title">Действия</h5>
+										<div class="mb-3 d-flex justify-content-between">
+												<a href="/medical_record/all" class="btn btn-outline-primary flex-fill mt-3 mx-1">Перейти к медкартам</a>
+												<a href="/users/change_password" class="btn btn-outline-success flex-fill mt-3 mx-1">Сменить пароль</a>
+												<a href="/auth/leave" class="btn btn-outline-danger flex-fill mt-3 mx-1">Выход из системы</a>
+										</div>
+								</div>
+						</div>
+				</div>
+			</div>
+		</div>
         
-        <a href="/users/update_profile" class="btn btn-outline-info btn-sm mt-3">Просмотр и редактирование личных сведений</a>
-        <div class="mb-3">    			
-            <a href="/medical_record/all" class="btn btn-outline-primary mt-3">Перейти к медкартам</a>			
-            <a href="/auth/leave" class="btn btn-outline-danger  mt-3">Выход из системы</a>
-        </div>
+        
             
 	</div>
 {% endblock %}

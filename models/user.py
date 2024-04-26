@@ -16,15 +16,18 @@ class UserPK(BaseModel):
     kindergarten_num: int
 
 
+class UserPass(BaseModel):
+    password_hash: str
+
+
 class UserBase(UserPK):
     kindergarten_name: str
     surname: str
     name: str
     patronymic: str
-    password_hash: str
 
 
-class UserCreate(UserBase):
+class UserValidate(UserBase):
     @validator("name")
     def validate_name(cls, value):
         if not LETTER_MATCH_PATTERN.match(value):
@@ -48,13 +51,16 @@ class UserCreate(UserBase):
                 status_code=422, detail="Patronymic should contains only letters"
             )
         return value
+    
+
+class UserCreate(UserValidate, UserPass):
+    pass
 
 
-class UserUpdate(UserCreate):
-    prev_kindergarten_num: int
+class UserUpdate(UserValidate):
+    pass
 
-
-class User(UserBase):
+class User(UserBase, UserPass):
 
     class Config:
         orm_mode = True
