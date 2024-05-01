@@ -17,8 +17,8 @@ class Child(BaseTable):
     sex = sa.Column(sa.String)
     group_num = sa.Column(sa.Integer)
     address = sa.Column(sa.String)
-    clinic = sa.Column(sa.String)
-    edu_type = sa.Column(sa.String)
+    clinic_id = sa.Column(sa.Integer, sa.ForeignKey('clinics.id', ondelete='RESTRICT'))
+    edu_type = sa.Column(sa.String, default='ДДУ')
     entering_date = sa.Column(sa.Date)
     father_id = sa.Column(sa.Integer, sa.ForeignKey('parents.id', ondelete='SET NULL'), nullable=True)
     mother_id = sa.Column(sa.Integer, sa.ForeignKey('parents.id', ondelete='SET NULL'), nullable=True)
@@ -29,6 +29,7 @@ class Child(BaseTable):
 
     father = relationship("Parent", foreign_keys="[Child.father_id]", primaryjoin="Parent.id == Child.father_id")
     mother = relationship("Parent", foreign_keys="[Child.mother_id]", primaryjoin="Parent.id == Child.mother_id")
+    clinic = relationship("Clinic", foreign_keys="[Child.clinic_id]", primaryjoin="Clinic.id == Child.clinic_id")
 
 
 class ChildWithParents(BaseTable):
@@ -43,7 +44,7 @@ class ChildWithParents(BaseTable):
     sex = sa.Column(sa.String)
     group_num = sa.Column(sa.Integer)
     address = sa.Column(sa.String)
-    clinic = sa.Column(sa.String)
+    clinic_name = sa.Column(sa.String)
     edu_type = sa.Column(sa.String)
     entering_date = sa.Column(sa.Date)
     father_surname = sa.Column(sa.String)
@@ -74,6 +75,13 @@ class Allergy(BaseTable):
     reaction_type = sa.Column(sa.String)
     diagnosis_date = sa.Column(sa.Date)
     note = sa.Column(sa.String, nullable=True)
+
+
+class Clinic(BaseTable):
+    __tablename__ = 'clinics'
+
+    id = sa.Column(sa.Integer, primary_key=True)
+    name = sa.Column(sa.String) 
 
 
 class Deworming(BaseTable):

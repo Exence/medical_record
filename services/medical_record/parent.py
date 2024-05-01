@@ -3,10 +3,10 @@ from fastapi import (
     HTTPException,
     status,
 )
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from database import get_session
 
-from services.medical_record.medical_record import MedicalRecordService
 from services.user import check_user_access_to_medcard
 
 from models.child import Child
@@ -35,21 +35,15 @@ class ParentService():
             )
         return parent
 
-    def get_parents_by_medcard_num(self, user: User, medcard_num: int, medcard_service: MedicalRecordService = Depends()):
-        child = medcard_service.get_medcard_by_num(user=user, medcard_num=medcard_num)
-        father = self._get(child.father_id) if child.father_id else None
-        mother = self._get(child.mother_id) if child.mother_id else None
-        return father, mother
-    
-
     def add_new_parent(self, user: User, medcard_num: int, parent_data: ParentCreate):
         if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
             transaction = self.session.begin()
             try:
                 parent = Parent(**{k: v for k,v in parent_data.dict().items() if k != 'parent_type'})
                 self.session.add(parent)
-                self.session.flush()
+                self.session.flush()  
                 self.session.refresh(parent)
+
                 child = (
                     self.session
                     .query(Child)
@@ -57,11 +51,15 @@ class ParentService():
                     .first()
                 )
                 setattr(child, f"{parent_data.parent_type.value}_id", parent.id)
+
                 transaction.commit()
+                transaction.close() 
+
                 return parent
-            except Exception as error:
+            except SQLAlchemyError as error:  
                 print(error)
                 transaction.rollback()
+                transaction.close()  
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -89,10 +87,4 @@ class ParentService():
                 status_code=status.HTTP_403_FORBIDDEN
             )
         
-    def delete_parent_by_type(self, user: User, medcard_num: int, parent_type: ParentType, medcard_service: MedicalRecordService):
-        child = medcard_service.get_medcard_by_num(user=user, medcard_num=medcard_num)
-        parents = {"father": child.father_id, "mother": child.mother_id}
-        parent = self._get(parents[f"{parent_type.value}"])
-        self.session.delete(parent)
-        setattr(child, f"{parent_type.value}_id", None)
-        self.session.commit()
+    

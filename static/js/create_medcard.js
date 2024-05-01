@@ -93,11 +93,11 @@ modal_commit_btn.addEventListener('click', function(e){
     } else {
         result = "";
         modal_only_letters_inputs.forEach(input => {
-            result += input.value + " ";
+            result += input.value + ";";
             input.value = "";
             input.classList.remove("is-valid");
         });
-        result += birthday_year_input.value + " " +  education_selector.value + " 8" + phone_input.value;
+        result += birthday_year_input.value + ";" +  education_selector.value + ";8" + phone_input.value;
         birthday_year_input.value = "";
         birthday_year_input.classList.remove("is-valid");
         phone_input.value = "";

@@ -105,9 +105,6 @@ class AuthService():
 
         user = UserModel(**user.__dict__)
 
-        if not user:
-            raise exception
-
         if not self.verify_password(password, user.password_hash):
             raise exception
 

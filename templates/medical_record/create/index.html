@@ -19,11 +19,8 @@
             <div class="col-12">
                 <label for="kindergarten_name" class="form-label">Детский сад</label>
                 <div class="col-md-3">
-                    <select class="form-select" name="kindergarten_name" id="kindergarten_name" required>
-                        <option selected> МБДОУ Детский сад №1</option>
-                        <option> МБДОУ Детский сад №2</option>
-                        <option> МБДОУ Детский сад №3</option>
-                        <option> МБДОУ Детский сад №4</option>
+                    <select class="form-select" name="kindergarten_name" id="kindergarten_name" disabled>
+                        <option selected> {{kindergarten_name}}</option>
                       </select>
                 </div>
             </div>
@@ -40,8 +37,8 @@
               <input type="text" class="form-control only-letters" name="patronymic" id="patronymic" placeholder="Иванович" required>
             </div>
             <div class="form-group col-md-2" >
-                <label for="birthday" class="form-label" required>Дата рождения</label>
-                <input type="date" class="form-control" name="birthday" id="birthday">
+                <label for="birthday" class="form-label">Дата рождения</label>
+                <input type="date" class="form-control" name="birthday" id="birthday" required>
                 <div class="invalid-feedback">
                     Пожалуйста, введите дату рождения.
                 </div>
@@ -49,13 +46,13 @@
             <div class="form-group col-md-2" >
                 <label>Пол</label>
                 <div class="form-check col-md-2">
-                    <input class="form-check-input" type="radio" name="sex" id="flexRadioSex1" value="Мужской" checked>
+                    <input class="form-check-input" type="radio" name="sex" id="flexRadioSex1" value="М" checked>
                     <label class="form-check-label" for="flexRadioSex1">
                     Мужской
                     </label>
                 </div>
                 <div class="form-check col-md-2">
-                    <input class="form-check-input" type="radio" name="sex" id="flexRadioSex2" value="Женский">
+                    <input class="form-check-input" type="radio" name="sex" id="flexRadioSex2" value="Ж">
                     <label class="form-check-label" for="flexRadioSex2">
                     Женский
                     </label>
@@ -74,18 +71,17 @@
             </div> 
             <div class="form-group col-md-2" >
                 <label for="entering_date" class="form-label">Дата поступления</label>
-                <input type="date" class="form-control" name="entering_date" id="entering_date">
-                <div class="invalid-feedback" required>
+                <input type="date" class="form-control" name="entering_date" id="entering_date" required>
+                <div class="invalid-feedback">
                     Пожалуйста, введите дату поступления.
                 </div>
             </div>   
             <div class="col-md-4">
               <label for="clinic" class="form-label">Обслуживающая поликлиника</label>
-              <select class="form-select" name="clinic" id="clinic" required>
-                <option selected>Городская детская поликлиника №1</option>
-                <option>Городская детская поликлиника №2</option>
-                <option>Городская детская поликлиника №3</option>
-                <option>Городская детская поликлиника №4</option>
+              <select class="form-select" name="clinic_id" id="clinic_id" required>
+                {% for id, name in clinics.items() %}
+                  {% include '/clinics/options/clinic.html' %}                               
+                {% endfor %} 
               </select>
             </div> 
             <div class="col-12">
@@ -137,7 +133,8 @@
                 <textarea class="form-control" name="case_history" id="case_history" rows="5"></textarea>
             </div>
             <div class="col-12">
-              <button class="btn btn-primary" type="submit">Создать медкарту</button>
+              <button class="btn btn-primary mb-5" type="submit">Создать медкарту</button>
+              <a href="javascript:history.back()" class="btn btn-secondary mb-5">Назад</a>
             </div>
           </form>
           </div>

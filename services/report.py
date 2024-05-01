@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 
 from database import get_session
 
-from models.child import ChildToShow
 from models.tub_diagnostic import TubDiagnostic
 from models.user import User
 from models.vaccination import VacReport

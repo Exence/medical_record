@@ -60,6 +60,7 @@ class UserCreate(UserValidate, UserPass):
 class UserUpdate(UserValidate):
     pass
 
+
 class User(UserBase, UserPass):
 
     class Config:

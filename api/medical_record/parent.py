@@ -53,5 +53,5 @@ async def delete_parent(parent_type_request: ParentTypeRequest,
                         user: User = Depends(get_current_user),
                         service: ParentService = Depends(),
                         medcard_service: MedicalRecordService = Depends()):
-    service.delete_parent_by_type(user=user, medcard_num=medcard_num,
-                          parent_type=parent_type_request.parent_type, medcard_service=medcard_service)
+    medcard_service.delete_parent_by_type(user=user, medcard_num=medcard_num,
+                          parent_type=parent_type_request.parent_type, parent_service=service)

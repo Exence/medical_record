@@ -11,6 +11,7 @@ from pydantic import (
 from datetime import date
 
 from models.parent import Parent
+from models.clinic import Clinic
 
 
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
@@ -22,10 +23,10 @@ LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 class ChildPK(BaseModel):
     medcard_num: int = Field(...)
 
-class ParentsIds(BaseModel):
+class ForeignIds(BaseModel):
     father_id: int | None
     mother_id: int | None
-
+    clinic_id: int = Field(...)
 
 
 class ChildBase(BaseModel):
@@ -37,7 +38,6 @@ class ChildBase(BaseModel):
     sex: str = Field(..., max_length=1)
     group_num: int = Field(..., gt=0, lt=7)
     address: str = Field(..., max_length=250)
-    clinic: str = Field(..., max_length=200)
     edu_type: str = Field(default='ДДУ', max_length=25)
     entering_date: date = Field(...)
     family_characteristics: str = Field(...)
@@ -47,6 +47,7 @@ class ChildBase(BaseModel):
 
 
 class ChildWithParentsView(ChildPK, ChildBase):
+    clinic_name: str = Field(...)
     father_surname: str | None = Field(max_length=150)
     father_name: str | None = Field(max_length=150)
     father_patronymic: str | None = Field(max_length=150)
@@ -62,22 +63,22 @@ class ChildWithParentsView(ChildPK, ChildBase):
 
 
 class ChildEdit(ChildPK, ChildBase):
-    kindergarten_num: str | None
+    kindergarten_name: str | None
 
     class Config:
         orm_mode = True
 
 
-class Child(ChildPK, ChildBase, ParentsIds):
+class Child(ChildPK, ChildBase, ForeignIds):
     father: Parent
     mother: Parent
+    clinic: Clinic
     
     class Config:
         orm_mode = True
 
 
 class ChildCreate(ChildBase):
-    kindergarten_num: int = Field(..., gt=-1, lt=1000)
 
     @validator("name")
     def validate_name(cls, value):
@@ -140,72 +141,16 @@ class CreateChildForm(BaseModel):
     surname: str
     name: str
     patronymic: str
-    kindergarten_name: str
+    kindergarten_num: int
     birthday: date
     sex: str
     group_num: int
     address: str
-    clinic: str
-    entering_date: str
+    clinic_id: int
+    entering_date: date
     father: str
     mother: str
     family_characteristics: str
     family_microclimate: str
     rest_and_class_opportunities: str
     case_history: str
-
-    @classmethod
-    def as_form(
-        cls,
-        surname: str = Form(...),
-        name: str = Form(...),
-        patronymic: str = Form(...),
-        kindergarten_name: str = Form(...),
-        birthday: date = Form(...),
-        sex: str = Form(...),
-        group_num: int = Form(...),
-        address: str = Form(...),
-        clinic: str = Form(...),
-        entering_date: str = Form(...),
-        father: str = Form(default=""),
-        mother: str = Form(default=""),
-        family_characteristics: str = Form(...),
-        family_microclimate: str = Form(...),
-        rest_and_class_opportunities: str = Form(...),
-        case_history: str = Form(default="")
-    ):
-        return cls(surname=surname,
-                   name=name,
-                   patronymic=patronymic,
-                   kindergarten_name=kindergarten_name,
-                   birthday=birthday,
-                   sex=sex,
-                   group_num=group_num,
-                   address=address,
-                   clinic=clinic,
-                   entering_date=entering_date,
-                   father=father,
-                   mother=mother,
-                   family_characteristics=family_characteristics,
-                   family_microclimate=family_microclimate,
-                   rest_and_class_opportunities=rest_and_class_opportunities,
-                   case_history=case_history
-                   )
-
-
-class ChildToShow(BaseModel):
-    medcard_num: int
-    surname: str
-    name: str
-    patronymic: str
-    kindergarten_name: str
-    birthday: date
-    group_num: int
-    father_surname: str | None
-    father_name: str | None
-    father_patronymic: str | None
-    father_phone_num: int | None
-    mother_surname: str | None
-    mother_name: str | None
-    mother_patronymic: str | None
-    mother_phone_num: int | None

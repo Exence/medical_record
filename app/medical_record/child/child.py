@@ -67,7 +67,7 @@ def get_child_medcard(medcard_num: int, request: Request,
                       ongoing_medical_supervision_service: OngoingMedicalSupervisionService = Depends(),
                       screening_service: ScreeningService = Depends()):
     child = service.get_medcard_by_num(user=user, medcard_num=medcard_num)
-    father, mother = parents_service.get_parents_by_medcard_num(user=user, medcard_num=medcard_num,medcard_service=service)
+    father, mother = service.get_parents_by_medcard_num(user=user, medcard_num=medcard_num,parent_service=parents_service)
     kindergartens = [{"number": user.kindergarten_num, "name": user.kindergarten_name}]
     allergyes = allergy_service.get_allergyes_by_medcard_num(
         user=user, medcard_num=medcard_num)
