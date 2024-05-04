@@ -20,11 +20,19 @@
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1 px-2">{{ kindergarten.name }}</h5>
               <ul class="list-group w-100 px-1 py-2">
-                {% set count = namespace(n=1) %}
+                {% set count = namespace(n=0) %}
                 {% for group_num, childrens in kindergarten.groups.items() %}
                     {% include '/medical_record/all/divs/group.html' %}  
                     {% set count.n = count.n + 1 %}                           
                 {% endfor %}
+                {% if not count.n %}
+                  <li class="list-group-item d-flex text-center justify-content-between align-items-start">
+                    <div class="text-center w-100">
+                      <p>Пока еще не добавлено ни одной медкарты. Для добавления новой медкарты нажмите "Создать медкарту"</p>
+                      <a href="/medical_record/create" class="btn btn-outline-primary">Создать медкарту</a>
+                    </div>
+                  </li>
+                {% endif %}
               </ul>
             </div>
           </div> 

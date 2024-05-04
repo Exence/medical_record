@@ -18,7 +18,7 @@ add_vac_report_btn.addEventListener('click', () => {
     $.ajax({
         type: "POST",
         async: true,
-        url: "/vaccine/get_all",
+        url: "api/v1/vaccine/get_all",
         success: (data) => {
             let vac_name_modal_slct = document.querySelector('#vacReportVacName-modal');
             data.forEach(vac => {

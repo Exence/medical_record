@@ -5,7 +5,9 @@ from .auth import router as auth_router
 from .clinic import router as clinic_router
 
 
-router = APIRouter()
+router = APIRouter(
+  prefix='/api/v1'
+)
 
 router.include_router(medical_record_router)
 router.include_router(auth_router)

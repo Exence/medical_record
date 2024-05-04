@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	<title>Справочник поликлиник</title>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+    <div class="row">
+      <div class="col-6 offset-3">
+          <h1 class="text-center">Справочник поликлиник</h1>
+      </div>
+      <div class="col-3 d-flex justify-content-end align-items-center">
+          <button data-bs-toggle="modal" data-bs-target="#clinicModal" class="btn btn-outline-success mx-2" onclick="addClinic()">Добавить</button>
+          <a href="/medical_record/all" class="btn btn-outline-primary">Все медкарты</a>
+      </div>
+    </div>
+
+    {% if msg %}
+			<div class="alert alert-success" role="alert">
+  				{{msg}}
+			</div>
+		{% endif %}
+		{% if err %}
+			<div class="alert alert-danger" role="alert">
+		  		{{ err }}
+			</div>
+		{% endif %}
+
+    {% for id, name in clinics.items() %}
+      {% include '/clinics/divs/clinic.html' %}                       
+    {% endfor %}
+            
+	</div>
+
+  <!-- Clinic modal -->
+  <div class="modal fade" id="clinicModal" tabindex="-1" aria-labelledby="clinicModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="clinicModalLabel">Поликлиника</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="clinicForm" novalidate>
+            <input type="hidden" id="clinicId">
+            <div class="form-group">
+                <label for="clinicName">Название поликлиники</label>
+                <input type="text" class="form-control" id="clinicName" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="commitModal">Сохранить</button>
+        </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- Delete modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Удалить сведения о поликлинике</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="deleteClinicId">
+        <p id="deleteModalText"></p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="deleteModalClose">Отмена</button>
+          <button type="button" class="btn btn-warning" data-bs-dismiss="modal" id="deleteModalCommit">Да, удалить</button>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', path='js/clinic.js') }}"></script>
+{% endblock %}

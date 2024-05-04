@@ -6,7 +6,6 @@ from fastapi import (
     Response,
     Request,
 )
-from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from models.user import User, UserUpdate

@@ -3,14 +3,15 @@ from fastapi import (
     HTTPException,
     status,
 )
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.orm import Session
 
 from database import get_session
 
-from models.clinic import ClinicUpdate, ClinicCreate, ClinicPK, ClinicDict
+from models.clinic import ClinicUpdate, ClinicCreate, ClinicPK
 
 from models.user import User
-from tables import Clinic
+from tables import Clinic, Child
 
 
 class ClinicService():
@@ -41,7 +42,6 @@ class ClinicService():
         clinics = dict()
         for clinic in query:
             clinics[clinic.id] = clinic.name
-
         return clinics
 
     def get_clinic_by_id(self, id: int) -> Clinic:
@@ -50,21 +50,54 @@ class ClinicService():
     def add_new_clinic(self, user: User, clinic_data: ClinicCreate):
         if user:
             clinic = Clinic(**clinic_data.dict())
-            self.session.add(clinic)
-            self.session.commit()
+            try:
+                self.session.add(clinic)
+                self.session.commit()
+                return clinic
+            except IntegrityError as e:
+                error_message = str(e.orig)
+                if "UNIQUE constraint failed" in error_message:
+                    error_message = "Данное имя поликлиники уже существует"
+                self.session.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=error_message
+                )
+            except SQLAlchemyError as e:
+                self.session.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Ошибка в работе базы данных при добавлении поликлиники"
+                )
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
-        return clinic
 
     def update_clinic(self, user: User, clinic_data: ClinicUpdate):
         if user:
             clinic = self._get_by_pk(clinic_data.id)
             for field, value in clinic_data:
                 setattr(clinic, field, value)
-            self.session.commit()
-            return clinic
+            
+            try:
+                self.session.commit()
+                return clinic
+            except IntegrityError as e:
+                error_message = str(e.orig)
+                if "UNIQUE constraint failed" in error_message:
+                    error_message = "Данное имя поликлиники уже существует"
+                self.session.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=error_message
+                )
+            except SQLAlchemyError as e:
+                self.session.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Ошибка в работе базы данных при обновлении поликлиники"
+                )
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -72,9 +105,21 @@ class ClinicService():
 
     def delete_clinic(self, user: User, clinic_pk: ClinicPK):
         if user:
+            if self.session.query(Child).filter_by(clinic_id=clinic_pk.id).first():
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Невозможно удалить поликлинику, так как есть дети, записанные в эту поликлинику"
+                )
             clinic = self._get_by_pk(clinic_pk.id)
-            self.session.delete(clinic)
-            self.session.commit()
+            try:
+                self.session.delete(clinic)
+                self.session.commit()
+            except SQLAlchemyError as e:
+                self.session.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Ошибка в работе базы данных при удалении поликлиники"
+                )
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
