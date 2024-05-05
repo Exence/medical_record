@@ -87,7 +87,7 @@
               <label for="clinic" class="form-label">Обслуживающая поликлиника</label>
               <select class="form-select" name="clinic_id" id="clinic_id" required>
                 {% for id, name in clinics.items() %}
-                  {% include '/clinics/options/clinic.html' %}                               
+                  {% include '/catalogs/clinics/options/clinic.html' %}                               
                 {% endfor %} 
               </select>
             </div> 

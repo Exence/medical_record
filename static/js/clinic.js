@@ -20,7 +20,7 @@ function editClinic(id, name) {
       var id = $('#clinicId').val();
       var name = $('#clinicName').val();
       $.ajax({
-          url: '/api/v1/clinics/',
+          url: '/api/v1/catalogs/clinics/',
           method: 'PUT',
           contentType: 'application/json',
           data: JSON.stringify({ id: id, name: name }),
@@ -45,7 +45,7 @@ function addClinic() {
       e.preventDefault();
       var name = $('#clinicName').val();
       $.ajax({
-          url: '/api/v1/clinics/',
+          url: '/api/v1/catalogs/clinics/',
           method: 'POST',
           contentType: 'application/json',
           data: JSON.stringify({ name: name }),
@@ -69,7 +69,7 @@ function deleteClinic(id, name) {
   $('#deleteModalCommit').click(function() {
     var id = $('#deleteClinicId').val();
     $.ajax({
-      url: '/api/v1/clinics/',
+      url: '/api/v1/catalogs/clinics/',
       method: 'DELETE',
       contentType: 'application/json',
       data: JSON.stringify({ id: id }),

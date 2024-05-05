@@ -34,4 +34,4 @@ async def show_all_clinics(request: Request,
     if err:
         err = unquote(err)
     clinics = service.get_all_clinics_as_dict()
-    return templates.TemplateResponse('clinics/index.html', {'request': request, 'clinics': clinics, 'msg': msg, 'err': err})
+    return templates.TemplateResponse('catalogs/clinics/index.html', {'request': request, 'clinics': clinics, 'msg': msg, 'err': err})
