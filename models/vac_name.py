@@ -22,8 +22,12 @@ class VacName(VacNamePK, VacNameBase):
 
 
 class VacNameDict(TypedDict):
+    id: int
     name: str
-    vac_type: str
+
+class VacNameTypeDict(TypedDict):
+    prof: dict[VacNameDict]
+    epid: dict[VacNameDict]
 
 
 class VacNameCreate(VacNameBase):

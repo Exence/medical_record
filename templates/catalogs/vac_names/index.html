@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Справочник наименований прививок</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-6 offset-3">
+                <h1 class="text-center">Справочник наименований прививок</h1>
+            </div>
+            <div class="col-3 d-flex justify-content-end align-items-center">
+                <button data-bs-toggle="modal" data-bs-target="#vacNameModal" class="btn btn-outline-success mx-2" onclick="addVacName()">Добавить</button>
+                <a href="/medical_record/all" class="btn btn-outline-primary">Все медкарты</a>
+            </div>
+        </div>
+
+        {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
+            </div>
+        {% endif %}
+        {% if err %}
+            <div class="alert alert-danger" role="alert">
+                {{ err }}
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-6">
+                <h2>Профилактические</h2>
+                {% for id, name in vac_names.prof.items() %}
+                    {% include '/catalogs/vac_names/divs/vac_name.html' %}
+                {% endfor %}
+            </div>
+            <div class="col-6">
+                <h2>По показаниям</h2>
+                {% for id, name in vac_names.epid.items() %}
+                    {% include '/catalogs/vac_names/divs/vac_name.html' %}
+                {% endfor %}
+            </div>
+        </div>
+
+        
+
+    </div>
+
+    <!-- Vac name modal -->
+    <div class="modal fade" id="vacNameModal" tabindex="-1" aria-labelledby="vacNameModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="vacNameModalLabel">Наименование прививки</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="vacNameForm" novalidate>
+                        <input type="hidden" id="vacNameId">
+                        <div class="form-group">
+                            <label for="vacName">Наименование прививки</label>
+                            <input type="text" class="form-control" id="vacName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vacType">Тип прививки</label>
+                            <select class="form-select" id="vacType" required>
+                                <option value="Профилактическая">Профилактическая</option>
+                                <option value="По показаниям">По показаниям</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" onclick="saveVacName()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', path='js/vac_name.js') }}"></script>
+{% endblock %}

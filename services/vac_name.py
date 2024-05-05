@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from database import get_session
 
-from models.vac_name import VacNameUpdate, VacNameCreate, VacNamePK, VacNameDict
+from models.vac_name import VacNameUpdate, VacNameCreate, VacNamePK, VacNameTypeDict
 
 from models.user import User
 from tables import VacName
@@ -32,16 +32,20 @@ class VacNameService():
             )
         return vac_name
 
-    def get_all_vac_names_as_dict(self) -> dict[VacNameDict]:
+    def get_all_vac_names_as_dict(self) -> VacNameTypeDict:
         query = (
             self.session
             .query(VacName)
             .all()
         )
-        vac_names = dict()
-        for vac in query:
-            vac_names[vac.id] = VacNameDict(
-                name=vac.name, vac_type=vac.vac_type)
+
+        vac_names = {'prof': {}, 'epid': {}}
+
+        for vac_name in query:
+            if vac_name.vac_type == 'Профилактическая':
+                vac_names['prof'][vac_name.id] = vac_name.name
+            elif vac_name.vac_type == 'По показаниям':
+                vac_names['epid'][vac_name.id] = vac_name.name
 
         return vac_names
 

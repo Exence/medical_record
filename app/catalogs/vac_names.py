@@ -19,8 +19,8 @@ from services.vac_name import VacNameService
 
 
 router = APIRouter(
-    prefix='/vaccine',
-    tags=['Vaccine']
+    prefix='/vac_name',
+    tags=['Vaccine Names']
 )
 templates = Jinja2Templates(directory="templates")
 

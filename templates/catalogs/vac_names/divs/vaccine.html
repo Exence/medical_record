@@ -1,0 +1,10 @@
+<div class="card mb-2" id="vacName{{ id }}">
+    <div class="card-body d-flex justify-content-between align-items-center">
+        <div class="align-self-center" id="vacName">{{ name }}</div>
+        <div class="align-self-center" id="vacType">{{ vac_type }}</div>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-sm btn-outline-primary mx-2" data-bs-toggle="modal" data-bs-target="#vacNameModal" onclick="editVacName('{{ id }}' , '{{ name }}', '{{ vac_type }}')">Редактировать</button>
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteVacName('{{ id }}' , '{{ name }}')">Удалить</button>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 window.addEventListener('load', (event) => {
-    document.cookie = 'err=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/clinics;';
-    document.cookie = 'msg=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/clinics;';
+    document.cookie = 'err=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/catalogs/clinics;';
+    document.cookie = 'msg=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/catalogs/clinics;';
 });
 
 function errorWithDetailText(xhr, error) {
@@ -26,12 +26,12 @@ function editClinic(id, name) {
           data: JSON.stringify({ id: id, name: name }),
           success: function() {
             document.cookie = `msg=${encodeURIComponent(`Поликлиника успешно обновлена`)}`;
-            window.location.href = "/clinics";
+            window.location.href = "/catalogs/clinics";
           },
           error: function(xhr, status, error) {
             const detailErr = errorWithDetailText(xhr,error);
             document.cookie = `err=${encodeURIComponent(`При попытке обновления записи сервер вернул ошибку: ${detailErr}`)}`;
-            window.location.href = "/clinics";
+            window.location.href = "/catalogs/clinics";
           } 
       });
     }
@@ -51,12 +51,12 @@ function addClinic() {
           data: JSON.stringify({ name: name }),
           success: function() {
             document.cookie = `msg=${encodeURIComponent(`Поликлиника успешно добавлена`)}`;
-            window.location.href = "/clinics";
+            window.location.href = "/catalogs/clinics";
           },
           error: function(xhr, status, error) {
             const detailErr = errorWithDetailText(xhr,error);
             document.cookie = `err=${encodeURIComponent(`При попытке добавления записи сервер вернул ошибку: ${detailErr}`)}`;
-            window.location.href = "/clinics";
+            window.location.href = "/catalogs/clinics";
           } 
       });
     }
@@ -75,12 +75,12 @@ function deleteClinic(id, name) {
       data: JSON.stringify({ id: id }),
       success: function() {
         document.cookie = `msg=${encodeURIComponent(`Поликлиника удалена`)}`;
-        window.location.href = "/clinics";
+        window.location.href = "/catalogs/clinics";
       },
       error: function(xhr, status, error) {
         const detailErr = errorWithDetailText(xhr,error);
         document.cookie = `err=${encodeURIComponent(`При попытке удаления записи сервер вернул ошибку: ${detailErr}`)}`;
-        window.location.href = "/clinics";
+        window.location.href = "/catalogs/clinics";
       }
   });
   });
