@@ -3,6 +3,7 @@ from fastapi import (
     HTTPException,
     status,
 )
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.orm import Session
 
 from database import get_session
@@ -10,7 +11,7 @@ from database import get_session
 from models.vac_name import VacNameUpdate, VacNameCreate, VacNamePK, VacNameTypeDict
 
 from models.user import User
-from tables import VacName
+from tables import VacName, Vaccination
 
 
 class VacNameService():
@@ -49,8 +50,8 @@ class VacNameService():
 
         return vac_names
 
-    def get_vac_name_by_pk(self, vac_name_pk: VacNamePK) -> VacName:
-        return self._get_by_pk(vac_name_pk.id)
+    def get_vac_name_by_id(self, id: int) -> VacName:
+        return self._get_by_pk(id)
 
     def get_vac_names_by_type(self, vac_type: str) -> list[VacName]:
         return (
@@ -65,20 +66,53 @@ class VacNameService():
         if user:
             vac_name = VacName(**vac_name_data.dict())
             self.session.add(vac_name)
-            self.session.commit()
+            try:
+                self.session.add(vac_name)
+                self.session.commit()
+                return vac_name
+            except IntegrityError as e:
+                error_message = str(e.orig)
+                if "UNIQUE constraint failed" in error_message:
+                    error_message = "Данное имя прививки уже существует"
+                self.session.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=error_message
+                )
+            except SQLAlchemyError as e:
+                self.session.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Ошибка в работе базы данных при добавлении прививки"
+                )
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
-        return vac_name
 
     def update_vac_name(self, user: User, vac_name_data: VacNameUpdate):
         if user:
             vac_name = self._get_by_pk(vac_name_data.id)
             for field, value in vac_name_data:
                 setattr(vac_name, field, value)
-            self.session.commit()
-            return vac_name
+            try:
+                self.session.commit()
+                return vac_name
+            except IntegrityError as e:
+                error_message = str(e.orig)
+                if "UNIQUE constraint failed" in error_message:
+                    error_message = "Данное имя прививки уже существует"
+                self.session.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=error_message
+                )
+            except SQLAlchemyError as e:
+                self.session.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Ошибка в работе базы данных при обновлении прививки"
+                )
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -86,6 +120,11 @@ class VacNameService():
 
     def delete_vac_name(self, user: User, vac_name_pk: VacNamePK):
         if user:
+            if self.session.query(Vaccination).filter_by(vac_name_id=vac_name_pk.id).first():
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Невозможно удалить прививку, так как есть дети, которые ей привиты"
+                )
             vac_name = self._get_by_pk(vac_name_pk.id)
             self.session.delete(vac_name)
             self.session.commit()

@@ -1,9 +1,11 @@
 from fastapi import (
     APIRouter,
+    Cookie,
     Depends,
     Response,
     Request,
 )
+from urllib.parse import unquote
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 
@@ -19,13 +21,23 @@ from services.vac_name import VacNameService
 
 
 router = APIRouter(
-    prefix='/vac_name',
-    tags=['Vaccine Names']
+    prefix='/vac_names',
+    tags=['Vaccine Name']
 )
 templates = Jinja2Templates(directory="templates")
 
 
-@router.post('/get_all')
-async def get_all_vaccine(service: VacNameService = Depends()):
+@router.get('/')
+async def show_all_clinics(request: Request,
+                           service: VacNameService = Depends(),
+                           msg: str = Cookie(None),
+                           err: str = Cookie(None)):
+    if msg:
+        msg = unquote(msg)
+    if err:
+        err = unquote(err)
     vac_names = service.get_all_vac_names_as_dict()
-    return vac_names
+    return templates.TemplateResponse('catalogs/vac_names/index.html', {'request': request,
+                                                                        'vac_names': vac_names,
+                                                                        'msg': msg,
+                                                                        'err': err})

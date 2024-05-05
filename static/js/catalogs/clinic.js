@@ -65,7 +65,7 @@ function addClinic() {
 
 function deleteClinic(id, name) {
   $('#deleteClinicId').val(id);
-  $('#deleteModalText').html(`Удалить сведения о "${name}"?`);
+  $('#deleteModalText').html(`Удалить поликлинику: "${name}"?`);
   $('#deleteModalCommit').click(function() {
     var id = $('#deleteClinicId').val();
     $.ajax({

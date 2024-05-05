@@ -26,7 +26,7 @@ from services.oauth2_scheme import OAuth2PasswordBearerWithCookie
 from services.user import UserService
 
 
-oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl='/sign-in')
+oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl='/api/v1/sign-in')
 
 
 def get_current_user(access_token: str = Depends(oauth2_scheme)) -> User:

@@ -46,7 +46,9 @@ sub_routers = [
     visit_specialist_control_router,
 ]
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/childrens/{medcard_num}'
+)
 
 for sub_router in sub_routers:
     router.include_router(sub_router)

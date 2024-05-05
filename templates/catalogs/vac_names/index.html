@@ -27,15 +27,17 @@
             </div>
         {% endif %}
 
-        <div class="row">
-            <div class="col-6">
+        <div class="row mt-2 mb-2">
+            <div class="col-6 pl-2">
                 <h2>Профилактические</h2>
+                {% set vac_type = 'Профилактическая' %}
                 {% for id, name in vac_names.prof.items() %}
                     {% include '/catalogs/vac_names/divs/vac_name.html' %}
                 {% endfor %}
             </div>
             <div class="col-6">
                 <h2>По показаниям</h2>
+                {% set vac_type = 'По показаниям' %} 
                 {% for id, name in vac_names.epid.items() %}
                     {% include '/catalogs/vac_names/divs/vac_name.html' %}
                 {% endfor %}
@@ -58,8 +60,8 @@
                     <form id="vacNameForm" novalidate>
                         <input type="hidden" id="vacNameId">
                         <div class="form-group">
-                            <label for="vacName">Наименование прививки</label>
-                            <input type="text" class="form-control" id="vacName" required>
+                            <label for="vacNameInput">Наименование прививки</label>
+                            <input type="text" class="form-control" id="vacNameInput" required>
                         </div>
                         <div class="form-group">
                             <label for="vacType">Тип прививки</label>
@@ -71,15 +73,34 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary" onclick="saveVacName()">Сохранить</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModal">Отмена</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="commitModal">Сохранить</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Delete modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Удалить сведения о поликлинике</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="deleteVacNameId">
+            <p id="deleteModalText"></p>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="deleteModalClose">Отмена</button>
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal" id="deleteModalCommit">Да, удалить</button>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', path='js/vac_name.js') }}"></script>
+    <script src="{{ url_for('static', path='js/catalogs/vac_name.js') }}"></script>
 {% endblock %}

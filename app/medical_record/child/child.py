@@ -32,13 +32,11 @@ from services.medical_record.ongoing_medical_supervision import OngoingMedicalSu
 from services.medical_record.screening import ScreeningService
 from services.vac_name import VacNameService
 
-from api import router as api_router
 
 router = APIRouter(
     prefix='/child/{medcard_num}',
     tags=['Child']
 )
-router.include_router(api_router)
 
 templates = Jinja2Templates(directory="templates")
 
