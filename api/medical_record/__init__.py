@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from .child import router as child_router
 from .allergy import router as allergy_router
 from .deworming import router as deworming_router
 from .dispensary import router as dispensary_router
@@ -23,6 +24,7 @@ from .visit_specialist_control import router as visit_specialist_control_router
 
 
 sub_routers = [
+    child_router,
     allergy_router,
     deworming_router,
     dispensary_router,

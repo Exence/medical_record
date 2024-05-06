@@ -100,6 +100,7 @@ class MedicalRecordService():
             medcard = self._get(medcard_num)
             self.session.delete(medcard)
             self.session.commit()
+            return {'detail': 'Medcard deleted'}
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN

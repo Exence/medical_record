@@ -70,8 +70,8 @@ class ChildEdit(ChildPK, ChildBase):
 
 
 class Child(ChildPK, ChildBase, ForeignIds):
-    father: Parent
-    mother: Parent
+    father: Parent | None
+    mother: Parent | None
     clinic: Clinic
     
     class Config:

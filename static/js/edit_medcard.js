@@ -3332,3 +3332,29 @@ delete_commit_modal_btn.addEventListener('click', () => {
             break;
     }
 })
+
+
+function deleteMedcard(medcard_num) {
+    var confirmDeleteString = document.getElementById("confirmDeleteString").innerText;
+    var confirmDeleteInput = document.getElementById("confirmDeleteInput").value;
+    if (confirmDeleteString === confirmDeleteInput) {
+        $.ajax({
+            type: "DELETE",
+            async: true,
+            url: "/api/v1/childrens/" + medcard_num,
+            data: null,
+            contentType: "application/json",
+            dataType: 'json',
+            success: () => {
+                alert('Медкарта была удалена');
+                window.location.href = "/medical_record/all";
+            },
+            error: () => {
+                alert('При удалении произошла ошибка')
+            }
+        }); 
+    } else {
+        alert(`Для удаления необходимо ввести в поле ввода текст: "${confirmDeleteString}"`)
+    }
+    
+}

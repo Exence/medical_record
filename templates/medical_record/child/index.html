@@ -326,6 +326,22 @@
           </div>
         </div>
       </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="screening-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#delete-collapse" aria-expanded="false" aria-controls="delete-collapse">
+            УДАЛИТЬ ДАННЫЕ ТЕКУЩЕЙ МЕДКАРТЫ
+          </button>
+        </h2>
+        <div id="delete-collapse" class="accordion-collapse collapse" aria-labelledby="delete-header">
+          <div class="accordion-body" >              
+            <p>Для удаления текущей медкарты введите: «<strong id="confirmDeleteString">УДАЛИТЬ {{ child.surname }} {{ child.name }} {{ child.patronymic }}</strong>» и нажмите кнопку «Удалить»</p>
+            <div class="w-100 d-flex justify-content-center align-items-center">
+              <input type="text" id="confirmDeleteInput" class="w-100 mt-2 me-2 px-2 py-1" placeholder="Введите: «УДАЛИТЬ {{ child.surname }} {{ child.name }} {{ child.patronymic }}»">
+              <button class="btn btn-outline-danger mt-2 ms-2" onclick="deleteMedcard('{{ child.medcard_num }}')">Удалить</button>
+            </div>            
+          </div>
+        </div>
+      </div>
 	</div>
 
   <!-- Child modal -->
