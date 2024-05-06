@@ -9,7 +9,7 @@ from models.clinic import (
     ClinicUpdate,
 )
 from models.user import User
-from services.clinic import ClinicService
+from services.catalogs.clinic import ClinicService
 from services.auth import get_current_user
 
 

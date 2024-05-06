@@ -17,7 +17,7 @@ from services.auth import (
     AuthService,
     get_current_user,
 )
-from services.vac_name import VacNameService
+from services.catalogs.vac_name import VacNameService
 
 
 router = APIRouter(

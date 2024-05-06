@@ -14,18 +14,22 @@ tub_record_commit_modal_btn.addEventListener('click', () => {
 const add_vac_report_btn = document.querySelector('#add-vac-report-btn')
 const vac_record_commit_modal_btn = document.querySelector('#vac-report-commit-modal');
 
-add_vac_report_btn.addEventListener('click', () => {
-    $.ajax({
-        type: "POST",
-        async: true,
-        url: "api/v1/vaccine/get_all",
-        success: (data) => {
-            let vac_name_modal_slct = document.querySelector('#vacReportVacName-modal');
-            data.forEach(vac => {
-                let vac_name = new Option(vac.name, vac.id);
-                vac_name_modal_slct.append(vac_name);
-            });
-            
+function fillVacNames() {
+    $.get('/api/v1/catalogs/vac_names', (data) => {
+        $('#vacReportVacName-modal').empty();
+        for (const vacType in data) {
+            for (const vacId in data[vacType]) {
+                const vacName = data[vacType][vacId];
+                $('#vacReportVacName-modal').append($('<option>', {
+                    value: vacId,
+                    text: vacName
+                }));
+            }
         }
     });
-})
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    fillVacNames();
+});
+

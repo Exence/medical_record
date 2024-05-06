@@ -31,7 +31,7 @@
                 <label for="prevaccinationCheckupVacName-modal" class="form-label">Прививка</label>
                 <select class="form-select" id="prevaccinationCheckupVacName-modal" required>
                   {% for vac_name in prof_vac_names %}
-                    {% include '/medical_record/child/main_divs/vac_name.html' %}
+                    {% include '/catalogs/vac_names/options/vac_name.html' %}
                   {% endfor %}
                 </select>
             </div>

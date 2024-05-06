@@ -10,7 +10,7 @@ from models.child import ChildEdit, CreateChildForm
 from models.user import User
 
 from services.auth import get_current_user
-from services.clinic import ClinicService
+from services.catalogs.clinic import ClinicService
 from services.kindergarten import KindergartenService
 from services.medical_record.medical_record import MedicalRecordService
 from services.medical_record.parent import ParentService

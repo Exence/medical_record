@@ -15,7 +15,7 @@ from services.auth import (
     AuthService, 
     get_current_user
 )
-from services.clinic import ClinicService
+from services.catalogs.clinic import ClinicService
 
 
 router = APIRouter(

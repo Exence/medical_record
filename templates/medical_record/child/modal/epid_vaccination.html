@@ -10,7 +10,7 @@
                     <label for="epidVaccinationVacName-modal" class="form-label">Прививка</label>
                     <select class="form-select" id="epidVaccinationVacName-modal" required>
                     {% for vac_name in epid_vac_names %}
-                        {% include '/medical_record/child/main_divs/vac_name.html' %}
+                        {% include '/catalogs/vac_names/options/vac_name.html' %}
                     {% endfor %}
                     </select>
                 </div>

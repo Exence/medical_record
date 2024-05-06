@@ -240,25 +240,14 @@ class PrevaccinationCheckup(BaseTable):
 
     medcard_num = sa.Column(sa.Integer, primary_key=True)
     examination_date = sa.Column(sa.Date, primary_key=True)
-    vac_name_id = sa.Column(sa.Integer)
+    vac_name_id = sa.Column(sa.Integer, sa.ForeignKey('vac_names.id', ondelete='RESTRICT'))
     age = sa.Column(sa.Integer, nullable=True)
     diagnosis = sa.Column(sa.String)
     report = sa.Column(sa.String)
     no_vac_date = sa.Column(sa.Date, nullable=True)
     doctor = sa.Column(sa.String)
-
-
-class PrevaccinationCheckupView(BaseTable):
-    __tablename__ = 'prevaccination_checkups_view'
-
-    medcard_num = sa.Column(sa.Integer, primary_key=True)
-    examination_date = sa.Column(sa.Date, primary_key=True)
-    name = sa.Column(sa.String)
-    age = sa.Column(sa.Integer, nullable=True)
-    diagnosis = sa.Column(sa.String)
-    report = sa.Column(sa.String)
-    no_vac_date = sa.Column(sa.Date, nullable=True)
-    doctor = sa.Column(sa.String)
+    
+    vac_name = relationship("VacName", foreign_keys="[PrevaccinationCheckup.vac_name_id]", primaryjoin="VacName.id == PrevaccinationCheckup.vac_name_id")
 
 
 class Screening(BaseTable):
@@ -340,7 +329,7 @@ class Vaccination(BaseTable):
     __tablename__ = 'vaccinations'
 
     medcard_num = sa.Column(sa.Integer, primary_key=True)
-    vac_name_id = sa.Column(sa.Integer, primary_key=True)
+    vac_name_id = sa.Column(sa.Integer, sa.ForeignKey('vac_names.id', ondelete='RESTRICT'), primary_key=True)
     vac_type = sa.Column(sa.String, primary_key=True)
     vac_date = sa.Column(sa.Date)    
     serial = sa.Column(sa.String)
@@ -348,6 +337,7 @@ class Vaccination(BaseTable):
     introduction_method = sa.Column(sa.String)
     reaction = sa.Column(sa.String)
     doctor = sa.Column(sa.String)
+
 
 
 class ProfVaccination(BaseTable):
@@ -363,7 +353,6 @@ class ProfVaccination(BaseTable):
     introduction_method = sa.Column(sa.String)
     reaction = sa.Column(sa.String)
     doctor = sa.Column(sa.String)
-
 
 class EpidVaccination(BaseTable):
     __tablename__ = 'epid_vaccinations'

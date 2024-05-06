@@ -30,7 +30,7 @@ from services.medical_record.tub_vac import TuberculosisVaccinationService
 from services.medical_record.medical_examination import MedicalExaminationService
 from services.medical_record.ongoing_medical_supervision import OngoingMedicalSupervisionService
 from services.medical_record.screening import ScreeningService
-from services.vac_name import VacNameService
+from services.catalogs.vac_name import VacNameService
 
 
 router = APIRouter(

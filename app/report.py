@@ -19,7 +19,7 @@ from services.auth import (
 )
 
 from services.report import ReportService
-from services.vac_name import VacNameService
+from services.catalogs.vac_name import VacNameService
 
 
 router = APIRouter(
@@ -65,7 +65,7 @@ def get_vac_report(request: Request,
                    user: User = Depends(get_current_user)):
     vaccinated_childrens = report_service.get_childrens_by_vaccine(
         user, form_data)
-    vac_name = vac_name_service.get_vac_name_by_pk({id: form_data.vac_name_id})
+    vac_name = vac_name_service.get_vac_name_by_id(form_data.vac_name_id)
     vaccination = {
         "vac_name": vac_name.name,
         "vac_type": form_data.vac_type,

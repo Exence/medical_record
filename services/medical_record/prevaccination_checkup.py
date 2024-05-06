@@ -11,7 +11,11 @@ from database import get_session
 
 from services.user import check_user_access_to_medcard
 
-from models.prevaccination_checkup import PrevaccinationCheckupUpdate, PrevaccinationCheckupCreate, PrevaccinationCheckupPK
+from models.prevaccination_checkup import (
+    PrevaccinationCheckup as PrevaccinationCheckupModel,
+    PrevaccinationCheckupUpdate, 
+    PrevaccinationCheckupCreate, 
+    PrevaccinationCheckupPK)
 from models.user import User
 from tables import PrevaccinationCheckup
 
@@ -35,7 +39,7 @@ class PrevaccinationCheckupService():
             )
         return prevaccination_checkup
 
-    def get_prevaccination_checkups_by_medcard_num(self, user: User, medcard_num: int) -> list[PrevaccinationCheckup]:
+    def get_prevaccination_checkups_by_medcard_num(self, user: User, medcard_num: int) -> list[PrevaccinationCheckupModel]:
         if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
             query = (
                 self.session.query(PrevaccinationCheckup)
@@ -43,11 +47,11 @@ class PrevaccinationCheckupService():
                 .order_by(PrevaccinationCheckup.examination_date)
             )
             prevaccination_checkups = query.all()
+            return prevaccination_checkups
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
-        return prevaccination_checkups
 
     def get_prevaccination_checkup_by_pk(self, user: User, prevaccination_checkup_pk: PrevaccinationCheckupPK):
         if check_user_access_to_medcard(user=user, medcard_num=prevaccination_checkup_pk.medcard_num):

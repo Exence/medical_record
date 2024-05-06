@@ -11,7 +11,7 @@ from database import get_session
 from models.vac_name import VacNameUpdate, VacNameCreate, VacNamePK, VacNameTypeDict
 
 from models.user import User
-from tables import VacName, Vaccination
+from tables import VacName, Vaccination, PrevaccinationCheckup
 
 
 class VacNameService():
@@ -124,6 +124,11 @@ class VacNameService():
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="Невозможно удалить прививку, так как есть дети, которые ей привиты"
+                )
+            if self.session.query(PrevaccinationCheckup).filter_by(vac_name_id=vac_name_pk.id).first():
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Невозможно удалить прививку, так как есть дети, которые осмотр перед данной прививкой"
                 )
             vac_name = self._get_by_pk(vac_name_pk.id)
             self.session.delete(vac_name)

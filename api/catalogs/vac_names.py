@@ -7,9 +7,10 @@ from models.vac_name import (
     VacName,
     VacNameCreate,
     VacNameUpdate,
+    VacNameTypeDict
 )
 from models.user import User
-from services.vac_name import VacNameService
+from services.catalogs.vac_name import VacNameService
 from services.auth import get_current_user
 
 
@@ -19,7 +20,7 @@ router = APIRouter(
 )
 
 
-@router.get('/', response_model=list[VacName])
+@router.get('/', response_model=VacNameTypeDict)
 async def get_vac_names(service: VacNameService = Depends()):
     return service.get_all_vac_names_as_dict()
 

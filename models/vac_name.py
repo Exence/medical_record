@@ -4,7 +4,6 @@ from pydantic import (
     Field,
     validator,
 )
-from typing import TypedDict
 
 
 class VacNamePK(BaseModel):
@@ -21,13 +20,25 @@ class VacName(VacNamePK, VacNameBase):
         orm_mode = True
 
 
-class VacNameDict(TypedDict):
-    id: int
-    name: str
+class VacNameTypeDict(BaseModel):
+    prof: dict[int, str]
+    epid: dict[int, str]
 
-class VacNameTypeDict(TypedDict):
-    prof: dict[VacNameDict]
-    epid: dict[VacNameDict]
+    class Config:
+        schema_extra = {
+            "example": {
+                        "prof": {
+                            1: "Прививка 1",
+                            2: "Прививка 2",
+                            3: "Прививка 3"
+                        },
+                        "epid": {
+                            4: "Прививка 4",
+                            5: "Прививка 5",
+                            6: "Прививка 6"
+                        }
+                    }
+        }
 
 
 class VacNameCreate(VacNameBase):

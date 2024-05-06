@@ -11,6 +11,8 @@ from pydantic import (
     validator,
 )
 
+from models.vac_name import VacName
+
 
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 REACTION_MATCH_PATTERN = re.compile(r"^(Не|За)медленная$")
@@ -32,6 +34,7 @@ class VaccinationBase(VaccinationPK):
 
 
 class Vaccination(VaccinationBase):
+    vac_name: VacName
 
     class Config:
         orm_mode = True

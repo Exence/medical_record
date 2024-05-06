@@ -1643,7 +1643,7 @@ function update_prevaccination_checkup(examination_date){
             prevaccination_checkup_examination_date_modal_dtpkr.value = prevaccination_checkup.examination_date;
             prevaccination_checkup_diagnosis_modal_inpt.value = prevaccination_checkup.diagnosis;
             prevaccination_checkup_report_modal_slct.value = prevaccination_checkup.report;
-            prevaccination_checkup_vac_name_modal_slct.value = prevaccination_checkup_vac_name_modal_slct.querySelector(`option[vac_id="${prevaccination_checkup.vac_name_id}"]`).value;
+            prevaccination_checkup_vac_name_modal_slct.value = prevaccination_checkup.vac_name_id;
             prevaccination_checkup_no_vac_date_modal_dtpkr.value = prevaccination_checkup.no_vac_date;
             prevaccination_checkup_doctor_modal_inpt.value = prevaccination_checkup.doctor;            
         }
@@ -1662,7 +1662,7 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
         "examination_date": prevaccination_checkup_examination_date_modal_dtpkr.value,
         "diagnosis": prevaccination_checkup_diagnosis_modal_inpt.value,
         "report": prevaccination_checkup_report_modal_slct.value,
-        "vac_name_id": prevaccination_checkup_vac_name_modal_slct[prevaccination_checkup_vac_name_modal_slct.selectedIndex].getAttribute('vac_id'),
+        "vac_name_id": prevaccination_checkup_vac_name_modal_slct.value,
         "no_vac_date": prevaccination_checkup_no_vac_date_modal_dtpkr.value? prevaccination_checkup_no_vac_date_modal_dtpkr.value : null,
         "doctor":  prevaccination_checkup_doctor_modal_inpt.value
     };
@@ -1676,8 +1676,9 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
                 contentType: "application/json",
                 dataType: 'json',
                 success: function(prevaccination_checkup_data) {
+                    const vac_name = prevaccination_checkup_vac_name_modal_slct.options[prevaccination_checkup_vac_name_modal_slct.selectedIndex].textContent;
                     innerHTML = '<div name="div-prevaccination-checkup-' + prevaccination_checkup.examination_date + '" class="col-12 mb-3">\
-                    <p><strong>' + prevaccination_checkup_vac_name_modal_slct.value + '</strong> Дата осмотра: <u><mark>' + prevaccination_checkup.examination_date + '</mark></u>, Возраст: <u><mark>' + prevaccination_checkup_data.age + '</mark></u>\
+                    <p><strong>' + vac_name + '</strong> Дата осмотра: <u><mark>' + prevaccination_checkup.examination_date + '</mark></u>, Возраст: <u><mark>' + prevaccination_checkup_data.age + '</mark></u>\
                     Диагноз: <u><mark>' + prevaccination_checkup.diagnosis + '</mark></u>, Заключение: <u><mark>' + prevaccination_checkup.report + '</mark></u> <br>'
                     if (prevaccination_checkup.no_vac_date){
                         innerHTML += '<strong>Мед. отвод до: </strong><u><mark>' + prevaccination_checkup.no_vac_date + '</mark></u> <br></br>'
@@ -1704,7 +1705,8 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
                     contentType: "application/json",
                     dataType: 'json',
                     success: function(prevaccination_checkup_data){                        
-                        innerHTML = '<p><strong>' + prevaccination_checkup_vac_name_modal_slct.value + '</strong> Дата осмотра: <u><mark>' + prevaccination_checkup.examination_date + '</mark></u>, Возраст: <u><mark>' + prevaccination_checkup_data.age + '</mark></u>\
+                        const vac_name = prevaccination_checkup_vac_name_modal_slct.options[prevaccination_checkup_vac_name_modal_slct.selectedIndex].textContent;
+                        innerHTML = '<p><strong>' + vac_name + '</strong> Дата осмотра: <u><mark>' + prevaccination_checkup.examination_date + '</mark></u>, Возраст: <u><mark>' + prevaccination_checkup_data.age + '</mark></u>\
                         Диагноз: <u><mark>' + prevaccination_checkup.diagnosis + '</mark></u>, Заключение: <u><mark>' + prevaccination_checkup.report + '</mark></u> <br>'
                         if (prevaccination_checkup.no_vac_date){
                             innerHTML += '<strong>Мед. отвод до: </strong><u><mark>' + prevaccination_checkup.no_vac_date + '</mark></u> <br></br>'
