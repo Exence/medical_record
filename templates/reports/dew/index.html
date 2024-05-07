@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	<title>Дегельминтизация</title>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h1 class="text-center">Дегельминтизация</h1>
+        <h3 class="text-center">Период: с <u><mark>{{ dew_diagnostic.start_date }}</mark></u> по <u><mark>{{ dew_diagnostic.end_date }}</mark></u></h3>
+        <div class="tub-diagnostic-header">
+             <p>
+                <strong>Всего: </strong> <u><mark>{{ dew_diagnostic.absolute }}</mark></u>, из них:<br>
+                <strong>Положительно: </strong> <u><mark>{{ dew_diagnostic.positive_count }}</mark></u><br>
+                <strong>Отрицательно: </strong> <u><mark>{{ dew_diagnostic.negative_count }}</mark></u><br>
+             </p> 
+        </div>
+        {% set count = namespace(n=1) %}
+        {% if dew_positive_childrens %}
+            <div class="col-12 me-auto">
+                <h3 class="text-center">Список детей с положительным результатом на энтеробиоз</h3>        
+                <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                    {% for child in dew_positive_childrens %}
+                        {% include '/medical_record/all/divs/child.html' %}                                
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        {% if dew_negative_childrens %}
+            {% set count.n = count.n + 1 %}
+            <div class="col-12 me-auto">
+                <h3 class="text-center">Список детей с отрицательным результатом на энтеробиоз</h3>      
+                <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                    {% for child in dew_negative_childrens %}
+                        {% include '/medical_record/all/divs/child.html' %}                                
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+	</div>
+{% endblock %}

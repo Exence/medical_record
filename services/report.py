@@ -4,10 +4,10 @@ from sqlalchemy.orm import Session
 
 from database import get_session
 
-from models.tub_diagnostic import TubDiagnostic
+from models.reports.tub_diagnostic import TubDiagnostic
 from models.user import User
 from models.vaccination import VacReport
-from tables import Child, MantouxTest, Vaccination
+from tables import Child, MantouxTest, Deworming, Vaccination
 
 
 class ReportService():
@@ -22,6 +22,17 @@ class ReportService():
                     .join(MantouxTest, Child.medcard_num == MantouxTest.medcard_num)
                     .filter(MantouxTest.result == mantoux_test_result)
                     .filter(MantouxTest.check_date.between(start_date, end_date))
+                    .all()
+            )
+    
+    def get_childrens_by_deworming_result(self, user: User, deworming_result: str, start_date: date, end_date: date) -> list[Child]:
+        if user:
+            return (
+                self.session
+                    .query(Child)
+                    .join(Deworming, Child.medcard_num == Deworming.medcard_num)
+                    .filter(Deworming.result == deworming_result)
+                    .filter(Deworming.deworming_date.between(start_date, end_date))
                     .all()
             )
 

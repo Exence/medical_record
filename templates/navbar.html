@@ -34,6 +34,7 @@
               <li><a class="dropdown-item" href="/reports/annual ">Годовой отчет</a></li>
               <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#vacReportModal" id="add-vac-report-btn">Отчет по прививкам</button></li>
               <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#tubReportModal" >Туберкулинодиагностика</button></li>
+              <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#dewReportModal" >Дегельминтизация</button></li>
             </ul>
           </li>
           <li class="nav-item">
@@ -47,39 +48,74 @@
     </div>
   </nav>
 <!-- MODALS -->
-  <div class="modal fade" id="tubReportModal" tabindex="-1" aria-labelledby="tubReportModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="tubReportModalLabel">Туберкулинодиагностика</h5><br>        
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group" >
-                <label for="tubReportStartDate-modal" class="form-label">С</label>
-                <div class="col-md-4">
-                    <input type="date" class="form-control" id="tubReportStartDate-modal" required>
-                </div>                    
-                <div class="invalid-feedback">
-                    Пожалуйста, введите дату отчета.
-                </div>
-            </div>
-            <div class="form-group" >
-                <label for="tubReportEndDate-modal" class="form-label">По</label>
-                <div class="col-md-4">
-                    <input type="date" class="form-control" id="tubReportEndDate-modal" required>
-                </div>                    
-                <div class="invalid-feedback">
-                    Пожалуйста, введите дату отчета.
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="tub-report-close-modal">Отмена</button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="tub-report-commit-modal">Сформировать отчет</button>
-        </div>
-    </div>
-    </div>
+<div class="modal fade" id="tubReportModal" tabindex="-1" aria-labelledby="tubReportModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="tubReportModalLabel">Туберкулинодиагностика</h5><br>        
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group" >
+              <label for="tubReportStartDate-modal" class="form-label">С</label>
+              <div class="col-md-4">
+                  <input type="date" class="form-control" id="tubReportStartDate-modal" required>
+              </div>                    
+              <div class="invalid-feedback">
+                  Пожалуйста, введите дату отчета.
+              </div>
+          </div>
+          <div class="form-group" >
+              <label for="tubReportEndDate-modal" class="form-label">По</label>
+              <div class="col-md-4">
+                  <input type="date" class="form-control" id="tubReportEndDate-modal" required>
+              </div>                    
+              <div class="invalid-feedback">
+                  Пожалуйста, введите дату отчета.
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="tub-report-close-modal">Отмена</button>
+      <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="tub-report-commit-modal">Сформировать отчет</button>
+      </div>
+  </div>
+  </div>
+</div>
+
+<div class="modal fade" id="dewReportModal" tabindex="-1" aria-labelledby="dewReportModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="dewReportModalLabel">Дегельминтизация</h5><br>        
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group" >
+              <label for="dewReportStartDate-modal" class="form-label">С</label>
+              <div class="col-md-4">
+                  <input type="date" class="form-control" id="dewReportStartDate-modal" required>
+              </div>                    
+              <div class="invalid-feedback">
+                  Пожалуйста, введите дату отчета.
+              </div>
+          </div>
+          <div class="form-group" >
+              <label for="dewReportEndDate-modal" class="form-label">По</label>
+              <div class="col-md-4">
+                  <input type="date" class="form-control" id="dewReportEndDate-modal" required>
+              </div>                    
+              <div class="invalid-feedback">
+                  Пожалуйста, введите дату отчета.
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="dew-report-close-modal">Отмена</button>
+      <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="dew-report-commit-modal">Сформировать отчет</button>
+      </div>
+  </div>
+  </div>
 </div>
 
 <div class="modal fade" id="vacReportModal" tabindex="-1" aria-labelledby="vacReportModalLabel" aria-hidden="true">

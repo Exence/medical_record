@@ -10,7 +10,8 @@ from fastapi.templating import Jinja2Templates
 
 from models.auth import Token
 from models.json import JsonForm
-from models.tub_diagnostic import TubDiagnostic
+from models.reports.tub_diagnostic import TubDiagnostic
+from models.reports.dew_diagnostic import DewDiagnostic
 from models.user import User
 from models.vaccination import VacReport
 from services.auth import (
@@ -53,6 +54,29 @@ def get_tub_diagnostic_report(start_date: date, end_date: date, request: Request
                                     "tub_doubtful_childrens": tub_doubtful_childrens,
                                     "tub_negative_childrens": tub_negative_childrens,
                                     "tub_diagnostic": tub_diagnostic
+                                    }
+    )
+
+
+@router.get('/deworming/{start_date}/{end_date}')
+def get_deworming_report(start_date: date, end_date: date, request: Request, service: ReportService = Depends(), user: User = Depends(get_current_user)):
+    dew_positive_childrens = service.get_childrens_by_deworming_result(
+        user, 'Положительно', start_date, end_date)
+    dew_negative_childrens = service.get_childrens_by_deworming_result(
+        user, 'Отрицательно', start_date, end_date)
+    positive = len(dew_positive_childrens)
+    negative = len(dew_negative_childrens)
+    absolute = positive + negative
+    dew_diagnostic = DewDiagnostic(start_date=start_date,
+                                   end_date=end_date,
+                                   absolute=absolute,
+                                   positive_count=positive,
+                                   negative_count=negative)
+    return templates.TemplateResponse(
+        "/reports/dew/index.html", {"request": request,
+                                    "dew_positive_childrens": dew_positive_childrens,
+                                    "dew_negative_childrens": dew_negative_childrens,
+                                    "dew_diagnostic": dew_diagnostic
                                     }
     )
 
