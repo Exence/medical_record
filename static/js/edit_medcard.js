@@ -238,7 +238,7 @@ const oms_commit_modal_btn = document.querySelector('#oms-commit-modal');
 /*********************************************************************************************/
 /* SCREENING CONST*/
 const screening_modal_header = document.querySelector('#screeningModalLabel');
-const screening_age_modal_slct = document.querySelector('#screeningAge-modal');
+const screening_examination_date_modal_dtpk = document.querySelector('#screeningExaminationDate-modal');
 const screening_questionnaire_test_modal_slct = document.querySelector('#screeningQuestionnaireTest-modal');
 const screening_height_modal_inpt = document.querySelector('#screeningHeight-modal');
 const screening_weight_modal_inpt = document.querySelector('#screeningWeight-modal');
@@ -280,7 +280,7 @@ function update_child(){
     $.ajax({
         type: "GET",
         async: true,
-        url: "/api/v1/childrens/get/" + medcard_num,
+        url: "/api/v1/childrens/" + medcard_num,
         success: function(child){
             child_surname_modal_inpt.value = child.surname;
             child_name_modal_inpt.value = child.name;
@@ -294,7 +294,7 @@ function update_child(){
             }
             child_group_num_modal_slct.value = child.group_num;
             child_address_modal_inpt.value = child.address;
-            child_clinic_modal_slct.value = child.clinic.trim();
+            child_clinic_modal_slct.value = child.clinic.id;
             child_entering_date_modal_dtpk.value = child.entering_date;
             child_family_characteristics_modal_slct.value = child.family_characteristics.trim();
             child_family_microclimate_modal_slct.value = child.family_microclimate;
@@ -306,7 +306,6 @@ function update_child(){
 
 child_commit_modal_btn.addEventListener('click', () => {
     var child = {
-        "medcard_num": medcard_num,
         "surname": child_surname_modal_inpt.value,
         "name": child_name_modal_inpt.value,
         "patronymic": child_patronymic_modal_inpt.value,
@@ -315,7 +314,7 @@ child_commit_modal_btn.addEventListener('click', () => {
         "sex": child_modal_rd.value[0],
         "group_num": child_group_num_modal_slct.value,
         "address": child_address_modal_inpt.value,
-        "clinic": child_clinic_modal_slct.value,
+        "clinic_id": child_clinic_modal_slct.value,
         "entering_date": child_entering_date_modal_dtpk.value,
         "family_characteristics": child_family_characteristics_modal_slct.value,
         "family_microclimate": child_family_microclimate_modal_slct.value,
@@ -323,17 +322,17 @@ child_commit_modal_btn.addEventListener('click', () => {
         "case_history": child_case_history_modal_txt.value
     } 
     $.ajax({
-        type: "POST",
+        type: "PUT",
         async: true,
-        url: "/api/v1/childrens/update",
+        url: "/api/v1/childrens/" + medcard_num,
         data: JSON.stringify(child),
         contentType: "application/json",
         dataType: 'json',
-        success: () => {
+        success: (response) => {
             let general_div = document.querySelector('#general-main-div');
             general_div.innerHTML = '<strong>' + child.surname + ' ' + child.name + ' ' + child.patronymic + '</strong> <u><mark>' + child.birthday + ' г.р.</mark></u>, пол: <u><mark>' + child.sex + '</mark></u>,\
             характеристика образовательного учреждения: <u><mark>ДДУ</mark></u>,\
-            дом. адрес (или адрес интернатного учреждения): <u><mark>' + child.address + '</mark></u>, обслуживающая поликлиника: <u><mark>' + child.clinic + '</mark></u>,\
+            дом. адрес (или адрес интернатного учреждения): <u><mark>' + child.address + '</mark></u>, обслуживающая поликлиника: <u><mark>' + response.clinic.name + '</mark></u>,\
             месяц, год поступления: <u><mark>' + child.entering_date + '</mark></u>';
             let anamnes_div = document.querySelector('#anamnes-main-div');
             innerHTML = '<p>Характеристика семьи: <u><mark>' + child.family_characteristics + '</mark></u>, микроклимат в семье: <u><mark>' + child.family_microclimate + '</mark></u>, \
@@ -367,7 +366,7 @@ allergy_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/allergy/add",
+                url: "/api/v1/childrens/" + medcard_num + "/allergyes/",
                 data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
@@ -394,9 +393,9 @@ allergy_commit_modal_btn.addEventListener('click', () => {
             const allergen_name = allergy_close_modal_btn.value;
             allergy["prev_allergen"] = allergen_name;
             $.ajax({
-                type: "POST",
+                type: "PUT",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/allergy/update",
+                url: "/api/v1/childrens/" + medcard_num + "/allergyes/",
                 data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
@@ -523,7 +522,7 @@ parent_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/parent/add",
+                url: "/api/v1/childrens/" + medcard_num + "/parents/",
                 data: JSON.stringify(parent),
                 contentType: "application/json",
                 dataType: 'json',
@@ -567,9 +566,9 @@ parent_commit_modal_btn.addEventListener('click', () => {
         case 'update':
             parent['id'] = parent_close_modal_btn.value;
             $.ajax({
-                type: "POST",
+                type: "PUT",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/parent/update",
+                url: "/api/v1/childrens/" + medcard_num + "/parents/",
                 data: JSON.stringify(parent),
                 contentType: "application/json",
                 dataType: 'json',
@@ -665,7 +664,7 @@ class_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/extra_class/add",
+                url: "/api/v1/childrens/" + medcard_num + "/extra_classes/",
                 data: JSON.stringify(extra_class),
                 contentType: "application/json",
                 dataType: 'json',
@@ -687,9 +686,9 @@ class_commit_modal_btn.addEventListener('click', () =>{
                 extra_class["prev_classes_type"] = prev_extra_classes_data[0];
                 extra_class["prev_age"] = prev_extra_classes_data[1];
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/extra_class/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/extra_classes/",
                     data: JSON.stringify(extra_class),
                     contentType: "application/json",
                     dataType: 'json',
@@ -730,7 +729,7 @@ function update_past_illness(diagnosis, start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/past_illness/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/past_illnesses/one",
         data: JSON.stringify(past_illness),
         contentType: "application/json",
         dataType: 'json',
@@ -756,14 +755,14 @@ past_illness_commit_modal_btn.addEventListener('click', () =>{
         "medcard_num": medcard_num,
         "diagnosis": past_illness_diagnosis_modal_inpt.value,
         "start_date": past_illness_start_date_modal_dtpkr.value,
-        "end_date": past_illness_end_date_modal_dtpkr.value?? null
+        "end_date": past_illness_end_date_modal_dtpkr.value || null
     }
     switch (past_illness_commit_modal_btn.value) {
         case 'add':
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/past_illness/add",
+                url: "/api/v1/childrens/" + medcard_num + "/past_illnesses/",
                 data: JSON.stringify(past_illness),
                 contentType: "application/json",
                 dataType: 'json',
@@ -785,9 +784,9 @@ past_illness_commit_modal_btn.addEventListener('click', () =>{
                 past_illness["prev_diagnosis"] = prev_past_illness_data[0];
                 past_illness["prev_start_date"] = prev_past_illness_data[1];
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/past_illness/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/past_illnesses/",
                     data: JSON.stringify(past_illness),
                     contentType: "application/json",
                     dataType: 'json',
@@ -827,7 +826,7 @@ function update_hospitalization(start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/hospitalization/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/hospitalizations/one",
         data: JSON.stringify(hospitalization),
         contentType: "application/json",
         dataType: 'json',
@@ -854,7 +853,7 @@ hospitalization_commit_modal_btn.addEventListener('click', () =>{
         "medcard_num": medcard_num,
         "diagnosis": hospitalization_diagnosis_modal_txt.value,
         "start_date": hospitalization_start_date_modal_dtpkr.value,
-        "end_date": hospitalization_end_date_modal_dtpkr.value? hospitalization_end_date_modal_dtpkr.value : null,
+        "end_date": hospitalization_end_date_modal_dtpkr.value || null,
         "founding": hospitalization_founding_modal_inpt.value
     }
     switch (hospitalization_commit_modal_btn.value) {
@@ -862,7 +861,7 @@ hospitalization_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/hospitalization/add",
+                url: "/api/v1/childrens/" + medcard_num + "/hospitalizations/",
                 data: JSON.stringify(hospitalization),
                 contentType: "application/json",
                 dataType: 'json',
@@ -884,9 +883,9 @@ hospitalization_commit_modal_btn.addEventListener('click', () =>{
             case 'update':
                 hospitalization["prev_start_date"] = hospitalization_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/hospitalization/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/hospitalizations/",
                     data: JSON.stringify(hospitalization),
                     contentType: "application/json",
                     dataType: 'json',
@@ -928,7 +927,7 @@ function update_spa_treatment(start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/spa_treatment/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/spa_treatments/one",
         data: JSON.stringify(spa_treatment),
         contentType: "application/json",
         dataType: 'json',
@@ -956,7 +955,7 @@ spa_treatment_commit_modal_btn.addEventListener('click', () =>{
         "medcard_num": medcard_num,
         "diagnosis": spa_treatment_diagnosis_modal_txt.value,
         "start_date": spa_treatment_start_date_modal_dtpkr.value,
-        "end_date": spa_treatment_end_date_modal_dtpkr.value? spa_treatment_end_date_modal_dtpkr.value : null,
+        "end_date": spa_treatment_end_date_modal_dtpkr.value || null,
         "founding_specialization": spa_treatment_founding_modal_inpt.value,
         "climatic_zone": spa_treatment_climatic_zone_modal_slct.value
     }
@@ -965,7 +964,7 @@ spa_treatment_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/spa_treatment/add",
+                url: "/api/v1/childrens/" + medcard_num + "/spa_treatments/",
                 data: JSON.stringify(spa_treatment),
                 contentType: "application/json",
                 dataType: 'json',
@@ -996,9 +995,9 @@ spa_treatment_commit_modal_btn.addEventListener('click', () =>{
             case 'update':
                 spa_treatment["prev_start_date"] = spa_treatment_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/spa_treatment/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/spa_treatments/",
                     data: JSON.stringify(spa_treatment),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1052,7 +1051,7 @@ function update_medical_certificate(disease, cert_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/medical_certificate/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/medical_certificates/one",
         data: JSON.stringify(medical_certificate),
         contentType: "application/json",
         dataType: 'json',
@@ -1084,8 +1083,8 @@ medical_certificate_commit_modal_btn.addEventListener('click', () => {
         "start_date": medical_certificate_start_date_modal_dtpkr.value,
         "end_date": medical_certificate_end_date_modal_dtpkr.value,
         "infection_contact": medical_certificate_infection_contact_modal_chk.checked,
-        "sport_exemption_date": medical_certificate_sport_exemption_date_modal_dpkr.value? medical_certificate_sport_exemption_date_modal_dpkr.value : null,
-        "vac_exemption_date": medical_certificate_vac_exemption_date_modal_dpkr.value? medical_certificate_vac_exemption_date_modal_dpkr.value : null,
+        "sport_exemption_date": medical_certificate_sport_exemption_date_modal_dpkr.value || null,
+        "vac_exemption_date": medical_certificate_vac_exemption_date_modal_dpkr.value || null,
         "doctor": medical_certificate_doctor_modal_inpt.value
     };
     switch (medical_certificate_commit_modal_btn.value) {
@@ -1093,7 +1092,7 @@ medical_certificate_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/medical_certificate/add",
+                url: "/api/v1/childrens/" + medcard_num + "/medical_certificates/",
                 data: JSON.stringify(medical_certificate),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1129,9 +1128,9 @@ medical_certificate_commit_modal_btn.addEventListener('click', () => {
                 medical_certificate["prev_disease"] = prev_data[0];
                 medical_certificate["prev_cert_date"] = prev_data[1];
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/medical_certificate/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/medical_certificates/",
                     data: JSON.stringify(medical_certificate),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1193,7 +1192,7 @@ function update_dispensary(start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/dispensary/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/dispensaryes/one",
         data: JSON.stringify(dispensary),
         contentType: "application/json",
         dataType: 'json',
@@ -1230,7 +1229,7 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/dispensary/add",
+                url: "/api/v1/childrens/" + medcard_num + "/dispensaryes/",
                 data: JSON.stringify(dispensary),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1262,9 +1261,9 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
             case 'update':
                 dispensary["prev_start_date"] = dispensary_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/dispensary/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/dispensaryes/",
                     data: JSON.stringify(dispensary),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1307,7 +1306,7 @@ function get_visit_specialist_control(start_dispanser_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_control/get_all",
+        url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_controls/all",
         data: JSON.stringify(visit_specialist_control),
         contentType: "application/json",
         dataType: 'json',
@@ -1360,14 +1359,14 @@ visit_specialist_control_commit_modal_btn.addEventListener('click', () => {
         "medcard_num": medcard_num,
         "start_dispanser_date": visit_specialist_control_add_btn.value,
         "assigned_date": visit_specialist_control_assigned_date_modal_dtpkr.value,
-        "fact_date": visit_specialist_control_fact_date_modal_dtpkr.value? visit_specialist_control_fact_date_modal_dtpkr.value : null
+        "fact_date": visit_specialist_control_fact_date_modal_dtpkr.value || null
     }
     switch (visit_specialist_control_commit_modal_btn.value) {
         case 'add':
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_control/add",
+                url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_controls/",
                 data: JSON.stringify(visit_specialist_control),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1385,11 +1384,11 @@ visit_specialist_control_commit_modal_btn.addEventListener('click', () => {
             break;
 
             case 'update':
-                visit_specialist_control["prev_assigned_date"] = visit_specialist_control_close_modal_btn.value? visit_specialist_control_close_modal_btn.value : null
+                visit_specialist_control["prev_assigned_date"] = visit_specialist_control_close_modal_btn.value || null
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_control/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_controls/",
                     data: JSON.stringify(visit_specialist_control),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1428,7 +1427,7 @@ function update_deworming(deworming_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/deworming/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/dewormings/one",
         data: JSON.stringify(deworming),
         contentType: "application/json",
         dataType: 'json',
@@ -1459,7 +1458,7 @@ deworming_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/deworming/add",
+                url: "/api/v1/childrens/" + medcard_num + "/dewormings/",
                 data: JSON.stringify(deworming),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1482,9 +1481,9 @@ deworming_commit_modal_btn.addEventListener('click', () =>{
             case 'update':
                 deworming["prev_deworming_date"] = deworming_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/deworming/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/dewormings/",
                     data: JSON.stringify(deworming),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1527,7 +1526,7 @@ function update_oral_sanation(sanation_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/oral_sanation/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/oral_sanations/one",
         data: JSON.stringify(oral_sanation),
         contentType: "application/json",
         dataType: 'json',
@@ -1560,7 +1559,7 @@ oral_sanation_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/oral_sanation/add",
+                url: "/api/v1/childrens/" + medcard_num + "/oral_sanations/",
                 data: JSON.stringify(oral_sanation),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1584,9 +1583,9 @@ oral_sanation_commit_modal_btn.addEventListener('click', () =>{
             case 'update':
                 oral_sanation["prev_sanation_date"] = oral_sanation_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/oral_sanation/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/oral_sanations/",
                     data: JSON.stringify(oral_sanation),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1632,7 +1631,7 @@ function update_prevaccination_checkup(examination_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkup/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkups/one",
         data: JSON.stringify(prevaccination_checkup),
         contentType: "application/json",
         dataType: 'json',
@@ -1663,7 +1662,7 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
         "diagnosis": prevaccination_checkup_diagnosis_modal_inpt.value,
         "report": prevaccination_checkup_report_modal_slct.value,
         "vac_name_id": prevaccination_checkup_vac_name_modal_slct.value,
-        "no_vac_date": prevaccination_checkup_no_vac_date_modal_dtpkr.value? prevaccination_checkup_no_vac_date_modal_dtpkr.value : null,
+        "no_vac_date": prevaccination_checkup_no_vac_date_modal_dtpkr.value || null,
         "doctor":  prevaccination_checkup_doctor_modal_inpt.value
     };
     switch (prevaccination_checkup_commit_modal_btn.value) {
@@ -1671,7 +1670,7 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkup/add",
+                url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkups/",
                 data: JSON.stringify(prevaccination_checkup),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1698,9 +1697,9 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
             case 'update':
                 prevaccination_checkup["prev_examination_date"] = prevaccination_checkup_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkup/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkups/",
                     data: JSON.stringify(prevaccination_checkup),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1749,7 +1748,7 @@ function update_prof_vaccination(vac_name_id, vac_type){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/prof_vaccination/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/prof_vaccinations/one",
         data: JSON.stringify(prof_vaccination),
         contentType: "application/json",
         dataType: 'json',
@@ -1757,7 +1756,7 @@ function update_prof_vaccination(vac_name_id, vac_type){
             prof_vaccination_modal_header.innerHTML = "Редактирование сведений об осмотре";
             prof_vaccination_commit_modal_btn.value = 'update';
             prof_vaccination_close_modal_btn.value = vac_name_id + '///' + vac_type;
-            prof_vaccination_vac_name_modal_slct.value = prof_vaccination_vac_name_modal_slct.querySelector(`option[vac_id="${prof_vaccination.vac_name_id}"]`).value;
+            prof_vaccination_vac_name_modal_slct.value = prof_vaccination.vac_name_id;
             prof_vaccination_vac_type_modal_slct.value = prof_vaccination_data.vac_type;
             prof_vaccination_date_modal_dtpk.value = prof_vaccination_data.vac_date;
             prof_vaccination_serial_modal_inpt.value = prof_vaccination_data.serial;
@@ -1778,7 +1777,7 @@ function delete_prof_vaccination(vac_name_id, vac_type){
 prof_vaccination_commit_modal_btn.addEventListener('click', () =>{    
     var prof_vaccination = {
         "medcard_num": medcard_num,
-        "vac_name_id": prof_vaccination_vac_name_modal_slct[prof_vaccination_vac_name_modal_slct.selectedIndex].getAttribute('vac_id'),
+        "vac_name_id": prof_vaccination_vac_name_modal_slct.value,
         "vac_type": prof_vaccination_vac_type_modal_slct.value,
         "vac_date": prof_vaccination_date_modal_dtpk.value,
         "serial":  prof_vaccination_serial_modal_inpt.value,
@@ -1792,13 +1791,13 @@ prof_vaccination_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/vaccination/add",
+                url: "/api/v1/childrens/" + medcard_num + "/vaccinations/",
                 data: JSON.stringify(prof_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
-                success: () => {
+                success: (vac) => {
                     innerHTML = '<div name="div-prof-vaccination-' + prof_vaccination.vac_name_id + '-' + prof_vaccination.vac_type.replace(/ /g,'') + '" class="col-12 mb-3">\
-                    <p><strong>' + prof_vaccination_vac_name_modal_slct.value + '</strong> <strong>' + prof_vaccination.vac_type + '</strong> Дата: <u><mark>' + prof_vaccination.vac_date + '</mark></u>, \
+                    <p><strong>' + vac.vac_name.name + '</strong> <strong>' + prof_vaccination.vac_type + '</strong> Дата: <u><mark>' + prof_vaccination.vac_date + '</mark></u>, \
                         серия: <u><mark>' + prof_vaccination.serial + '</mark></u>, доза: <u><mark>' + prof_vaccination.dose + '</mark></u>, \
                         способ введения: <u><mark>' + prof_vaccination.introduction_method + '</mark></u>, реакция: <u><mark>' + prof_vaccination.reaction + '</mark></u><br>\
                         Врач: <u><mark>' + prof_vaccination.doctor + '</mark></u>\
@@ -1819,14 +1818,14 @@ prof_vaccination_commit_modal_btn.addEventListener('click', () =>{
                 prof_vaccination["prev_vac_name_id"] = pk_data[0];
                 prof_vaccination["prev_vac_type"] = pk_data[1];
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/vaccination/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/vaccinations/",
                     data: JSON.stringify(prof_vaccination),
                     contentType: "application/json",
                     dataType: 'json',
-                    success: () => {
-                        innerHTML = '<p><strong>' + prof_vaccination_vac_name_modal_slct.value + '</strong> <strong>' + prof_vaccination.vac_type + '</strong> Дата: <u><mark>' + prof_vaccination.vac_date + '</mark></u>, \
+                    success: (vac) => {
+                        innerHTML = '<p><strong>' + vac.vac_name.name + '</strong> <strong>' + prof_vaccination.vac_type + '</strong> Дата: <u><mark>' + prof_vaccination.vac_date + '</mark></u>, \
                         серия: <u><mark>' + prof_vaccination.serial + '</mark></u>, доза: <u><mark>' + prof_vaccination.dose + '</mark></u>, \
                         способ введения: <u><mark>' + prof_vaccination.introduction_method + '</mark></u>, реакция: <u><mark>' + prof_vaccination.reaction + '</mark></u><br>\
                         Врач: <u><mark>' + prof_vaccination.doctor + '</mark></u>\
@@ -1868,7 +1867,7 @@ function update_epid_vaccination(vac_name_id, vac_type){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/epid_vaccination/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/epid_vaccinations/one",
         data: JSON.stringify(epid_vaccination),
         contentType: "application/json",
         dataType: 'json',
@@ -1876,7 +1875,7 @@ function update_epid_vaccination(vac_name_id, vac_type){
             epid_vaccination_modal_header.innerHTML = "Редактирование сведений об осмотре";
             epid_vaccination_commit_modal_btn.value = 'update';
             epid_vaccination_close_modal_btn.value = epid_vaccination.vac_name_id + '///' + epid_vaccination.vac_type;
-            epid_vaccination_vac_name_modal_slct.value = epid_vaccination_vac_name_modal_slct.querySelector(`option[vac_id="${epid_vaccination.vac_name_id}"]`).value;
+            epid_vaccination_vac_name_modal_slct.value = epid_vaccination.vac_name_id;
             epid_vaccination_vac_type_modal_slct.value = epid_vaccination.vac_type;
             epid_vaccination_date_modal_dtpk.value = epid_vaccination.vac_date;
             epid_vaccination_serial_modal_inpt.value = epid_vaccination.serial;
@@ -1897,8 +1896,7 @@ function delete_epid_vaccination(vac_name_id, vac_type){
 epid_vaccination_commit_modal_btn.addEventListener('click', () =>{    
     var epid_vaccination = {
         "medcard_num": medcard_num,
-        "vac_name_id": epid_vaccination_vac_name_modal_slct[epid_vaccination_vac_name_modal_slct.selectedIndex].getAttribute('vac_id'),
-        "vac_name": epid_vaccination_vac_name_modal_slct.value,
+        "vac_name_id": epid_vaccination_vac_name_modal_slct.value,
         "vac_type": epid_vaccination_vac_type_modal_slct.value,
         "vac_date": epid_vaccination_date_modal_dtpk.value,
         "serial":  epid_vaccination_serial_modal_inpt.value,
@@ -1912,13 +1910,13 @@ epid_vaccination_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/vaccination/add",
+                url: "/api/v1/childrens/" + medcard_num + "/vaccinations/",
                 data: JSON.stringify(epid_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
-                success: () => {
+                success: (vac) => {
                     innerHTML = '<div name="div-epid-vaccination-' + epid_vaccination.vac_name_id + '-' + epid_vaccination.vac_type.replace(/ /g,'') + '" class="col-12 mb-3">\
-                    <p><strong>' + epid_vaccination.vac_name + '</strong> <strong>' + epid_vaccination.vac_type + '</strong> Дата: <u><mark>' + epid_vaccination.vac_date + '</mark></u>, \
+                    <p><strong>' + vac.vac_name.name + '</strong> <strong>' + epid_vaccination.vac_type + '</strong> Дата: <u><mark>' + epid_vaccination.vac_date + '</mark></u>, \
                         серия: <u><mark>' + epid_vaccination.serial + '</mark></u>, доза: <u><mark>' + epid_vaccination.dose + '</mark></u>, \
                         способ введения: <u><mark>' + epid_vaccination.introduction_method + '</mark></u>, реакция: <u><mark>' + epid_vaccination.reaction + '</mark></u><br>\
                         Врач: <u><mark>' + epid_vaccination.doctor + '</mark></u>\
@@ -1939,14 +1937,14 @@ epid_vaccination_commit_modal_btn.addEventListener('click', () =>{
                 epid_vaccination["prev_vac_name_id"] = pk_data[0];
                 epid_vaccination["prev_vac_type"] = pk_data[1];
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/vaccination/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/vaccinations/",
                     data: JSON.stringify(epid_vaccination),
                     contentType: "application/json",
                     dataType: 'json',
-                    success: () => {
-                        innerHTML = '<p><strong>' + epid_vaccination.vac_name + '</strong> <strong>' + epid_vaccination.vac_type + '</strong> Дата: <u><mark>' + epid_vaccination.vac_date + '</mark></u>, \
+                    success: (vac) => {
+                        innerHTML = '<p><strong>' + vac.vac_name.name + '</strong> <strong>' + epid_vaccination.vac_type + '</strong> Дата: <u><mark>' + epid_vaccination.vac_date + '</mark></u>, \
                         серия: <u><mark>' + epid_vaccination.serial + '</mark></u>, доза: <u><mark>' + epid_vaccination.dose + '</mark></u>, \
                         способ введения: <u><mark>' + epid_vaccination.introduction_method + '</mark></u>, реакция: <u><mark>' + epid_vaccination.reaction + '</mark></u><br>\
                         Врач: <u><mark>' + epid_vaccination.doctor + '</mark></u>\
@@ -1987,7 +1985,7 @@ function update_gg_injection(vac_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/gg_injection/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/gg_injections/one",
         data: JSON.stringify(gg_injection),
         contentType: "application/json",
         dataType: 'json',
@@ -2026,7 +2024,7 @@ gg_injection_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/gg_injection/add",
+                url: "/api/v1/childrens/" + medcard_num + "/gg_injections/",
                 data: JSON.stringify(gg_injection),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2051,9 +2049,9 @@ gg_injection_commit_modal_btn.addEventListener('click', () =>{
             case 'update':
                 gg_injection["prev_vac_date"] = gg_injection_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/gg_injection/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/gg_injections/",
                     data: JSON.stringify(gg_injection),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2095,7 +2093,7 @@ function update_mantoux_test(check_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/mantoux_test/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/mantoux_tests/one",
         data: JSON.stringify(mantoux_test),
         contentType: "application/json",
         dataType: 'json',
@@ -2126,7 +2124,7 @@ mantoux_test_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/mantoux_test/add",
+                url: "/api/v1/childrens/" + medcard_num + "/mantoux_tests/",
                 data: JSON.stringify(mantoux_test),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2149,9 +2147,9 @@ mantoux_test_commit_modal_btn.addEventListener('click', () =>{
             case 'update':
                 mantoux_test["prev_check_date"] = mantoux_test_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/mantoux_test/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/mantoux_tests/",
                     data: JSON.stringify(mantoux_test),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2195,7 +2193,7 @@ function update_tub_vac(vac_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/tub_vac/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/tub_vacs/one",
         data: JSON.stringify(tub_vac),
         contentType: "application/json",
         dataType: 'json',
@@ -2230,7 +2228,7 @@ tub_vac_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/tub_vac/add",
+                url: "/api/v1/childrens/" + medcard_num + "/tub_vacs/",
                 data: JSON.stringify(tub_vac),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2254,9 +2252,9 @@ tub_vac_commit_modal_btn.addEventListener('click', () =>{
             case 'update':
                 tub_vac["prev_vac_date"] = tub_vac_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/tub_vac/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/tub_vacs/",
                     data: JSON.stringify(tub_vac),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2319,7 +2317,7 @@ function update_medical_examination(period){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/medical_examination/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/medical_examinations/one",
         data: JSON.stringify(medical_examination),
         contentType: "application/json",
         dataType: 'json',
@@ -2396,7 +2394,7 @@ medical_examination_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/medical_examination/add",
+                url: "/api/v1/childrens/" + medcard_num + "/medical_examinations/",
                 data: JSON.stringify(medical_examination),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2441,9 +2439,9 @@ medical_examination_commit_modal_btn.addEventListener('click', () =>{
             case 'update':
                 medical_examination["prev_period"] = medical_examination_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/medical_examination/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/medical_examinations/",
                     data: JSON.stringify(medical_examination),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2510,7 +2508,7 @@ function update_ongoing_medical_supervision(examination_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervision/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervisions/one",
         data: JSON.stringify(oms),
         contentType: "application/json",
         dataType: 'json',
@@ -2547,7 +2545,7 @@ oms_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervision/add",
+                url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervisions/",
                 data: JSON.stringify(oms),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2573,9 +2571,9 @@ oms_commit_modal_btn.addEventListener('click', () =>{
             case 'update':
                 oms["prev_examination_date"] = oms_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervision/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervisions/",
                     data: JSON.stringify(oms),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2617,23 +2615,23 @@ function screening_add_set_info(){
     screening_commit_modal_btn.value = 'add'; 
 }
 
-function update_screening(age){
+function update_screening(examination_date){
     var screening = {
         "medcard_num": medcard_num,
-        "age": age
+        "examination_date": examination_date
     }
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/screening/get_one",
+        url: "/api/v1/childrens/" + medcard_num + "/screenings/one",
         data: JSON.stringify(screening),
         contentType: "application/json",
         dataType: 'json',
         success: function(screening){
             screening_modal_header.innerHTML = "Редактирование скрининга";
             screening_commit_modal_btn.value = 'update';
-            screening_close_modal_btn.value = screening.age;
-            screening_age_modal_slct.value = screening.age;
+            screening_close_modal_btn.value = screening.examination_date;
+            screening_examination_date_modal_dtpk.value = screening.examination_date;
             screening_questionnaire_test_modal_slct.value = screening.questionnaire_test;
             screening_height_modal_inpt.value = screening.height;
             screening_weight_modal_inpt.value = screening.weight;
@@ -2673,28 +2671,28 @@ function delete_screening(age){
 screening_commit_modal_btn.addEventListener('click', () =>{ 
     var screening = {
         "medcard_num": medcard_num,
-        "age": screening_age_modal_slct.value,
+        "examination_date": screening_examination_date_modal_dtpk.value,
         "questionnaire_test": screening_questionnaire_test_modal_slct.value,
         "height": screening_height_modal_inpt.value,
         "weight": screening_weight_modal_inpt.value,
-        "physical_development": screening_physical_development_modal_slct.value? screening_physical_development_modal_slct.value : null,
-        "blood_pressures": screening_blood_pressures_modal_inpt.value? screening_blood_pressures_modal_inpt.value : null,
-        "carriage": screening_carriage_modal_slct.value? screening_carriage_modal_slct.value : null,
-        "foot_condition": screening_foot_condition_modal_slct.value? screening_foot_condition_modal_slct.value : null,
-        "sight_od": screening_sight_od_modal_inpt.value,
-        "sight_os": screening_sight_os_modal_inpt.value,
-        "visual_acuity": screening_visual_acuity_modal_slct.value? screening_visual_acuity_modal_slct.value : null,
-        "malinovsky_test": screening_malinovsky_test_modal_slct.value? screening_malinovsky_test_modal_slct.value : null,
-        "binocular_vision": screening_binocular_vision_modal_slct.value? screening_binocular_vision_modal_slct.value : null,
-        "hearing_acuteness": screening_hearing_acuteness_modal_slct.value? screening_hearing_acuteness_modal_slct.value : null,
-        "dynammetry_left": screening_dynammetry_left_modal_inpt.value,
-        "dynammetry_right": screening_dynammetry_right_modal_inpt.value,
-        "physical_fitness": screening_physical_fitness_modal_slct.value? screening_physical_fitness_modal_slct.value : null,
-        "protein_in_urine": screening_protein_in_urine_modal_slct.value? screening_protein_in_urine_modal_slct.value : null,
-        "glucose_in_urine": screening_glucose_in_urine_modal_slct.value? screening_glucose_in_urine_modal_slct.value : null,
-        "biological_age": screening_biological_age_modal_slct.value? screening_biological_age_modal_slct.value : null,
+        "physical_development": screening_physical_development_modal_slct.value || null,
+        "blood_pressures": screening_blood_pressures_modal_inpt.value || null,
+        "carriage": screening_carriage_modal_slct.value || null,
+        "foot_condition": screening_foot_condition_modal_slct.value || null,
+        "sight_od": screening_sight_od_modal_inpt.value || null,
+        "sight_os": screening_sight_os_modal_inpt.value || null,
+        "visual_acuity": screening_visual_acuity_modal_slct.value || null,
+        "malinovsky_test": screening_malinovsky_test_modal_slct.value || null,
+        "binocular_vision": screening_binocular_vision_modal_slct.value || null,
+        "hearing_acuteness": screening_hearing_acuteness_modal_slct.value || null,
+        "dynammetry_left": screening_dynammetry_left_modal_inpt.value || null,
+        "dynammetry_right": screening_dynammetry_right_modal_inpt.value || null,
+        "physical_fitness": screening_physical_fitness_modal_slct.value || null,
+        "protein_in_urine": screening_protein_in_urine_modal_slct.value || null,
+        "glucose_in_urine": screening_glucose_in_urine_modal_slct.value || null,
+        "biological_age": screening_biological_age_modal_slct.value || null,
         "speech_defects": screening_speech_defects_modal_chck.checked,
-        "kern_test": screening_kern_test_modal_inpt.value? screening_kern_test_modal_inpt.value : null,
+        "kern_test": screening_kern_test_modal_inpt.value || null,
         "neurotic_disorders": screening_neurotic_disorders_modal_chck.checked,
         "thinking_and_speech_disorders": screening_thinking_and_speech_disorders_modal_chck.checked,
         "motor_development_disorders": screening_motor_development_disorders_modal_chck.checked,
@@ -2704,17 +2702,16 @@ screening_commit_modal_btn.addEventListener('click', () =>{
     };
     switch (screening_commit_modal_btn.value) {
         case 'add':
-            console.log(screening);
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/screening/add",
+                url: "/api/v1/childrens/" + medcard_num + "/screenings/",
                 data: JSON.stringify(screening),
                 contentType: "application/json",
                 dataType: 'json',
-                success: () => {
-                    innerHTML = '<div-screening-' + screening.age + '" class="col-12 mb-3">\
-                    <p>Возраст: <u><mark>' + screening.age + '</mark></u>, Анкетный тест: <u><mark>' + screening.questionnaire_test + '</mark></u>, \
+                success: (response) => {
+                    innerHTML = '<div name="div-screening-' + screening.examination_date + '" class="col-12 mb-3">\
+                    <p>Дата проведения: <u><mark>' + screening.examination_date + '</mark></u>, Возраст: <u><mark>' + response.age + '</mark></u>, Анкетный тест: <u><mark>' + screening.questionnaire_test + '</mark></u>, \
                         рост, см: <u><mark>' + screening.height + '</mark></u>, масса, кг: <u><mark>' + screening.weight + '</mark></u>, '
                         if (screening.physical_development){
                             innerHTML += 'Физическое развитие: <u><mark>' + screening.physical_development + '</mark></u>, '
@@ -2791,8 +2788,8 @@ screening_commit_modal_btn.addEventListener('click', () =>{
                         }    
                     innerHTML += '</p>\
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
-                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-' + screening.age + '-btn" onclick="update_screening(\'' + screening.age + '\')">Редактировать</button>\
-                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-screening-' + screening.age + '-btn" onclick="delete_screening(\'' + screening.age + '\')">Удалить</button>\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-' + screening.examination_date + '-btn" onclick="update_screening(\'' + screening.examination_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-screening-' + screening.examination_date + '-btn" onclick="delete_screening(\'' + screening.examination_date + '\')">Удалить</button>\
                     </div>\
                 </div>';
                     let screening_div = document.querySelector('#screening-main-div');
@@ -2802,16 +2799,16 @@ screening_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                screening["prev_age"] = screening_close_modal_btn.value;
+                screening["prev_examination_date"] = screening_close_modal_btn.value;
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/screening/update",
+                    url: "/api/v1/childrens/" + medcard_num + "/screenings/",
                     data: JSON.stringify(screening),
                     contentType: "application/json",
                     dataType: 'json',
-                    success: () => {
-                        innerHTML = '<p>Возраст: <u><mark>' + screening.age + '</mark></u>, Анкетный тест: <u><mark>' + screening.questionnaire_test + '</mark></u>, \
+                    success: (response) => {
+                        innerHTML = '<p>Дата проведения: <u><mark>' + screening.examination_date + '</mark></u>, Возраст: <u><mark>' + response.age + '</mark></u>, Анкетный тест: <u><mark>' + screening.questionnaire_test + '</mark></u>, \
                         рост, см: <u><mark>' + screening.height + '</mark></u>, масса, кг: <u><mark>' + screening.weight + '</mark></u>, '
                         if (screening.physical_development){
                             innerHTML += 'Физическое развитие: <u><mark>' + screening.physical_development + '</mark></u>, '
@@ -2888,12 +2885,12 @@ screening_commit_modal_btn.addEventListener('click', () =>{
                         }    
                     innerHTML += '</p>\
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
-                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-' + screening.age + '-btn" onclick="update_screening(\'' + screening.age + '\')">Редактировать</button>\
-                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-screening-' + screening.age + '-btn" onclick="delete_screening(\'' + screening.age + '\')">Удалить</button>\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-' + screening.examination_date + '-btn" onclick="update_screening(\'' + screening.examination_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-screening-' + screening.examination_date + '-btn" onclick="delete_screening(\'' + screening.examination_date + '\')">Удалить</button>\
                     </div>';
-                        let screening_div = document.getElementsByName('div-screening-' + screening.prev_age)[0]
+                        let screening_div = document.getElementsByName('div-screening-' + screening.prev_examination_date)[0]
                         screening_div.innerHTML = innerHTML;
-                        screening_div.setAttribute('name', 'div-screening-' + screening.age) 
+                        screening_div.setAttribute('name', 'div-screening-' + screening.examination_date) 
                     }
                 });
                 break;
@@ -2913,9 +2910,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "medcard_num": medcard_num
             };
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/allergy/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/allergyes/",
                 data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2931,9 +2928,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
             const parent_type = {"parent_type": close_delete_modal_btn.value}
             console.log(parent_type);
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/parent/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/parents/",
                 data: JSON.stringify(parent_type),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2965,9 +2962,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "age": extra_class_data[1]
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/extra_class/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/extra_classes/",
                 data: JSON.stringify(extra_class),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2987,9 +2984,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "start_date": past_illness_data[1]
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/past_illness/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/past_illnesses",
                 data: JSON.stringify(past_illness),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3007,9 +3004,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "start_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/hospitalization/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/hospitalizations",
                 data: JSON.stringify(hospitalization),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3027,9 +3024,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "start_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/spa_treatment/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/spa_treatments",
                 data: JSON.stringify(spa_treatment),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3049,9 +3046,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "cert_date": medical_certificate_data[1]
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/medical_certificate/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/medical_certificates",
                 data: JSON.stringify(medical_certificate),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3069,9 +3066,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "start_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/dispensary/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/dispensaryes",
                 data: JSON.stringify(dispensary),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3090,9 +3087,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "assigned_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_control/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_controls",
                 data: JSON.stringify(visit_specialist_control),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3110,9 +3107,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "deworming_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/deworming/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/dewormings",
                 data: JSON.stringify(deworming),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3130,9 +3127,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "sanation_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/oral_sanation/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/oral_sanations",
                 data: JSON.stringify(oral_sanation),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3150,9 +3147,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "examination_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkup/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkups",
                 data: JSON.stringify(prevaccination_checkup),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3172,9 +3169,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "vac_type": pk_data[1]
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/vaccination/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/vaccinations",
                 data: JSON.stringify(prof_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3194,9 +3191,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "vac_type": pk_data[1]
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/vaccination/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/vaccinations",
                 data: JSON.stringify(epid_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3214,9 +3211,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "vac_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/gg_injection/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/gg_injections",
                 data: JSON.stringify(gg_injection),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3234,9 +3231,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "check_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/mantoux_test/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/mantoux_tests",
                 data: JSON.stringify(mantoux_test),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3254,9 +3251,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "vac_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/tub_vac/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/tub_vacs",
                 data: JSON.stringify(tub_vac),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3274,9 +3271,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "period": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/medical_examination/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/medical_examinations",
                 data: JSON.stringify(medical_examination),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3294,9 +3291,9 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 "examination_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervision/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervisions",
                 data: JSON.stringify(oms),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3311,17 +3308,17 @@ delete_commit_modal_btn.addEventListener('click', () => {
         case 'delete_screening':
             var screening = {
                 "medcard_num": medcard_num,
-                "age": close_delete_modal_btn.value
+                "examination_date": close_delete_modal_btn.value
             }
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/screening/delete",
+                url: "/api/v1/childrens/" + medcard_num + "/screenings",
                 data: JSON.stringify(screening),
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
-                    var screening_div = document.getElementsByName('div-screening-' + screening.age)[0];
+                    var screening_div = document.getElementsByName('div-screening-' + screening.examination_date)[0];
                     screening_div.remove();
                 }
             });

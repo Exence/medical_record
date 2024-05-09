@@ -254,6 +254,7 @@ class Screening(BaseTable):
     __tablename__ = 'screenings'
 
     medcard_num = sa.Column(sa.Integer, primary_key=True)
+    examination_date = sa.Column(sa.Date, primary_key=True) 
     
     age = sa.Column(sa.Integer)
     questionnaire_test = sa.Column(sa.String)
@@ -337,6 +338,8 @@ class Vaccination(BaseTable):
     introduction_method = sa.Column(sa.String)
     reaction = sa.Column(sa.String)
     doctor = sa.Column(sa.String)
+
+    vac_name = relationship("VacName", foreign_keys="[Vaccination.vac_name_id]", primaryjoin="VacName.id == Vaccination.vac_name_id")
 
 
 

@@ -76,7 +76,7 @@ def show_all_medcards(request: Request,
     )
 
 
-@router.get('/child/get/{medcard_num}')
+@router.get('/childrens/get/{medcard_num}')
 async def get_child(medcard_num: int,
                     service: MedicalRecordService = Depends(),
                     user: User = Depends(get_current_user)):
@@ -84,7 +84,7 @@ async def get_child(medcard_num: int,
     return child
 
 
-@router.post('/child/update')
+@router.post('/childrens/update')
 async def update_child(medcard_data: ChildEdit,
                        service: MedicalRecordService = Depends(),
                        user: User = Depends(get_current_user)):

@@ -1,3 +1,4 @@
+from datetime import date
 from fastapi import (
     Depends,
     HTTPException,
@@ -17,11 +18,11 @@ class ScreeningService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, age: int) -> Screening:
+    def _get_by_pk(self, medcard_num: int, examination_date: date) -> Screening:
         screening = (
             self.session
             .query(Screening)
-            .filter_by(medcard_num=medcard_num, age=age)
+            .filter_by(medcard_num=medcard_num, examination_date=examination_date)
             .first()
         )
 
@@ -49,7 +50,7 @@ class ScreeningService():
     def get_screening_by_pk(self, user: User, screening_pk: ScreeningPK):
         if check_user_access_to_medcard(user=user, medcard_num=screening_pk.medcard_num):
             screening = self._get_by_pk(
-                screening_pk.medcard_num, screening_pk.age)
+                screening_pk.medcard_num, screening_pk.examination_date)
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -61,6 +62,7 @@ class ScreeningService():
             screening = Screening(**screening_data.dict())
             self.session.add(screening)
             self.session.commit()
+            self.session.refresh(screening)
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
@@ -70,21 +72,22 @@ class ScreeningService():
     def update_screening(self, user: User, screening_data: ScreeningUpdate):
         if check_user_access_to_medcard(user=user, medcard_num=screening_data.medcard_num):
             screening = self._get_by_pk(
-                screening_data.medcard_num, screening_data.prev_age)
+                screening_data.medcard_num, screening_data.prev_examination_date)
             for field, value in screening_data:
-                if field != 'prev_age':
+                if field != 'prev_examination_date':
                     setattr(screening, field, value)
             self.session.commit()
-            return screening
+            self.session.refresh(screening)
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN
             )
+        return screening
 
     def delete_screening(self, user: User, screening_pk: ScreeningPK):
         if check_user_access_to_medcard(user=user, medcard_num=screening_pk.medcard_num):
             screening = self._get_by_pk(
-                screening_pk.medcard_num, screening_pk.age)
+                screening_pk.medcard_num, screening_pk.examination_date)
             self.session.delete(screening)
             self.session.commit()
         else:

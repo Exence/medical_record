@@ -13,6 +13,7 @@ from models.user import User
 from services.auth import get_current_user
 from services.medical_record.medical_record import MedicalRecordService
 from services.medical_record.allergy import AllergyService
+from services.catalogs.clinic import ClinicService
 from services.medical_record.extra_class import ExtraClassService
 from services.medical_record.past_illness import PastIllnessService
 from services.medical_record.parent import ParentService
@@ -34,7 +35,7 @@ from services.catalogs.vac_name import VacNameService
 
 
 router = APIRouter(
-    prefix='/child/{medcard_num}',
+    prefix='/childrens/{medcard_num}',
     tags=['Child']
 )
 
@@ -47,6 +48,7 @@ def get_child_medcard(medcard_num: int, request: Request,
                       service: MedicalRecordService = Depends(),
                       parents_service: ParentService = Depends(),
                       allergy_service: AllergyService = Depends(),
+                      clinic_service: ClinicService = Depends(),
                       extra_class_service: ExtraClassService = Depends(),
                       past_illness_service: PastIllnessService = Depends(),
                       hospitalization_service: HospitalizationService = Depends(),
@@ -69,6 +71,7 @@ def get_child_medcard(medcard_num: int, request: Request,
     kindergartens = [{"number": user.kindergarten_num, "name": user.kindergarten_name}]
     allergyes = allergy_service.get_allergyes_by_medcard_num(
         user=user, medcard_num=medcard_num)
+    clinics = clinic_service.get_all_clinics_as_dict()
     extra_classes = extra_class_service.get_extra_classes_by_medcard_num(
         user=user, medcard_num=medcard_num)
     past_illnesses = past_illness_service.get_past_illnesses_by_medcard_num(
@@ -107,10 +110,11 @@ def get_child_medcard(medcard_num: int, request: Request,
     screenings = screening_service.get_screenings_by_medcard_num(
         user=user, medcard_num=medcard_num)
     return templates.TemplateResponse(
-        "/medical_record/child/index.html", {"request": request,
+        "/medical_record/childrens/index.html", {"request": request,
                                              "child": child,
                                              "kindergartens": kindergartens,
                                              "allergyes": allergyes,
+                                             "clinics": clinics,
                                              "father": father,
                                              "mother": mother,
                                              "extra_classes": extra_classes,

@@ -1,4 +1,5 @@
 from decimal import Decimal
+from datetime import date
 from fastapi import HTTPException
 from pydantic import (
     BaseModel,
@@ -9,10 +10,11 @@ from pydantic import (
 
 class ScreeningPK(BaseModel):
     medcard_num: int = Field(...)
-    age: int = Field(...)
+    examination_date: date = Field(...)
 
 
 class ScreeningBase(ScreeningPK):
+    age: int | None
     questionnaire_test: str = Field(...)
     height: Decimal = Field(...)
     weight: Decimal = Field(...)
@@ -146,4 +148,4 @@ class ScreeningCreate(ScreeningBase):
 
 
 class ScreeningUpdate(ScreeningBase):
-    prev_age: int = Field(...)
+    prev_examination_date: date = Field(...)

@@ -62,11 +62,8 @@ class ChildWithParentsView(ChildPK, ChildBase):
     mother_phone_num: int | None = Field(gt=80000000000, lt=90000000000)
 
 
-class ChildEdit(ChildPK, ChildBase):
-    kindergarten_name: str | None
-
-    class Config:
-        orm_mode = True
+class ChildEdit(ChildBase):
+    clinic_id: int = Field(...)
 
 
 class Child(ChildPK, ChildBase, ForeignIds):

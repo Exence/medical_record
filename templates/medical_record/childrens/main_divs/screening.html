@@ -1,5 +1,6 @@
-<div name="div-screening-{{ screening.age }}" class="col-12 mb-3">
-    <p>Возраст: <u><mark>{{ screening.age }}</mark></u>, Анкетный тест: <u><mark>{{ screening.questionnaire_test }}</mark></u>, 
+<div name="div-screening-{{ screening.examination_date }}" class="col-12 mb-3">
+    <p>Дата проведения: <u><mark>{{ screening.examination_date }}</mark></u>,  
+        Возраст: <u><mark>{{ screening.age }}</mark></u>, Анкетный тест: <u><mark>{{ screening.questionnaire_test }}</mark></u>, 
         рост, см: <u><mark>{{ screening.height }}</mark></u>, масса, кг: <u><mark>{{ screening.weight }}</mark></u>, 
         {% if screening.physical_development %}
             Физическое развитие: <u><mark>{{ screening.physical_development }}</mark></u>, 
@@ -76,7 +77,7 @@
         {% endif %}    
     </p>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-{{ screening.age }}-btn" onclick="update_screening('{{ screening.age }}')">Редактировать</button>
-        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-screening-{{ screening.age }}-btn" onclick="delete_screening('{{ screening.age }}')">Удалить</button>
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-{{ screening.examination_date }}-btn" onclick="update_screening('{{ screening.examination_date }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-screening-{{ screening.examination_date }}-btn" onclick="delete_screening('{{ screening.examination_date }}')">Удалить</button>
     </div>
 </div>

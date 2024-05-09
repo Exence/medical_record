@@ -37,6 +37,10 @@ class Parent(ParentPK, ParentBase):
     class Config:
         orm_mode = True
 
+class ParentsResponse(BaseModel):
+    father: Parent
+    mother: Parent
+
 
 class ParentCreate(ParentBase):
     parent_type: ParentType = Field(...)

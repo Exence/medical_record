@@ -10,7 +10,7 @@ from database import get_session
 from services.user import check_user_access_to_medcard
 
 from models.child import Child
-from models.parent import Parent, ParentUpdate, ParentCreate, ParentType
+from models.parent import Parent, ParentUpdate, ParentCreate, ParentsResponse
 from models.user import User
 
 from tables import Parent, Child
@@ -34,6 +34,16 @@ class ParentService():
                 detail='Parent is not found'
             )
         return parent
+    
+    def get_parents_by_medcard_num(self, user: User, medcard_num: int):
+        if user:
+            child = (self.session
+                     .query(Child)
+                     .filter_by(medcard_num=medcard_num)
+                     .first()
+                     )
+            
+            return ParentsResponse(father=child.father, mother=child.mother)
 
     def add_new_parent(self, user: User, medcard_num: int, parent_data: ParentCreate):
         if check_user_access_to_medcard(user=user, medcard_num=medcard_num):

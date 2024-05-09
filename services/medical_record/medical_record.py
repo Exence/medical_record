@@ -83,9 +83,9 @@ class MedicalRecordService():
                                       parent_data=mother_data) if mother_data else dict(id=None)
         return medcard
 
-    def update_medcard(self, user: User, medcard_data: ChildEdit):
-        if check_user_access_to_medcard(user=user, medcard_num=medcard_data.medcard_num):
-            medcard = self._get(medcard_data.medcard_num)
+    def update_medcard(self, user: User, medcard_num: int, medcard_data: ChildEdit):
+        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
+            medcard = self._get(medcard_num)
             for field, value in medcard_data:
                 setattr(medcard, field, value)
             self.session.commit()

@@ -14,12 +14,12 @@ from services.auth import get_current_user
 
 
 router = APIRouter(
-    prefix='/tub_vac',
+    prefix='/tub_vacs',
     tags=['Tuberculosis vaccination']
 )
 
 
-@router.post('/get_one')
+@router.post('/one')
 async def get_tub_vac(tub_vac_pk: TuberculosisVaccinationPK,
                       user: User = Depends(get_current_user),
                       service: TuberculosisVaccinationService = Depends()):
@@ -27,21 +27,21 @@ async def get_tub_vac(tub_vac_pk: TuberculosisVaccinationPK,
     return tub_vac
 
 
-@router.post('/add')
-async def add_extra_class(tub_vac_data: TuberculosisVaccinationCreate,
+@router.post('/')
+async def add_tub_vac(tub_vac_data: TuberculosisVaccinationCreate,
                           user: User = Depends(get_current_user),
                           service: TuberculosisVaccinationService = Depends()):
     service.add_new_tub_vac(user=user, tub_vac_data=tub_vac_data)
 
 
-@router.post('/update')
+@router.put('/')
 async def update_tub_vac(tub_vac_data: TuberculosisVaccinationUpdate,
                          user: User = Depends(get_current_user),
                          service: TuberculosisVaccinationService = Depends()):
     service.update_tub_vac(user=user, tub_vac_data=tub_vac_data)
 
 
-@router.post('/delete')
+@router.delete('/')
 async def delete_tub_vac(tub_vac_pk: TuberculosisVaccinationPK,
                          user: User = Depends(get_current_user),
                          service: TuberculosisVaccinationService = Depends()):

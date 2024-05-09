@@ -9,12 +9,12 @@ from services.auth import get_current_user
 
 
 router = APIRouter(
-    prefix='/epid_vaccination',
+    prefix='/epid_vaccinations',
     tags=['Epid vaccination']
 )
 
 
-@router.post('/get_one')
+@router.post('/one')
 async def get_epid_vaccination(epid_vaccination_pk: VaccinationPK,
                                user: User = Depends(get_current_user),
                                service: VaccinationService = Depends()):

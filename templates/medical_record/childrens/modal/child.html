@@ -11,7 +11,7 @@
                     <div class="">
                         <select class="form-select" name="kindergarten_name" id="kindergarten_name" disabled required>
                             {% for kindergarten in kindergartens %}
-                                {% include '/medical_record/child/main_divs/kindergarten_name.html' %}
+                                {% include '/medical_record/childrens/main_divs/kindergarten_name.html' %}
                             {% endfor %}
                         </select>
                     </div>
@@ -71,10 +71,9 @@
                 <div class="">
                     <label for="clinic" class="form-label">Обслуживающая поликлиника</label>
                     <select class="form-select" name="clinic" id="clinic" required>
-                        <option selected>Городская детская поликлиника №1</option>
-                        <option>Городская детская поликлиника №2</option>
-                        <option>Городская детская поликлиника №3</option>
-                        <option>Городская детская поликлиника №4</option>
+                        {% for id, name in clinics.items() %}
+                            {% include '/catalogs/clinics/options/clinic.html' %}                               
+                        {% endfor %} 
                     </select>
                 </div> 
                 <div class="col-12">
