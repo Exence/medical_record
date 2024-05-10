@@ -661,6 +661,7 @@ class_commit_modal_btn.addEventListener('click', () =>{
     }
     switch (class_commit_modal_btn.value) {
         case 'add':
+            console.log(extra_class);
             $.ajax({
                 type: "POST",
                 async: true,
@@ -2785,7 +2786,9 @@ screening_commit_modal_btn.addEventListener('click', () =>{
                             if (screening.social_contacts_disorders){
                                 innerHTML += 'Социальные контакты: <u><mark>Отклонение</mark></u>'
                             }
-                        }    
+                        }
+                        innerHTML += '<br>\
+                        Заболеваний за год: <u><mark>' + response.diseases_for_year + '</mark></u>'
                     innerHTML += '</p>\
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
                         <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-' + screening.examination_date + '-btn" onclick="update_screening(\'' + screening.examination_date + '\')">Редактировать</button>\
@@ -2882,7 +2885,9 @@ screening_commit_modal_btn.addEventListener('click', () =>{
                             if (screening.social_contacts_disorders){
                                 innerHTML += 'Социальные контакты: <u><mark>Отклонение</mark></u>'
                             }
-                        }    
+                        }
+                        innerHTML += '<br>\
+                        Заболеваний за год: <u><mark>' + response.diseases_for_year + '</mark></u>'
                     innerHTML += '</p>\
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
                         <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-' + screening.examination_date + '-btn" onclick="update_screening(\'' + screening.examination_date + '\')">Редактировать</button>\

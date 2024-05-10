@@ -53,7 +53,7 @@ async def create_user(request: Request,
     child_form = CreateChildForm(**form_data, kindergarten_num=user.kindergarten_num)
     msg = ""
     error = ""
-    if service.add_new_medcard(user=user, child_form=child_form, parent_service=parent_service):
+    if service.add_new_medcard_from_form(user=user, child_form=child_form, parent_service=parent_service):
         msg = "Новая медкарта успешно добавлена в систему"
     else:
         error = "Ошибка работы с БД при добавлении медкарты. Медкарта НЕ добавлена!"
@@ -74,18 +74,3 @@ def show_all_medcards(request: Request,
         "/medical_record/all/index.html", {"request": request,
                                            "kindergarten": kindergarten}
     )
-
-
-@router.get('/childrens/get/{medcard_num}')
-async def get_child(medcard_num: int,
-                    service: MedicalRecordService = Depends(),
-                    user: User = Depends(get_current_user)):
-    child = service.get_medcard_by_num(user=user, medcard_num=medcard_num)
-    return child
-
-
-@router.post('/childrens/update')
-async def update_child(medcard_data: ChildEdit,
-                       service: MedicalRecordService = Depends(),
-                       user: User = Depends(get_current_user)):
-    service.update_medcard(user=user, medcard_data=medcard_data)

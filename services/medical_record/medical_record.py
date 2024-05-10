@@ -55,8 +55,21 @@ class MedicalRecordService():
                 status_code=status.HTTP_403_FORBIDDEN
             )
         return medcard
+    
+    def add_new_medcard(self, user: User, child_data: ChildCreate):
+        if user:
+            medcard = Child(**child_data.dict())
+            self.session.add(medcard)
+            self.session.commit()
+            self.session.refresh(medcard)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        return medcard
 
-    def add_new_medcard(self, user: User, child_form: CreateChildForm, parent_service: ParentService):
+
+    def add_new_medcard_from_form(self, user: User, child_form: CreateChildForm, parent_service: ParentService):
         child_data = dict()
         for key, value in child_form:
             if key not in ['father', 'mother', 'kindergarten_name']:

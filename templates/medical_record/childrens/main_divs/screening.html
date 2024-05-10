@@ -72,9 +72,11 @@
                 Внимание и память: <u><mark>Отклонение</mark></u>, 
             {% endif %}
             {% if screening.social_contacts_disorders %}
-                Социальные контакты: <u><mark>Отклонение</mark></u>
+                Социальные контакты: <u><mark>Отклонение</mark></u>,
             {% endif %}
-        {% endif %}    
+        {% endif %}
+        <br>
+        Заболеваний за год: <u><mark>{{ screening.diseases_for_year }}</mark></u>
     </p>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#screeningModal" name="update-screening-{{ screening.examination_date }}-btn" onclick="update_screening('{{ screening.examination_date }}')">Редактировать</button>

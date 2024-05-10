@@ -23,10 +23,9 @@ LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")
 class ChildPK(BaseModel):
     medcard_num: int = Field(...)
 
-class ForeignIds(BaseModel):
+class ParentsIds(BaseModel):
     father_id: int | None
     mother_id: int | None
-    clinic_id: int = Field(...)
 
 
 class ChildBase(BaseModel):
@@ -40,6 +39,7 @@ class ChildBase(BaseModel):
     address: str = Field(..., max_length=250)
     edu_type: str = Field(default='ДДУ', max_length=25)
     entering_date: date = Field(...)
+    clinic_id: int = Field(...)
     family_characteristics: str = Field(...)
     family_microclimate: str = Field(...)
     rest_and_class_opportunities: str = Field(...)
@@ -63,10 +63,10 @@ class ChildWithParentsView(ChildPK, ChildBase):
 
 
 class ChildEdit(ChildBase):
-    clinic_id: int = Field(...)
+    pass
 
 
-class Child(ChildPK, ChildBase, ForeignIds):
+class Child(ChildPK, ChildBase, ParentsIds):
     father: Parent | None
     mother: Parent | None
     clinic: Clinic
