@@ -39,7 +39,7 @@ class ExtraClassService():
             self.session.query(ExtraClass)
             .filter_by(medcard_num=medcard_num)
             .order_by(ExtraClass.classes_type)
-            .all
+            .all()
         )
         return extra_classes
 
