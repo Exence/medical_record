@@ -129,15 +129,15 @@ class MedicalRecordService():
             )
         return medcards
     
-    def get_childrens_with_parents(self, user: User) -> list[ChildWithParents]:
-        childrens_with_parents = (
+    def get_children_with_parents(self, user: User) -> list[ChildWithParents]:
+        children_with_parents = (
                 self.session
                 .query(ChildWithParents)
                 .filter_by(kindergarten_num=user.kindergarten_num)
                 .order_by(ChildWithParents.group_num)
                 .all()
             )
-        return childrens_with_parents
+        return children_with_parents
     
     def get_parents_by_medcard_num(self, user: User, medcard_num: int, parent_service: ParentService):
         child = self.get_medcard_by_num(user=user, medcard_num=medcard_num)

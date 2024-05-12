@@ -50,7 +50,7 @@ sub_routers = [
 ]
 
 router = APIRouter(
-    prefix='/childrens/{medcard_num}'
+    prefix='/children/{medcard_num}'
 )
 
 for sub_router in sub_routers:

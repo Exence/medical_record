@@ -8,7 +8,7 @@ from services.medical_record.medical_record import MedicalRecordService
 from services.auth import get_current_user
 
 router = APIRouter(
-  prefix='/childrens',
+  prefix='/children',
   tags=['Child']
 )
 

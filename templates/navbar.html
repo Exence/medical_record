@@ -31,7 +31,7 @@
               Отчеты
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="/reports/annual ">Годовой отчет</a></li>
+              <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#annualReportModal" id="add-annual-report-btn">Годовой отчет</button></li>
               <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#vacReportModal" id="add-vac-report-btn">Отчет по прививкам</button></li>
               <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#tubReportModal" >Туберкулинодиагностика</button></li>
               <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#dewReportModal" >Дегельминтизация</button></li>
@@ -150,6 +150,37 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="vac-report-close-modal">Отмена</button>
             <button type="submit" class="btn btn-primary" id="vac-report-commit-modal">Сформировать отчет</button>
+          </div>
+        </form>
+  </div>
+  </div>
+</div>
+<div class="modal fade" id="annualReportModal" tabindex="-1" aria-labelledby="annualReportModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="annualReportModalLabel">Годовой отчет</h5><br> 
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="row g-3 needs-validation" id="annual-report-form" name="form_data" novalidate method="post" action="/reports/annual">          
+          <div class="col-md-6">
+            <label for="annualReportAnnualYear-modal" class="form-label">Год отчета</label>
+            <input type="text" name="year" id="annualReportAnnualYear-modal">
+          </div>
+          <div class="col-md-6">
+            <label for="annualReportannualType-modal" class="form-label">Тип</label>
+            <select class="form-select" name="age_type" id="annualReportannualType-modal" required>
+                <option selected>1-3 года</option>
+                <option>4-6 лет</option>
+                <option>Поступ. в 1 класс</option>
+            </select>
+          </div>
+      
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="annual-report-close-modal">Отмена</button>
+            <button type="submit" class="btn btn-primary" id="annual-report-commit-modal">Сформировать отчет</button>
           </div>
         </form>
   </div>

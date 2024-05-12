@@ -16,22 +16,22 @@
              </p> 
         </div>
         {% set count = namespace(n=1) %}
-        {% if dew_positive_childrens %}
+        {% if dew_positive_children %}
             <div class="col-12 me-auto">
                 <h3 class="text-center">Список детей с положительным результатом на энтеробиоз</h3>        
                 <div class="accordion col-12" id="accordionGroup{{ count.n }}">
-                    {% for child in dew_positive_childrens %}
+                    {% for child in dew_positive_children %}
                         {% include '/medical_record/all/divs/child.html' %}                                
                     {% endfor %}
                 </div>
             </div>
         {% endif %}
-        {% if dew_negative_childrens %}
+        {% if dew_negative_children %}
             {% set count.n = count.n + 1 %}
             <div class="col-12 me-auto">
                 <h3 class="text-center">Список детей с отрицательным результатом на энтеробиоз</h3>      
                 <div class="accordion col-12" id="accordionGroup{{ count.n }}">
-                    {% for child in dew_negative_childrens %}
+                    {% for child in dew_negative_children %}
                         {% include '/medical_record/all/divs/child.html' %}                                
                     {% endfor %}
                 </div>

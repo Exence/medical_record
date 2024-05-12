@@ -33,7 +33,7 @@ CREATE FUNCTION public.age_insert_trigger_fnc() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-NEW.age = EXTRACT(YEAR FROM age(NEW.examination_date, (SELECT birthday FROM childrens WHERE medcard_num = NEW.medcard_num)))::smallint;
+NEW.age = EXTRACT(YEAR FROM age(NEW.examination_date, (SELECT birthday FROM children WHERE medcard_num = NEW.medcard_num)))::smallint;
 RETURN NEW;
 END;
 $$;
@@ -42,20 +42,20 @@ $$;
 ALTER FUNCTION public.age_insert_trigger_fnc() OWNER TO postgres;
 
 --
--- Name: childrens_delete_trigger_fnc(); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: children_delete_trigger_fnc(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.childrens_delete_trigger_fnc() RETURNS trigger
+CREATE FUNCTION public.children_delete_trigger_fnc() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
 IF OLD.father_id IS NOT NULL THEN
-IF (SELECT count(*) FROM childrens WHERE father_id = OLD.father_id) = 0 THEN
+IF (SELECT count(*) FROM children WHERE father_id = OLD.father_id) = 0 THEN
 DELETE FROM parents WHERE id = OLD.father_id;
 END IF;
 END IF;
 IF OLD.mother_id IS NOT NULL THEN
-IF (SELECT count(*) FROM childrens WHERE mother_id = OLD.mother_id) = 0 THEN
+IF (SELECT count(*) FROM children WHERE mother_id = OLD.mother_id) = 0 THEN
 DELETE FROM parents WHERE id = OLD.mother_id;
 END IF;
 END IF;
@@ -64,7 +64,7 @@ END;
 $$;
 
 
-ALTER FUNCTION public.childrens_delete_trigger_fnc() OWNER TO postgres;
+ALTER FUNCTION public.children_delete_trigger_fnc() OWNER TO postgres;
 
 --
 -- Name: on_one_child(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -82,10 +82,10 @@ $$;
 ALTER FUNCTION public.on_one_child(abs integer, count integer) OWNER TO postgres;
 
 --
--- Name: on_thousand_childrens(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: on_thousand_children(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.on_thousand_childrens(abs integer, count integer) RETURNS numeric
+CREATE FUNCTION public.on_thousand_children(abs integer, count integer) RETURNS numeric
     LANGUAGE plpgsql
     AS $$
         BEGIN
@@ -94,7 +94,7 @@ CREATE FUNCTION public.on_thousand_childrens(abs integer, count integer) RETURNS
 $$;
 
 
-ALTER FUNCTION public.on_thousand_childrens(abs integer, count integer) OWNER TO postgres;
+ALTER FUNCTION public.on_thousand_children(abs integer, count integer) OWNER TO postgres;
 
 --
 -- Name: percent(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -152,10 +152,10 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: childrens; Type: TABLE; Schema: public; Owner: postgres
+-- Name: children; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.childrens (
+CREATE TABLE public.children (
     medcard_num integer NOT NULL,
     surname character varying(200) NOT NULL,
     name character varying(200) NOT NULL,
@@ -174,15 +174,15 @@ CREATE TABLE public.childrens (
     family_microclimate character varying(25) NOT NULL,
     rest_and_class_opportunities character varying(30) NOT NULL,
     case_history text,
-    CONSTRAINT childrens_family_characteristics_check CHECK (((family_characteristics = 'Полная'::bpchar) OR (family_characteristics = 'Неполная'::bpchar))),
-    CONSTRAINT childrens_family_microclimate_check CHECK ((((family_microclimate)::text = 'Благоприятный'::text) OR ((family_microclimate)::text = 'Неблагоприятный'::text))),
-    CONSTRAINT childrens_group_num_check CHECK (((group_num >= 1) AND (group_num <= 6))),
-    CONSTRAINT childrens_rest_and_class_opportunities_check CHECK ((((rest_and_class_opportunities)::text = 'Комната'::text) OR ((rest_and_class_opportunities)::text = 'Индивидуальный стол'::text) OR ((rest_and_class_opportunities)::text = 'Нет'::text))),
-    CONSTRAINT childrens_sex_check CHECK (((sex = 'М'::bpchar) OR (sex = 'Ж'::bpchar)))
+    CONSTRAINT children_family_characteristics_check CHECK (((family_characteristics = 'Полная'::bpchar) OR (family_characteristics = 'Неполная'::bpchar))),
+    CONSTRAINT children_family_microclimate_check CHECK ((((family_microclimate)::text = 'Благоприятный'::text) OR ((family_microclimate)::text = 'Неблагоприятный'::text))),
+    CONSTRAINT children_group_num_check CHECK (((group_num >= 1) AND (group_num <= 6))),
+    CONSTRAINT children_rest_and_class_opportunities_check CHECK ((((rest_and_class_opportunities)::text = 'Комната'::text) OR ((rest_and_class_opportunities)::text = 'Индивидуальный стол'::text) OR ((rest_and_class_opportunities)::text = 'Нет'::text))),
+    CONSTRAINT children_sex_check CHECK (((sex = 'М'::bpchar) OR (sex = 'Ж'::bpchar)))
 );
 
 
-ALTER TABLE public.childrens OWNER TO postgres;
+ALTER TABLE public.children OWNER TO postgres;
 
 --
 -- Name: kindergartens; Type: TABLE; Schema: public; Owner: postgres
@@ -216,10 +216,10 @@ CREATE TABLE public.parents (
 ALTER TABLE public.parents OWNER TO postgres;
 
 --
--- Name: all_childrens; Type: VIEW; Schema: public; Owner: postgres
+-- Name: all_children; Type: VIEW; Schema: public; Owner: postgres
 --
 
-CREATE VIEW public.all_childrens AS
+CREATE VIEW public.all_children AS
  SELECT c.medcard_num,
     c.surname,
     c.name,
@@ -235,14 +235,14 @@ CREATE VIEW public.all_childrens AS
     m.name AS mother_name,
     m.patronymic AS mother_patronymic,
     m.phone_num AS mother_phone
-   FROM (((public.childrens c
+   FROM (((public.children c
      LEFT JOIN public.parents f ON ((c.father_id = f.id)))
      LEFT JOIN public.parents m ON ((c.mother_id = m.id)))
      JOIN public.kindergartens k ON ((c.kindergarten_num = k.number)))
   ORDER BY k.name, c.group_num, c.surname, c.name, c.patronymic;
 
 
-ALTER TABLE public.all_childrens OWNER TO postgres;
+ALTER TABLE public.all_children OWNER TO postgres;
 
 --
 -- Name: allergyes; Type: TABLE; Schema: public; Owner: postgres
@@ -263,10 +263,10 @@ CREATE TABLE public.allergyes (
 ALTER TABLE public.allergyes OWNER TO postgres;
 
 --
--- Name: childrens_medcard_num_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: children_medcard_num_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public.childrens_medcard_num_seq
+CREATE SEQUENCE public.children_medcard_num_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -275,13 +275,13 @@ CREATE SEQUENCE public.childrens_medcard_num_seq
     CACHE 1;
 
 
-ALTER TABLE public.childrens_medcard_num_seq OWNER TO postgres;
+ALTER TABLE public.children_medcard_num_seq OWNER TO postgres;
 
 --
--- Name: childrens_medcard_num_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: children_medcard_num_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.childrens_medcard_num_seq OWNED BY public.childrens.medcard_num;
+ALTER SEQUENCE public.children_medcard_num_seq OWNED BY public.children.medcard_num;
 
 
 --
@@ -688,10 +688,10 @@ CREATE TABLE public.visit_specialist_controls (
 ALTER TABLE public.visit_specialist_controls OWNER TO postgres;
 
 --
--- Name: childrens medcard_num; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: children medcard_num; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.childrens ALTER COLUMN medcard_num SET DEFAULT nextval('public.childrens_medcard_num_seq'::regclass);
+ALTER TABLE ONLY public.children ALTER COLUMN medcard_num SET DEFAULT nextval('public.children_medcard_num_seq'::regclass);
 
 
 --
@@ -719,10 +719,10 @@ COPY public.allergyes (medcard_num, allergen, allergy_type, start_age, reaction_
 
 
 --
--- Data for Name: childrens; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: children; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.childrens (medcard_num, surname, name, patronymic, kindergarten_num, birthday, sex, group_num, address, clinic, edu_type, entering_date, father_id, mother_id, family_characteristics, family_microclimate, rest_and_class_opportunities, case_history) FROM stdin;
+COPY public.children (medcard_num, surname, name, patronymic, kindergarten_num, birthday, sex, group_num, address, clinic, edu_type, entering_date, father_id, mother_id, family_characteristics, family_microclimate, rest_and_class_opportunities, case_history) FROM stdin;
 3	Иванов	Артем	Игоревич	1	2019-04-03	М	1	Полярные Зори, 4, кв. 37	Городская детская поликлиника №1	ДДУ	2022-09-12	18	19	Полная              	Благоприятный	Комната	До десятого колена все здоровы как быки
 4	Кудряшов	Иннокентий	Арсеньевич	1	2019-09-23	М	1	Мирная ул., д. 9 кв.199	Городская детская поликлиника №1	ДДУ	2022-07-27	20	21	Полная              	Благоприятный	Комната	
 5	Халипова	Таисия	Максимовна	1	2018-07-11	Ж	2	Чкалова ул., д. 6 кв.148	Городская детская поликлиника №1	ДДУ	2020-07-23	22	23	Полная              	Благоприятный	Комната	
@@ -942,10 +942,10 @@ COPY public.visit_specialist_controls (medcard_num, start_dispanser_date, assign
 
 
 --
--- Name: childrens_medcard_num_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: children_medcard_num_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.childrens_medcard_num_seq', 44, true);
+SELECT pg_catalog.setval('public.children_medcard_num_seq', 44, true);
 
 
 --
@@ -971,11 +971,11 @@ ALTER TABLE ONLY public.allergyes
 
 
 --
--- Name: childrens childrens_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: children children_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.childrens
-    ADD CONSTRAINT childrens_pkey PRIMARY KEY (medcard_num);
+ALTER TABLE ONLY public.children
+    ADD CONSTRAINT children_pkey PRIMARY KEY (medcard_num);
 
 
 --
@@ -1155,10 +1155,10 @@ ALTER TABLE ONLY public.visit_specialist_controls
 
 
 --
--- Name: childrens childrens_delete_trigger; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: children children_delete_trigger; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
-CREATE TRIGGER childrens_delete_trigger AFTER DELETE ON public.childrens FOR EACH ROW EXECUTE FUNCTION public.childrens_delete_trigger_fnc();
+CREATE TRIGGER children_delete_trigger AFTER DELETE ON public.children FOR EACH ROW EXECUTE FUNCTION public.children_delete_trigger_fnc();
 
 
 --
@@ -1201,31 +1201,31 @@ CREATE TRIGGER users_insert_trigger BEFORE INSERT ON public.users FOR EACH ROW E
 --
 
 ALTER TABLE ONLY public.allergyes
-    ADD CONSTRAINT allergyes_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT allergyes_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
--- Name: childrens childrens_father_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: children children_father_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.childrens
-    ADD CONSTRAINT childrens_father_id_fkey FOREIGN KEY (father_id) REFERENCES public.parents(id) ON DELETE SET NULL;
-
-
---
--- Name: childrens childrens_kindergarten_num_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.childrens
-    ADD CONSTRAINT childrens_kindergarten_num_fkey FOREIGN KEY (kindergarten_num) REFERENCES public.kindergartens(number) ON DELETE RESTRICT;
+ALTER TABLE ONLY public.children
+    ADD CONSTRAINT children_father_id_fkey FOREIGN KEY (father_id) REFERENCES public.parents(id) ON DELETE SET NULL;
 
 
 --
--- Name: childrens childrens_mother_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: children children_kindergarten_num_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.childrens
-    ADD CONSTRAINT childrens_mother_id_fkey FOREIGN KEY (mother_id) REFERENCES public.parents(id) ON DELETE SET NULL;
+ALTER TABLE ONLY public.children
+    ADD CONSTRAINT children_kindergarten_num_fkey FOREIGN KEY (kindergarten_num) REFERENCES public.kindergartens(number) ON DELETE RESTRICT;
+
+
+--
+-- Name: children children_mother_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.children
+    ADD CONSTRAINT children_mother_id_fkey FOREIGN KEY (mother_id) REFERENCES public.parents(id) ON DELETE SET NULL;
 
 
 --
@@ -1233,7 +1233,7 @@ ALTER TABLE ONLY public.childrens
 --
 
 ALTER TABLE ONLY public.dewormings
-    ADD CONSTRAINT dewormings_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT dewormings_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1241,7 +1241,7 @@ ALTER TABLE ONLY public.dewormings
 --
 
 ALTER TABLE ONLY public.dispensaryes
-    ADD CONSTRAINT dispensaryes_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT dispensaryes_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1249,7 +1249,7 @@ ALTER TABLE ONLY public.dispensaryes
 --
 
 ALTER TABLE ONLY public.extra_classes
-    ADD CONSTRAINT extra_classes_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT extra_classes_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1257,7 +1257,7 @@ ALTER TABLE ONLY public.extra_classes
 --
 
 ALTER TABLE ONLY public.gamma_globulin_injections
-    ADD CONSTRAINT gamma_globulin_injections_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT gamma_globulin_injections_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1265,7 +1265,7 @@ ALTER TABLE ONLY public.gamma_globulin_injections
 --
 
 ALTER TABLE ONLY public.hospitalizations
-    ADD CONSTRAINT hospitalizations_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT hospitalizations_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1273,7 +1273,7 @@ ALTER TABLE ONLY public.hospitalizations
 --
 
 ALTER TABLE ONLY public.mantoux_test
-    ADD CONSTRAINT mantoux_test_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT mantoux_test_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1281,7 +1281,7 @@ ALTER TABLE ONLY public.mantoux_test
 --
 
 ALTER TABLE ONLY public.medical_certificates
-    ADD CONSTRAINT medical_certificates_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT medical_certificates_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1289,7 +1289,7 @@ ALTER TABLE ONLY public.medical_certificates
 --
 
 ALTER TABLE ONLY public.medical_examinations
-    ADD CONSTRAINT medical_examinations_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT medical_examinations_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1297,7 +1297,7 @@ ALTER TABLE ONLY public.medical_examinations
 --
 
 ALTER TABLE ONLY public.ongoing_medical_supervisions
-    ADD CONSTRAINT ongoing_medical_supervisions_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT ongoing_medical_supervisions_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1305,7 +1305,7 @@ ALTER TABLE ONLY public.ongoing_medical_supervisions
 --
 
 ALTER TABLE ONLY public.oral_sanations
-    ADD CONSTRAINT oral_sanations_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT oral_sanations_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1313,7 +1313,7 @@ ALTER TABLE ONLY public.oral_sanations
 --
 
 ALTER TABLE ONLY public.past_illnesses
-    ADD CONSTRAINT past_illnesses_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT past_illnesses_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1321,7 +1321,7 @@ ALTER TABLE ONLY public.past_illnesses
 --
 
 ALTER TABLE ONLY public.prevaccination_checkups
-    ADD CONSTRAINT prevaccination_checkups_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT prevaccination_checkups_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1337,7 +1337,7 @@ ALTER TABLE ONLY public.prevaccination_checkups
 --
 
 ALTER TABLE ONLY public.screenings
-    ADD CONSTRAINT screenings_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT screenings_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1345,7 +1345,7 @@ ALTER TABLE ONLY public.screenings
 --
 
 ALTER TABLE ONLY public.spa_treatments
-    ADD CONSTRAINT spa_treatments_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT spa_treatments_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1353,7 +1353,7 @@ ALTER TABLE ONLY public.spa_treatments
 --
 
 ALTER TABLE ONLY public.tuberculosis_vaccinations
-    ADD CONSTRAINT tuberculosis_vaccinations_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT tuberculosis_vaccinations_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1369,7 +1369,7 @@ ALTER TABLE ONLY public.users
 --
 
 ALTER TABLE ONLY public.vaccinations
-    ADD CONSTRAINT vaccinations_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT vaccinations_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1385,7 +1385,7 @@ ALTER TABLE ONLY public.vaccinations
 --
 
 ALTER TABLE ONLY public.visit_specialist_controls
-    ADD CONSTRAINT visit_specialist_controls_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.childrens(medcard_num) ON DELETE CASCADE;
+    ADD CONSTRAINT visit_specialist_controls_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --

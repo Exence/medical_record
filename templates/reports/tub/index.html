@@ -17,33 +17,33 @@
              </p> 
         </div>
         {% set count = namespace(n=1) %}
-        {% if tub_positive_childrens %}
+        {% if tub_positive_children %}
             <div class="col-12 me-auto">
                 <h3 class="text-center">Список детей с положительным результатом теста Манту</h3>        
                 <div class="accordion col-12" id="accordionGroup{{ count.n }}">
-                    {% for child in tub_positive_childrens %}
+                    {% for child in tub_positive_children %}
                         {% include '/medical_record/all/divs/child.html' %}                                
                     {% endfor %}
                 </div>
             </div>
         {% endif %}
-        {% if tub_doubtful_childrens %}
+        {% if tub_doubtful_children %}
             {% set count.n = count.n + 1 %}
             <div class="col-12 me-auto">
                 <h3 class="text-center">Список детей с сомнительным результатом теста Манту</h3>
                 <div class="accordion col-12" id="accordionGroup{{ count.n }}">
-                    {% for child in tub_doubtful_childrens %}
+                    {% for child in tub_doubtful_children %}
                         {% include '/medical_record/all/divs/child.html' %}                                
                     {% endfor %}
                 </div>
             </div>
         {% endif %}
-        {% if tub_negative_childrens %}
+        {% if tub_negative_children %}
             {% set count.n = count.n + 1 %}
             <div class="col-12 me-auto">
                 <h3 class="text-center">Список детей с отрицательным результатом теста Манту</h3>      
                 <div class="accordion col-12" id="accordionGroup{{ count.n }}">
-                    {% for child in tub_negative_childrens %}
+                    {% for child in tub_negative_children %}
                         {% include '/medical_record/all/divs/child.html' %}                                
                     {% endfor %}
                 </div>

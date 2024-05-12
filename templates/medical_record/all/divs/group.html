@@ -2,7 +2,7 @@
     <div class="col-12 me-auto">
       <div class="fw-bold">Группа №{{ group_num }}</div>
       <div class="accordion col-12" id="accordionGroup{{ count.n }}">
-          {% for child in childrens %}
+          {% for child in children %}
                 {% include '/medical_record/all/divs/child.html' %}                                
           {% endfor %}
       </div>

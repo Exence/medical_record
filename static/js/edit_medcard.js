@@ -280,7 +280,7 @@ function update_child(){
     $.ajax({
         type: "GET",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num,
+        url: "/api/v1/children/" + medcard_num,
         success: function(child){
             child_surname_modal_inpt.value = child.surname;
             child_name_modal_inpt.value = child.name;
@@ -324,7 +324,7 @@ child_commit_modal_btn.addEventListener('click', () => {
     $.ajax({
         type: "PUT",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num,
+        url: "/api/v1/children/" + medcard_num,
         data: JSON.stringify(child),
         contentType: "application/json",
         dataType: 'json',
@@ -366,7 +366,7 @@ allergy_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/allergyes/",
+                url: "/api/v1/children/" + medcard_num + "/allergyes/",
                 data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
@@ -395,7 +395,7 @@ allergy_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "PUT",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/allergyes/",
+                url: "/api/v1/children/" + medcard_num + "/allergyes/",
                 data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
@@ -522,7 +522,7 @@ parent_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/parents/",
+                url: "/api/v1/children/" + medcard_num + "/parents/",
                 data: JSON.stringify(parent),
                 contentType: "application/json",
                 dataType: 'json',
@@ -568,7 +568,7 @@ parent_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "PUT",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/parents/",
+                url: "/api/v1/children/" + medcard_num + "/parents/",
                 data: JSON.stringify(parent),
                 contentType: "application/json",
                 dataType: 'json',
@@ -665,7 +665,7 @@ class_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/extra_classes/",
+                url: "/api/v1/children/" + medcard_num + "/extra_classes/",
                 data: JSON.stringify(extra_class),
                 contentType: "application/json",
                 dataType: 'json',
@@ -689,7 +689,7 @@ class_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/extra_classes/",
+                    url: "/api/v1/children/" + medcard_num + "/extra_classes/",
                     data: JSON.stringify(extra_class),
                     contentType: "application/json",
                     dataType: 'json',
@@ -730,7 +730,7 @@ function update_past_illness(diagnosis, start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/past_illnesses/one",
+        url: "/api/v1/children/" + medcard_num + "/past_illnesses/one",
         data: JSON.stringify(past_illness),
         contentType: "application/json",
         dataType: 'json',
@@ -763,7 +763,7 @@ past_illness_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/past_illnesses/",
+                url: "/api/v1/children/" + medcard_num + "/past_illnesses/",
                 data: JSON.stringify(past_illness),
                 contentType: "application/json",
                 dataType: 'json',
@@ -787,7 +787,7 @@ past_illness_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/past_illnesses/",
+                    url: "/api/v1/children/" + medcard_num + "/past_illnesses/",
                     data: JSON.stringify(past_illness),
                     contentType: "application/json",
                     dataType: 'json',
@@ -827,7 +827,7 @@ function update_hospitalization(start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/hospitalizations/one",
+        url: "/api/v1/children/" + medcard_num + "/hospitalizations/one",
         data: JSON.stringify(hospitalization),
         contentType: "application/json",
         dataType: 'json',
@@ -862,7 +862,7 @@ hospitalization_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/hospitalizations/",
+                url: "/api/v1/children/" + medcard_num + "/hospitalizations/",
                 data: JSON.stringify(hospitalization),
                 contentType: "application/json",
                 dataType: 'json',
@@ -886,7 +886,7 @@ hospitalization_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/hospitalizations/",
+                    url: "/api/v1/children/" + medcard_num + "/hospitalizations/",
                     data: JSON.stringify(hospitalization),
                     contentType: "application/json",
                     dataType: 'json',
@@ -928,7 +928,7 @@ function update_spa_treatment(start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/spa_treatments/one",
+        url: "/api/v1/children/" + medcard_num + "/spa_treatments/one",
         data: JSON.stringify(spa_treatment),
         contentType: "application/json",
         dataType: 'json',
@@ -965,7 +965,7 @@ spa_treatment_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/spa_treatments/",
+                url: "/api/v1/children/" + medcard_num + "/spa_treatments/",
                 data: JSON.stringify(spa_treatment),
                 contentType: "application/json",
                 dataType: 'json',
@@ -998,7 +998,7 @@ spa_treatment_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/spa_treatments/",
+                    url: "/api/v1/children/" + medcard_num + "/spa_treatments/",
                     data: JSON.stringify(spa_treatment),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1052,7 +1052,7 @@ function update_medical_certificate(disease, cert_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/medical_certificates/one",
+        url: "/api/v1/children/" + medcard_num + "/medical_certificates/one",
         data: JSON.stringify(medical_certificate),
         contentType: "application/json",
         dataType: 'json',
@@ -1093,7 +1093,7 @@ medical_certificate_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/medical_certificates/",
+                url: "/api/v1/children/" + medcard_num + "/medical_certificates/",
                 data: JSON.stringify(medical_certificate),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1131,7 +1131,7 @@ medical_certificate_commit_modal_btn.addEventListener('click', () => {
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/medical_certificates/",
+                    url: "/api/v1/children/" + medcard_num + "/medical_certificates/",
                     data: JSON.stringify(medical_certificate),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1193,7 +1193,7 @@ function update_dispensary(start_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/dispensaryes/one",
+        url: "/api/v1/children/" + medcard_num + "/dispensaryes/one",
         data: JSON.stringify(dispensary),
         contentType: "application/json",
         dataType: 'json',
@@ -1230,7 +1230,7 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/dispensaryes/",
+                url: "/api/v1/children/" + medcard_num + "/dispensaryes/",
                 data: JSON.stringify(dispensary),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1264,7 +1264,7 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/dispensaryes/",
+                    url: "/api/v1/children/" + medcard_num + "/dispensaryes/",
                     data: JSON.stringify(dispensary),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1307,7 +1307,7 @@ function get_visit_specialist_control(start_dispanser_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_controls/all",
+        url: "/api/v1/children/" + medcard_num + "/visit_specialist_controls/all",
         data: JSON.stringify(visit_specialist_control),
         contentType: "application/json",
         dataType: 'json',
@@ -1367,7 +1367,7 @@ visit_specialist_control_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_controls/",
+                url: "/api/v1/children/" + medcard_num + "/visit_specialist_controls/",
                 data: JSON.stringify(visit_specialist_control),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1389,7 +1389,7 @@ visit_specialist_control_commit_modal_btn.addEventListener('click', () => {
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_controls/",
+                    url: "/api/v1/children/" + medcard_num + "/visit_specialist_controls/",
                     data: JSON.stringify(visit_specialist_control),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1428,7 +1428,7 @@ function update_deworming(deworming_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/dewormings/one",
+        url: "/api/v1/children/" + medcard_num + "/dewormings/one",
         data: JSON.stringify(deworming),
         contentType: "application/json",
         dataType: 'json',
@@ -1459,7 +1459,7 @@ deworming_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/dewormings/",
+                url: "/api/v1/children/" + medcard_num + "/dewormings/",
                 data: JSON.stringify(deworming),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1484,7 +1484,7 @@ deworming_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/dewormings/",
+                    url: "/api/v1/children/" + medcard_num + "/dewormings/",
                     data: JSON.stringify(deworming),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1527,7 +1527,7 @@ function update_oral_sanation(sanation_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/oral_sanations/one",
+        url: "/api/v1/children/" + medcard_num + "/oral_sanations/one",
         data: JSON.stringify(oral_sanation),
         contentType: "application/json",
         dataType: 'json',
@@ -1560,7 +1560,7 @@ oral_sanation_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/oral_sanations/",
+                url: "/api/v1/children/" + medcard_num + "/oral_sanations/",
                 data: JSON.stringify(oral_sanation),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1586,7 +1586,7 @@ oral_sanation_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/oral_sanations/",
+                    url: "/api/v1/children/" + medcard_num + "/oral_sanations/",
                     data: JSON.stringify(oral_sanation),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1632,7 +1632,7 @@ function update_prevaccination_checkup(examination_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkups/one",
+        url: "/api/v1/children/" + medcard_num + "/prevaccination_checkups/one",
         data: JSON.stringify(prevaccination_checkup),
         contentType: "application/json",
         dataType: 'json',
@@ -1671,7 +1671,7 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkups/",
+                url: "/api/v1/children/" + medcard_num + "/prevaccination_checkups/",
                 data: JSON.stringify(prevaccination_checkup),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1700,7 +1700,7 @@ prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkups/",
+                    url: "/api/v1/children/" + medcard_num + "/prevaccination_checkups/",
                     data: JSON.stringify(prevaccination_checkup),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1749,7 +1749,7 @@ function update_prof_vaccination(vac_name_id, vac_type){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/prof_vaccinations/one",
+        url: "/api/v1/children/" + medcard_num + "/prof_vaccinations/one",
         data: JSON.stringify(prof_vaccination),
         contentType: "application/json",
         dataType: 'json',
@@ -1792,7 +1792,7 @@ prof_vaccination_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/vaccinations/",
+                url: "/api/v1/children/" + medcard_num + "/vaccinations/",
                 data: JSON.stringify(prof_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1821,7 +1821,7 @@ prof_vaccination_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/vaccinations/",
+                    url: "/api/v1/children/" + medcard_num + "/vaccinations/",
                     data: JSON.stringify(prof_vaccination),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1868,7 +1868,7 @@ function update_epid_vaccination(vac_name_id, vac_type){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/epid_vaccinations/one",
+        url: "/api/v1/children/" + medcard_num + "/epid_vaccinations/one",
         data: JSON.stringify(epid_vaccination),
         contentType: "application/json",
         dataType: 'json',
@@ -1911,7 +1911,7 @@ epid_vaccination_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/vaccinations/",
+                url: "/api/v1/children/" + medcard_num + "/vaccinations/",
                 data: JSON.stringify(epid_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1940,7 +1940,7 @@ epid_vaccination_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/vaccinations/",
+                    url: "/api/v1/children/" + medcard_num + "/vaccinations/",
                     data: JSON.stringify(epid_vaccination),
                     contentType: "application/json",
                     dataType: 'json',
@@ -1986,7 +1986,7 @@ function update_gg_injection(vac_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/gg_injections/one",
+        url: "/api/v1/children/" + medcard_num + "/gg_injections/one",
         data: JSON.stringify(gg_injection),
         contentType: "application/json",
         dataType: 'json',
@@ -2025,7 +2025,7 @@ gg_injection_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/gg_injections/",
+                url: "/api/v1/children/" + medcard_num + "/gg_injections/",
                 data: JSON.stringify(gg_injection),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2052,7 +2052,7 @@ gg_injection_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/gg_injections/",
+                    url: "/api/v1/children/" + medcard_num + "/gg_injections/",
                     data: JSON.stringify(gg_injection),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2094,7 +2094,7 @@ function update_mantoux_test(check_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/mantoux_tests/one",
+        url: "/api/v1/children/" + medcard_num + "/mantoux_tests/one",
         data: JSON.stringify(mantoux_test),
         contentType: "application/json",
         dataType: 'json',
@@ -2125,7 +2125,7 @@ mantoux_test_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/mantoux_tests/",
+                url: "/api/v1/children/" + medcard_num + "/mantoux_tests/",
                 data: JSON.stringify(mantoux_test),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2150,7 +2150,7 @@ mantoux_test_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/mantoux_tests/",
+                    url: "/api/v1/children/" + medcard_num + "/mantoux_tests/",
                     data: JSON.stringify(mantoux_test),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2194,7 +2194,7 @@ function update_tub_vac(vac_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/tub_vacs/one",
+        url: "/api/v1/children/" + medcard_num + "/tub_vacs/one",
         data: JSON.stringify(tub_vac),
         contentType: "application/json",
         dataType: 'json',
@@ -2229,7 +2229,7 @@ tub_vac_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/tub_vacs/",
+                url: "/api/v1/children/" + medcard_num + "/tub_vacs/",
                 data: JSON.stringify(tub_vac),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2255,7 +2255,7 @@ tub_vac_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/tub_vacs/",
+                    url: "/api/v1/children/" + medcard_num + "/tub_vacs/",
                     data: JSON.stringify(tub_vac),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2318,7 +2318,7 @@ function update_medical_examination(period){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/medical_examinations/one",
+        url: "/api/v1/children/" + medcard_num + "/medical_examinations/one",
         data: JSON.stringify(medical_examination),
         contentType: "application/json",
         dataType: 'json',
@@ -2395,7 +2395,7 @@ medical_examination_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/medical_examinations/",
+                url: "/api/v1/children/" + medcard_num + "/medical_examinations/",
                 data: JSON.stringify(medical_examination),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2442,7 +2442,7 @@ medical_examination_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/medical_examinations/",
+                    url: "/api/v1/children/" + medcard_num + "/medical_examinations/",
                     data: JSON.stringify(medical_examination),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2509,7 +2509,7 @@ function update_ongoing_medical_supervision(examination_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervisions/one",
+        url: "/api/v1/children/" + medcard_num + "/ongoing_medical_supervisions/one",
         data: JSON.stringify(oms),
         contentType: "application/json",
         dataType: 'json',
@@ -2546,7 +2546,7 @@ oms_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervisions/",
+                url: "/api/v1/children/" + medcard_num + "/ongoing_medical_supervisions/",
                 data: JSON.stringify(oms),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2574,7 +2574,7 @@ oms_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervisions/",
+                    url: "/api/v1/children/" + medcard_num + "/ongoing_medical_supervisions/",
                     data: JSON.stringify(oms),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2624,7 +2624,7 @@ function update_screening(examination_date){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/childrens/" + medcard_num + "/screenings/one",
+        url: "/api/v1/children/" + medcard_num + "/screenings/one",
         data: JSON.stringify(screening),
         contentType: "application/json",
         dataType: 'json',
@@ -2706,7 +2706,7 @@ screening_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/screenings/",
+                url: "/api/v1/children/" + medcard_num + "/screenings/",
                 data: JSON.stringify(screening),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2806,7 +2806,7 @@ screening_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/childrens/" + medcard_num + "/screenings/",
+                    url: "/api/v1/children/" + medcard_num + "/screenings/",
                     data: JSON.stringify(screening),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2917,7 +2917,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/allergyes/",
+                url: "/api/v1/children/" + medcard_num + "/allergyes/",
                 data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2935,7 +2935,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/parents/",
+                url: "/api/v1/children/" + medcard_num + "/parents/",
                 data: JSON.stringify(parent_type),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2969,7 +2969,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/extra_classes/",
+                url: "/api/v1/children/" + medcard_num + "/extra_classes/",
                 data: JSON.stringify(extra_class),
                 contentType: "application/json",
                 dataType: 'json',
@@ -2991,7 +2991,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/past_illnesses",
+                url: "/api/v1/children/" + medcard_num + "/past_illnesses",
                 data: JSON.stringify(past_illness),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3011,7 +3011,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/hospitalizations",
+                url: "/api/v1/children/" + medcard_num + "/hospitalizations",
                 data: JSON.stringify(hospitalization),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3031,7 +3031,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/spa_treatments",
+                url: "/api/v1/children/" + medcard_num + "/spa_treatments",
                 data: JSON.stringify(spa_treatment),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3053,7 +3053,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/medical_certificates",
+                url: "/api/v1/children/" + medcard_num + "/medical_certificates",
                 data: JSON.stringify(medical_certificate),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3073,7 +3073,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/dispensaryes",
+                url: "/api/v1/children/" + medcard_num + "/dispensaryes",
                 data: JSON.stringify(dispensary),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3094,7 +3094,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/visit_specialist_controls",
+                url: "/api/v1/children/" + medcard_num + "/visit_specialist_controls",
                 data: JSON.stringify(visit_specialist_control),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3114,7 +3114,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/dewormings",
+                url: "/api/v1/children/" + medcard_num + "/dewormings",
                 data: JSON.stringify(deworming),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3134,7 +3134,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/oral_sanations",
+                url: "/api/v1/children/" + medcard_num + "/oral_sanations",
                 data: JSON.stringify(oral_sanation),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3154,7 +3154,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/prevaccination_checkups",
+                url: "/api/v1/children/" + medcard_num + "/prevaccination_checkups",
                 data: JSON.stringify(prevaccination_checkup),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3176,7 +3176,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/vaccinations",
+                url: "/api/v1/children/" + medcard_num + "/vaccinations",
                 data: JSON.stringify(prof_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3198,7 +3198,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/vaccinations",
+                url: "/api/v1/children/" + medcard_num + "/vaccinations",
                 data: JSON.stringify(epid_vaccination),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3218,7 +3218,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/gg_injections",
+                url: "/api/v1/children/" + medcard_num + "/gg_injections",
                 data: JSON.stringify(gg_injection),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3238,7 +3238,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/mantoux_tests",
+                url: "/api/v1/children/" + medcard_num + "/mantoux_tests",
                 data: JSON.stringify(mantoux_test),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3258,7 +3258,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/tub_vacs",
+                url: "/api/v1/children/" + medcard_num + "/tub_vacs",
                 data: JSON.stringify(tub_vac),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3278,7 +3278,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/medical_examinations",
+                url: "/api/v1/children/" + medcard_num + "/medical_examinations",
                 data: JSON.stringify(medical_examination),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3298,7 +3298,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/ongoing_medical_supervisions",
+                url: "/api/v1/children/" + medcard_num + "/ongoing_medical_supervisions",
                 data: JSON.stringify(oms),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3318,7 +3318,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/childrens/" + medcard_num + "/screenings",
+                url: "/api/v1/children/" + medcard_num + "/screenings",
                 data: JSON.stringify(screening),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3343,7 +3343,7 @@ function deleteMedcard(medcard_num) {
         $.ajax({
             type: "DELETE",
             async: true,
-            url: "/api/v1/childrens/" + medcard_num,
+            url: "/api/v1/children/" + medcard_num,
             data: null,
             contentType: "application/json",
             dataType: 'json',

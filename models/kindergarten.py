@@ -24,5 +24,5 @@ class KindergartenUpdate(KindergartenBase):
     prev_number: int = Field(..., gt=-1, lt=1000)
 
 
-class KindergartenWithChildrens(TypedDict):
+class KindergartenWithchildren(TypedDict):
     groups: dict[list[ChildWithParentsView]]

@@ -1,0 +1,379 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	<title>Годовой отчет</title>
+{% endblock %}
+
+{% block content %}
+	<div class="container mb-4">
+		<h1 class="text-center mb-2">Годовой отчет</h1>
+        <h2 class="text-center mb-4">Период:  <u><mark>{{ report.year }} год</mark></u> Возраст:  <u><mark>{{ report.age_type.value }}</mark></u></h2>
+        <div class="report-header">
+             <h2 class="text-left my-4">
+                <strong>Всего детей в категории: </strong> <u><mark>{{ report.children_count }}</mark></u>, из них:<br>
+             </h2> 
+        </div>
+
+        <div class="col-12 me-auto">
+            {% set count = namespace(n=1) %}
+            <div class="accordion col-12" id="accordionGroupFrequentlyAbs">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFrequentlyAbs" aria-expanded="true" aria-controls="collapseFrequentlyAbs">
+                        <h3 class="text-left">Часто болеющих детей - <u><mark>{{ report.frequently_abs }}</mark></u> (<u><mark>{{ report.frequently_per }}%</mark></u>)</h3>
+                      </button>
+                    </h2>
+                    <div id="collapseFrequentlyAbs" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.frequently_abs %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.frequently_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupHealthIndx">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHealthIndx" aria-expanded="true" aria-controls="collapseHealthIndx">
+                        <h3 class="text-left">Индекс здоровья - <u><mark>{{ report.health_indx_abs }}</mark></u> (<u><mark>{{ report.health_indx_per }}%</mark></u>)</h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseHealthIndx" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.health_indx_abs %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.health_indx_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupDiseasesCount">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDiseasesCount" aria-expanded="true" aria-controls="collapseDiseasesCount">
+                        <h3 class="text-left">Общая заболеваемость</h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseDiseasesCount" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        <p>Число случаев (абсолютно) - <u><mark>{{ report.diseases_count_abs }}</mark></u> </p>
+                        <p>Число случаев (на 1000 детей) - <u><mark>{{ report.diseases_count_on_thousand }}</mark></u> </p>
+                        <p>Число дней, пропущенных по болезни (абсолютно) - <u><mark>{{ report.missed_days_abs }}</mark></u> </p>
+                        <p>Число дней, пропущенных по болезни (на 1 ребенка) - <u><mark>{{ report.missed_days_on_one }}</mark></u> </p>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupHealthGroup">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHealthGroup" aria-expanded="true" aria-controls="collapseHealthGroup">
+                        <h3 class="text-left">Группы здоровья</h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseHealthGroup" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        <h3 class="text-left">Первая - {{ report.first_health_group }}</h3>
+                        {% if report.first_health_group %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.first_health_group_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <h3 class="text-left">Вторая - {{ report.second_health_group }}</h3>
+                        {% if report.second_health_group %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.fsecond_health_group_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <h3 class="text-left">Третья - {{ report.third_health_group }}</h3>
+                        {% if report.third_health_group %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.third_health_group_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>                
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupTubPositive">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTubPositive" aria-expanded="true" aria-controls="collapseTubPositive">
+                        <h3 class="text-left">Положительные туб. пробы - <u><mark>{{ report.tub_positive }}</mark></u></h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseTubPositive" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.tub_positive %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.tub_positive_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupSpeechDefects">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpeechDefects" aria-expanded="true" aria-controls="collapseSpeechDefects">
+                        <h3 class="text-left">Дефекты речи - <u><mark>{{ report.speech_defects }}</mark></u></h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseSpeechDefects" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.speech_defects %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.speech_defects_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupPoorPosture">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePoorPosture" aria-expanded="true" aria-controls="collapsePoorPosture">
+                        <h3 class="text-left">Нарушение осанки - <u><mark>{{ report.poor_posture }}</mark></u></h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapsePoorPosture" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.poor_posture %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.poor_posture_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupScoliosis">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseScoliosis" aria-expanded="true" aria-controls="collapseScoliosis">
+                        <h3 class="text-left">Сколиоз - <u><mark>{{ report.scoliosis }}</mark></u></h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseScoliosis" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.scoliosis %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.scoliosis_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupPhysicalDevelopmentDisorders">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePhysicalDevelopmentDisorders" aria-expanded="true" aria-controls="collapsePhysicalDevelopmentDisorders">
+                        <h3 class="text-left">Отставание в физическом развитии - <u><mark>{{ report.physical_development_disorders }}</mark></u></h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapsePhysicalDevelopmentDisorders" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.physical_development_disorders %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.physical_development_disorders_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupNeuroticDisorders">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNeuroticDisorders" aria-expanded="true" aria-controls="collapseNeuroticDisorders">
+                        <h3 class="text-left">Невротические расстройства - <u><mark>{{ report.neurotic_disorders }}</mark></u></h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseNeuroticDisorders" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.neurotic_disorders %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.neurotic_disorders_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupThinkingAndSpeechDisorders">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThinkingAndSpeechDisorders" aria-expanded="true" aria-controls="collapseThinkingAndSpeechDisorders">
+                        <h3 class="text-left">Отклонения в мышлении и речи - <u><mark>{{ report.thinking_and_speech_disorders }}</mark></u></h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseThinkingAndSpeechDisorders" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.thinking_and_speech_disorders %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.thinking_and_speech_disorders_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupMotorDevelopmentDisorders">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMotorDevelopmentDisorders" aria-expanded="true" aria-controls="collapseMotorDevelopmentDisorders">
+                        <h3 class="text-left">Отклонения моторного развития - <u><mark>{{ report.motor_development_disorders }}</mark></u></h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseMotorDevelopmentDisorders" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.motor_development_disorders %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.motor_development_disorders_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupAttentionAndMemoryDisorders">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAttentionAndMemoryDisorders" aria-expanded="true" aria-controls="collapseAttentionAndMemoryDisorders">
+                        <h3 class="text-left">Отклонения внимания и памяти - <u><mark>{{ report.attention_and_memory_disorders }}</mark></u></h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseAttentionAndMemoryDisorders" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.attention_and_memory_disorders %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.attention_and_memory_disorders_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupSocialContactsDisorders">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSocialContactsDisorders" aria-expanded="true" aria-controls="collapseSocialContactsDisorders">
+                        <h3 class="text-left">Отклонения в социальных контактах - <u><mark>{{ report.social_contacts_disorders }}</mark></u></h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseSocialContactsDisorders" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.social_contacts_disorders %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.social_contacts_disorders_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion col-12" id="accordionGroupAllergyes">
+                <div class="accordion-item col-12">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAllergyes" aria-expanded="true" aria-controls="collapseAllergyes">
+                        <h3 class="text-left">Аллергические заболевания - <u><mark>{{ report.allergyes }}</mark></u></h3>
+                      </button>
+                    </h2>
+                    {% set count.n = count.n + 1 %}
+                    <div id="collapseAllergyes" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                      <div class="accordion-body">
+                        {% if report.allergyes %}
+                            {% set count.n = count.n + 1 %}
+                            <div class="accordion col-12" id="accordionGroup{{ count.n }}">
+                                {% for child in report.allergyes_list %}
+                                    {% include '/medical_record/all/divs/child.html' %}                                
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+       
+	</div>
+{% endblock %}

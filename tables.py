@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 BaseTable = declarative_base()
 
 class Child(BaseTable):
-    __tablename__ = 'childrens'
+    __tablename__ = 'children'
 
     medcard_num = sa.Column(sa.Integer, primary_key=True)
     kindergarten_num = sa.Column(sa.Integer)
@@ -33,7 +33,7 @@ class Child(BaseTable):
 
 
 class ChildWithParents(BaseTable):
-    __tablename__ = 'childrens_with_parents_view'
+    __tablename__ = 'children_with_parents_view'
 
     medcard_num = sa.Column(sa.Integer, primary_key=True)
     kindergarten_num = sa.Column(sa.Integer)
@@ -44,6 +44,7 @@ class ChildWithParents(BaseTable):
     sex = sa.Column(sa.String)
     group_num = sa.Column(sa.Integer)
     address = sa.Column(sa.String)
+    clinic_id = sa.Column(sa.Integer)
     clinic_name = sa.Column(sa.String)
     edu_type = sa.Column(sa.String)
     entering_date = sa.Column(sa.Date)

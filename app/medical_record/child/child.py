@@ -35,7 +35,7 @@ from services.catalogs.vac_name import VacNameService
 
 
 router = APIRouter(
-    prefix='/childrens/{medcard_num}',
+    prefix='/children/{medcard_num}',
     tags=['Child']
 )
 
@@ -110,7 +110,7 @@ def get_child_medcard(medcard_num: int, request: Request,
     screenings = screening_service.get_screenings_by_medcard_num(
         user=user, medcard_num=medcard_num)
     return templates.TemplateResponse(
-        "/medical_record/childrens/index.html", {"request": request,
+        "/medical_record/children/index.html", {"request": request,
                                              "child": child,
                                              "kindergartens": kindergartens,
                                              "allergyes": allergyes,

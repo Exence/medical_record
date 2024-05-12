@@ -68,7 +68,7 @@ async def create_user(request: Request,
 def show_all_medcards(request: Request,
                       service: KindergartenService = Depends(),
                       user: User = Depends(get_current_user)):
-    kindergarten = service.get_kindergarten_with_childrens(
+    kindergarten = service.get_kindergarten_with_children(
         user)
     return templates.TemplateResponse(
         "/medical_record/all/index.html", {"request": request,
