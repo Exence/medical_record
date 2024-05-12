@@ -1,11 +1,14 @@
 from fastapi import (
     APIRouter,
     Cookie,
+    HTTPException,
     Depends,
     Form,
     Response,
     Request,
+    
 )
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from models.user import User, UserUpdate
@@ -25,6 +28,13 @@ templates = Jinja2Templates(directory="templates")
 
 
 def update_user_data(request: Request, auth_service: AuthService, updated_user: User, msg: str):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
+        
     try:
         jwt_token = auth_service.create_token(
             user_data=updated_user
@@ -46,6 +56,13 @@ def update_user_data(request: Request, auth_service: AuthService, updated_user: 
 
 @router.get('/create')
 def show_create_user_form(request: Request):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
+        
     return templates.TemplateResponse(
         "/admins/users/create/index.html", {"request": request}
     )
@@ -53,6 +70,13 @@ def show_create_user_form(request: Request):
 
 @router.get('/all')
 def show_all_users(request: Request, service: UserService = Depends()):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
+        
     users = service.get_all_users()
     return templates.TemplateResponse(
         "/admins/users/all/index.html", {"request": request, "users": users}
@@ -60,23 +84,41 @@ def show_all_users(request: Request, service: UserService = Depends()):
 
 
 @router.get('/cabinet')
-def show_cabinet(request: Request,
-                   user: User = Depends(get_current_user)):
+def show_cabinet(request: Request):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        user = get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
+        
     return templates.TemplateResponse(
         "cabinet/index.html", {"request": request, "user": user}
     )
 
 @router.get('/update_profile')
-def show_update_user_form(request: Request,
-                   user: User = Depends(get_current_user)):
+def show_update_user_form(request: Request):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        user = get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
     return templates.TemplateResponse(
         "cabinet/update_profile.html", {"request": request, "user": user}
     ) 
+    
 @router.post('/update_profile')
 async def update_user(request: Request,
                 user_service: UserService = Depends(),
-                auth_service: AuthService = Depends(),
-                user: User = Depends(get_current_user)):
+                auth_service: AuthService = Depends()):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        user=get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
+    
     form_data = await request.form()
     updated_data = UserUpdate(**form_data)
     updated_user = user_service.update_user(current_data=user, updated_data=updated_data)
@@ -84,24 +126,35 @@ async def update_user(request: Request,
     
 
 @router.get('/change_password')
-def show_change_password_form(request: Request,
-                   user: User = Depends(get_current_user)):
+def show_change_password_form(request: Request):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
     return templates.TemplateResponse(
         "cabinet/change_password.html", {"request": request}
     )
+
 
 @router.post('/change_password')
 def change_password(request: Request,
                     current_password: str = Form(),
                     new_password:str = Form(),
                     auth_service: AuthService = Depends(),
-                    user_service: UserService = Depends(),
-                    user: User = Depends(get_current_user)):
+                    user_service: UserService = Depends()):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        user=get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
     if auth_service.verify_password(current_password, user.password_hash):
         updated_user = user_service.change_password(user=user, new_password=new_password)
         return update_user_data(request=request,auth_service=auth_service,updated_user=updated_user,msg="Пароль успешно обновлен")
     else:
-       error = "Текущий пароль указан неверно"
-       return templates.TemplateResponse(
-        "cabinet/change_password.html", {"request": request, "error": error}
-    ) 
+        error = "Текущий пароль указан неверно"
+        return templates.TemplateResponse(
+            "cabinet/change_password.html", {"request": request, "error": error}
+        ) 

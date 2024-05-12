@@ -24,32 +24,32 @@ router = APIRouter(
 async def get_screenings_by_medcard_num(medcard_num: int,
                                         user: User = Depends(get_current_user),
                                         service: ScreeningService = Depends()):
-    return service.get_screenings_by_medcard_num(user=user, medcard_num=medcard_num)
+    return service.get_screenings_by_medcard_num(medcard_num=medcard_num)
 
 
 @router.post('/one', response_model=Screening)
 async def get_screening_by_pk(screening_pk: ScreeningPK,
                               user: User = Depends(get_current_user),
                               service: ScreeningService = Depends()):
-    return service.get_screening_by_pk(user=user, screening_pk=screening_pk)
+    return service.get_screening_by_pk(screening_pk=screening_pk)
 
 
 @router.post('/', response_model=Screening)
 async def add_screening(screening_data: ScreeningCreate,
                         user: User = Depends(get_current_user),
                         service: ScreeningService = Depends()):
-    return service.add_new_screening(user=user, screening_data=screening_data)
+    return service.add_new_screening(screening_data=screening_data)
 
 
 @router.put('/', response_model=Screening)
 async def update_screening(screening_data: ScreeningUpdate,
                            user: User = Depends(get_current_user),
                            service: ScreeningService = Depends()):
-    return service.update_screening(user=user, screening_data=screening_data)
+    return service.update_screening(screening_data=screening_data)
 
 
 @router.delete('/')
 async def delete_screening(screening_pk: ScreeningPK,
                            user: User = Depends(get_current_user),
                            service: ScreeningService = Depends()):
-    service.delete_screening(user=user, screening_pk=screening_pk)
+    service.delete_screening(screening_pk=screening_pk)

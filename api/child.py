@@ -17,4 +17,4 @@ router = APIRouter(
 async def add_new_medcard(child_data: ChildCreate,
                           user: User = Depends(get_current_user),
                           service: MedicalRecordService = Depends()):
-    return service.add_new_medcard(user=user, child_data=child_data)
+    return service.add_new_medcard(child_data=child_data)

@@ -32,12 +32,18 @@ def show_create_medcard_form(request: Request,
                              user: User = Depends(get_current_user), 
                              clinic_service: ClinicService = Depends()):
     clinics = clinic_service.get_all_clinics_as_dict()
-    return templates.TemplateResponse(
-        "/medical_record/create/index.html", {"request": request, 
-                                              "kindergarten_name": user.kindergarten_name,
-                                              "clinics": clinics
-                                              }
-    )
+    if user:
+        return templates.TemplateResponse(
+            "/medical_record/create/index.html", {"request": request, 
+                                                "kindergarten_name": user.kindergarten_name,
+                                                "kindergarten_num": user.kindergarten_num,
+                                                "clinics": clinics
+                                                }
+        )
+    else:
+        return templates.TemplateResponse(
+            "login_page/index.html", {"request": request}
+        )
 
 
 @router.post('/create')
@@ -49,28 +55,38 @@ async def create_user(request: Request,
     """
     Процедура добавления новой медкарты на ребенка
     """
-    form_data = await request.form()
-    child_form = CreateChildForm(**form_data, kindergarten_num=user.kindergarten_num)
-    msg = ""
-    error = ""
-    if service.add_new_medcard_from_form(user=user, child_form=child_form, parent_service=parent_service):
-        msg = "Новая медкарта успешно добавлена в систему"
+    if user:
+        form_data = await request.form()
+        child_form = CreateChildForm(**form_data, kindergarten_num=user.kindergarten_num)
+        msg = ""
+        error = ""
+        if service.add_new_medcard_from_form(child_form=child_form, parent_service=parent_service):
+            msg = "Новая медкарта успешно добавлена в систему"
+        else:
+            error = "Ошибка работы с БД при добавлении медкарты. Медкарта НЕ добавлена!"
+        clinics = clinic_service.get_all_clinics_as_dict()
+        return templates.TemplateResponse(
+            "/medical_record/create/index.html", {
+                "request": request, "msg": msg, "error": error, "kindergarten_name": user.kindergarten_name, "clinics": clinics}
+        )
     else:
-        error = "Ошибка работы с БД при добавлении медкарты. Медкарта НЕ добавлена!"
-    clinics = clinic_service.get_all_clinics_as_dict()
-    return templates.TemplateResponse(
-        "/medical_record/create/index.html", {
-            "request": request, "msg": msg, "error": error, "kindergarten_name": user.kindergarten_name, "clinics": clinics}
-    )
+        return templates.TemplateResponse(
+            "login_page/index.html", {"request": request}
+        )
 
 
 @router.get('/all')
 def show_all_medcards(request: Request,
                       service: KindergartenService = Depends(),
                       user: User = Depends(get_current_user)):
-    kindergarten = service.get_kindergarten_with_children(
-        user)
-    return templates.TemplateResponse(
-        "/medical_record/all/index.html", {"request": request,
-                                           "kindergarten": kindergarten}
-    )
+    if user:
+        kindergarten = service.get_kindergarten_with_children(
+            user)
+        return templates.TemplateResponse(
+            "/medical_record/all/index.html", {"request": request,
+                                            "kindergarten": kindergarten}
+        )
+    else:
+        return templates.TemplateResponse(
+            "login_page/index.html", {"request": request}
+        )

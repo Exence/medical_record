@@ -33,63 +33,38 @@ class OngoingMedicalSupervisionService():
             )
         return ongoing_medical_supervision
 
-    def get_ongoing_medical_supervisions_by_medcard_num(self, user: User, medcard_num: int) -> list[OngoingMedicalSupervision]:
-        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
-            query = (
-                self.session.query(OngoingMedicalSupervision)
-                .filter_by(medcard_num=medcard_num)
-                .order_by(OngoingMedicalSupervision.examination_date)
-            )
-            ongoing_medical_supervisions = query.all()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def get_ongoing_medical_supervisions_by_medcard_num(self, medcard_num: int) -> list[OngoingMedicalSupervision]:
+        query = (
+            self.session.query(OngoingMedicalSupervision)
+            .filter_by(medcard_num=medcard_num)
+            .order_by(OngoingMedicalSupervision.examination_date)
+        )
+        ongoing_medical_supervisions = query.all()
         return ongoing_medical_supervisions
 
-    def get_ongoing_medical_supervision_by_pk(self, user: User, ongoing_medical_supervision_pk: OngoingMedicalSupervisionPK):
-        if check_user_access_to_medcard(user=user, medcard_num=ongoing_medical_supervision_pk.medcard_num):
-            ongoing_medical_supervision = self._get_by_pk(
+    def get_ongoing_medical_supervision_by_pk(self, ongoing_medical_supervision_pk: OngoingMedicalSupervisionPK):
+        ongoing_medical_supervision = self._get_by_pk(
                 ongoing_medical_supervision_pk.medcard_num, ongoing_medical_supervision_pk.examination_date)
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
         return ongoing_medical_supervision
 
-    def add_new_ongoing_medical_supervision(self, user: User, ongoing_medical_supervision_data: OngoingMedicalSupervisionCreate):
-        if check_user_access_to_medcard(user=user, medcard_num=ongoing_medical_supervision_data.medcard_num):
-            ongoing_medical_supervision = OngoingMedicalSupervision(
-                **ongoing_medical_supervision_data.dict())
-            self.session.add(ongoing_medical_supervision)
-            self.session.commit()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def add_new_ongoing_medical_supervision(self, ongoing_medical_supervision_data: OngoingMedicalSupervisionCreate):
+        ongoing_medical_supervision = OngoingMedicalSupervision(
+            **ongoing_medical_supervision_data.dict())
+        self.session.add(ongoing_medical_supervision)
+        self.session.commit()
         return ongoing_medical_supervision
 
-    def update_ongoing_medical_supervision(self, user: User, ongoing_medical_supervision_data: OngoingMedicalSupervisionUpdate):
-        if check_user_access_to_medcard(user=user, medcard_num=ongoing_medical_supervision_data.medcard_num):
-            ongoing_medical_supervision = self._get_by_pk(
-                ongoing_medical_supervision_data.medcard_num, ongoing_medical_supervision_data.prev_examination_date)
-            for field, value in ongoing_medical_supervision_data:
-                if field != 'prev_examination_date':
-                    setattr(ongoing_medical_supervision, field, value)
-            self.session.commit()
-            return ongoing_medical_supervision
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def update_ongoing_medical_supervision(self, ongoing_medical_supervision_data: OngoingMedicalSupervisionUpdate):
+        ongoing_medical_supervision = self._get_by_pk(
+            ongoing_medical_supervision_data.medcard_num, ongoing_medical_supervision_data.prev_examination_date)
+        for field, value in ongoing_medical_supervision_data:
+            if field != 'prev_examination_date':
+                setattr(ongoing_medical_supervision, field, value)
+        self.session.commit()
+        return ongoing_medical_supervision
 
-    def delete_ongoing_medical_supervision(self, user: User, ongoing_medical_supervision_pk: OngoingMedicalSupervisionPK):
-        if check_user_access_to_medcard(user=user, medcard_num=ongoing_medical_supervision_pk.medcard_num):
-            ongoing_medical_supervision = self._get_by_pk(
-                ongoing_medical_supervision_pk.medcard_num, ongoing_medical_supervision_pk.examination_date)
-            self.session.delete(ongoing_medical_supervision)
-            self.session.commit()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def delete_ongoing_medical_supervision(self, ongoing_medical_supervision_pk: OngoingMedicalSupervisionPK):
+        ongoing_medical_supervision = self._get_by_pk(
+            ongoing_medical_supervision_pk.medcard_num, ongoing_medical_supervision_pk.examination_date)
+        self.session.delete(ongoing_medical_supervision)
+        self.session.commit()

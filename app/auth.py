@@ -7,11 +7,8 @@ from fastapi import (
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 
-from models.auth import Token
-from models.user import User
 from services.auth import (
     AuthService,
-    get_current_user,
 )
 
 
@@ -51,14 +48,6 @@ async def sign_in(
         return templates.TemplateResponse(
             "login_page/index.html", {"request": request, "error": error}
         )
-
-
-@router.get('/user', response_model=User)
-def get_user(user: User = Depends(get_current_user)):
-    """
-    Получение текущего Пользователя
-    """
-    return user
 
 
 @router.get('/leave')

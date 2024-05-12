@@ -47,80 +47,65 @@ class ClinicService():
     def get_clinic_by_id(self, id: int) -> Clinic:
         return self._get_by_pk(id)
 
-    def add_new_clinic(self, user: User, clinic_data: ClinicCreate):
-        if user:
-            clinic = Clinic(**clinic_data.dict())
-            try:
-                self.session.add(clinic)
-                self.session.commit()
-                return clinic
-            except IntegrityError as e:
-                error_message = str(e.orig)
-                if "UNIQUE constraint failed" in error_message:
-                    error_message = "Данное имя поликлиники уже существует"
-                self.session.rollback()
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=error_message
-                )
-            except SQLAlchemyError as e:
-                self.session.rollback()
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="Ошибка в работе базы данных при добавлении поликлиники"
-                )
-        else:
+    def add_new_clinic(self, clinic_data: ClinicCreate):
+        clinic = Clinic(**clinic_data.dict())
+        try:
+            self.session.add(clinic)
+            self.session.commit()
+            return clinic
+        except IntegrityError as e:
+            error_message = str(e.orig)
+            if "UNIQUE constraint failed" in error_message:
+                error_message = "Данное имя поликлиники уже существует"
+            self.session.rollback()
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=error_message
+            )
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Ошибка в работе базы данных при добавлении поликлиники"
             )
 
-    def update_clinic(self, user: User, clinic_data: ClinicUpdate):
-        if user:
-            clinic = self._get_by_pk(clinic_data.id)
-            for field, value in clinic_data:
-                setattr(clinic, field, value)
-            
-            try:
-                self.session.commit()
-                return clinic
-            except IntegrityError as e:
-                error_message = str(e.orig)
-                if "UNIQUE constraint failed" in error_message:
-                    error_message = "Данное имя поликлиники уже существует"
-                self.session.rollback()
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=error_message
-                )
-            except SQLAlchemyError as e:
-                self.session.rollback()
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="Ошибка в работе базы данных при обновлении поликлиники"
-                )
-        else:
+    def update_clinic(self, clinic_data: ClinicUpdate):
+        clinic = self._get_by_pk(clinic_data.id)
+        for field, value in clinic_data:
+            setattr(clinic, field, value)
+        
+        try:
+            self.session.commit()
+            return clinic
+        except IntegrityError as e:
+            error_message = str(e.orig)
+            if "UNIQUE constraint failed" in error_message:
+                error_message = "Данное имя поликлиники уже существует"
+            self.session.rollback()
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=error_message
+            )
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Ошибка в работе базы данных при обновлении поликлиники"
             )
 
-    def delete_clinic(self, user: User, clinic_pk: ClinicPK):
-        if user:
-            if self.session.query(Child).filter_by(clinic_id=clinic_pk.id).first():
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Невозможно удалить поликлинику, так как есть дети, записанные в эту поликлинику"
-                )
-            clinic = self._get_by_pk(clinic_pk.id)
-            try:
-                self.session.delete(clinic)
-                self.session.commit()
-            except SQLAlchemyError as e:
-                self.session.rollback()
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="Ошибка в работе базы данных при удалении поликлиники"
-                )
-        else:
+    def delete_clinic(self, clinic_pk: ClinicPK):
+        if self.session.query(Child).filter_by(clinic_id=clinic_pk.id).first():
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Невозможно удалить поликлинику, так как есть дети, записанные в эту поликлинику"
+            )
+        clinic = self._get_by_pk(clinic_pk.id)
+        try:
+            self.session.delete(clinic)
+            self.session.commit()
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Ошибка в работе базы данных при удалении поликлиники"
             )

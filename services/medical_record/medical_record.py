@@ -47,36 +47,25 @@ class MedicalRecordService():
             )
         return medcard
 
-    def get_medcard_by_num(self, user: User, medcard_num: int) -> Child:
-        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
-            medcard = self._get(medcard_num)
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def get_medcard_by_num(self, medcard_num: int) -> Child:
+        medcard = self._get(medcard_num)
         return medcard
     
-    def add_new_medcard(self, user: User, child_data: ChildCreate):
-        if user:
-            medcard = Child(**child_data.dict())
-            self.session.add(medcard)
-            self.session.commit()
-            self.session.refresh(medcard)
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def add_new_medcard(self, child_data: ChildCreate):
+        medcard = Child(**child_data.dict())
+        self.session.add(medcard)
+        self.session.commit()
+        self.session.refresh(medcard)
         return medcard
 
 
-    def add_new_medcard_from_form(self, user: User, child_form: CreateChildForm, parent_service: ParentService):
+    def add_new_medcard_from_form(self, child_form: CreateChildForm, parent_service: ParentService):
         child_data = dict()
         for key, value in child_form:
-            if key not in ['father', 'mother', 'kindergarten_name']:
+            if key not in ['father', 'mother']:
                 child_data[key] = value
         child_data['father_id'] = None
         child_data['mother_id'] = None
-        child_data['kindergarten_num'] = user.kindergarten_num
 
         medcard = Child(**child_data)
         self.session.add(medcard)
@@ -88,36 +77,24 @@ class MedicalRecordService():
         father_data = get_parent_data_from_str(child_form.father, ParentType.FATHER)
         mother_data = get_parent_data_from_str(child_form.mother, parent_type=ParentType.MOTHER)
         
-        parent_service.add_new_parent(user=user, 
-                                      medcard_num=medcard_num, 
+        parent_service.add_new_parent(medcard_num=medcard_num, 
                                       parent_data=father_data) if father_data else dict(id=None)
-        parent_service.add_new_parent(user=user, 
-                                      medcard_num=medcard_num, 
+        parent_service.add_new_parent(medcard_num=medcard_num, 
                                       parent_data=mother_data) if mother_data else dict(id=None)
         return medcard
 
-    def update_medcard(self, user: User, medcard_num: int, medcard_data: ChildEdit):
-        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
-            medcard = self._get(medcard_num)
-            for field, value in medcard_data:
-                setattr(medcard, field, value)
-            self.session.commit()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def update_medcard(self, medcard_num: int, medcard_data: ChildEdit):
+        medcard = self._get(medcard_num)
+        for field, value in medcard_data:
+            setattr(medcard, field, value)
+        self.session.commit()
         return medcard
 
-    def delete_medcard(self, user: User, medcard_num: int):
-        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
-            medcard = self._get(medcard_num)
-            self.session.delete(medcard)
-            self.session.commit()
-            return {'detail': 'Medcard deleted'}
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def delete_medcard(self, medcard_num: int):
+        medcard = self._get(medcard_num)
+        self.session.delete(medcard)
+        self.session.commit()
+        return {'detail': 'Medcard deleted'}
 
     def get_all_medcards(self, user: User) -> list[Child]:
         medcards = (
@@ -139,14 +116,14 @@ class MedicalRecordService():
             )
         return children_with_parents
     
-    def get_parents_by_medcard_num(self, user: User, medcard_num: int, parent_service: ParentService):
-        child = self.get_medcard_by_num(user=user, medcard_num=medcard_num)
+    def get_parents_by_medcard_num(self, medcard_num: int, parent_service: ParentService):
+        child = self.get_medcard_by_num(medcard_num=medcard_num)
         father = parent_service._get(child.father_id) if child.father_id else None
         mother = parent_service._get(child.mother_id) if child.mother_id else None
         return father, mother
     
-    def delete_parent_by_type(self, user: User, medcard_num: int, parent_type: ParentType, parent_service: ParentService):
-        child = self.get_medcard_by_num(user=user, medcard_num=medcard_num)
+    def delete_parent_by_type(self, medcard_num: int, parent_type: ParentType, parent_service: ParentService):
+        child = self.get_medcard_by_num(medcard_num=medcard_num)
         parents = {"father": child.father_id, "mother": child.mother_id}
         parent = parent_service._get(parents[f"{parent_type.value}"])
         self.session.delete(parent)

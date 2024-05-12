@@ -2,12 +2,14 @@ from datetime import date
 from fastapi import (
     APIRouter,
     Form,
+    HTTPException,
     Depends,
     Response,
     Request,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 
 from models.reports.tub_diagnostic import TubDiagnostic
 from models.reports.dew_diagnostic import DewDiagnostic
@@ -31,7 +33,14 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get('/tuberculin/{start_date}/{end_date}')
-def get_tub_diagnostic_report(start_date: date, end_date: date, request: Request, service: ReportService = Depends(), user: User = Depends(get_current_user)):
+def get_tub_diagnostic_report(start_date: date, end_date: date, request: Request, service: ReportService = Depends()):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
+        
     tub_positive_children = service.get_children_by_mantoux_test_result(
         'Положительно', start_date, end_date)
     tub_doubtful_children = service.get_children_by_mantoux_test_result(
@@ -43,11 +52,11 @@ def get_tub_diagnostic_report(start_date: date, end_date: date, request: Request
     negative = len(tub_negative_children)
     absolute = positive + doubtful + negative
     tub_diagnostic = TubDiagnostic(start_date=start_date,
-                                   end_date=end_date,
-                                   absolute=absolute,
-                                   positive_count=positive,
-                                   doubtful_count=doubtful,
-                                   negative_count=negative)
+                                end_date=end_date,
+                                absolute=absolute,
+                                positive_count=positive,
+                                doubtful_count=doubtful,
+                                negative_count=negative)
     return templates.TemplateResponse(
         "/reports/tub/index.html", {"request": request,
                                     "tub_positive_children": tub_positive_children,
@@ -59,7 +68,13 @@ def get_tub_diagnostic_report(start_date: date, end_date: date, request: Request
 
 
 @router.get('/deworming/{start_date}/{end_date}')
-def get_deworming_report(start_date: date, end_date: date, request: Request, service: ReportService = Depends(), user: User = Depends(get_current_user)):
+def get_deworming_report(start_date: date, end_date: date, request: Request, service: ReportService = Depends()):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
     dew_positive_children = service.        get_children_by_deworming_result(
         'Положительно', start_date, end_date)
     dew_negative_children = service.        get_children_by_deworming_result(
@@ -68,10 +83,10 @@ def get_deworming_report(start_date: date, end_date: date, request: Request, ser
     negative = len(dew_negative_children)
     absolute = positive + negative
     dew_diagnostic = DewDiagnostic(start_date=start_date,
-                                   end_date=end_date,
-                                   absolute=absolute,
-                                   positive_count=positive,
-                                   negative_count=negative)
+                                end_date=end_date,
+                                absolute=absolute,
+                                positive_count=positive,
+                                negative_count=negative)
     return templates.TemplateResponse(
         "/reports/dew/index.html", {"request": request,
                                     "dew_positive_children": dew_positive_children,
@@ -87,6 +102,12 @@ def get_vac_report(request: Request,
                    report_service: ReportService = Depends(),
                    vac_name_service: VacNameService = Depends(),
                    user: User = Depends(get_current_user)):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
     vaccinated_children = report_service.get_children_by_vaccine(form_data)
     vac_name = vac_name_service.get_vac_name_by_id(form_data.vac_name_id)
     vaccination = {
@@ -101,13 +122,19 @@ def get_vac_report(request: Request,
                                     "vaccination": vaccination
                                     }
     )
+    
 
 @router.post('/annual')
 def get_annual_report(request: Request,
                       age_type: AgeType =Form(),
                       year: int = Form(),
-                      report_service: ReportService = Depends(),
-                      user: User = Depends(get_current_user)):
+                      report_service: ReportService = Depends()):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
     report = report_service.get_annual_report_by_age_type(age_type=age_type, year=year)
     return templates.TemplateResponse(
         "/reports/annual/index.html", {"request": request,

@@ -35,63 +35,38 @@ class MedicalCertificateService():
             )
         return medical_certificate
 
-    def get_medical_certificates_by_medcard_num(self, user: User, medcard_num: int) -> list[MedicalCertificate]:
-        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
-            query = (
-                self.session.query(MedicalCertificate)
-                .filter_by(medcard_num=medcard_num)
-                .order_by(MedicalCertificate.cert_date)
-            )
-            medical_certificates = query.all()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def get_medical_certificates_by_medcard_num(self, medcard_num: int) -> list[MedicalCertificate]:
+        medical_certificates = (
+            self.session.query(MedicalCertificate)
+            .filter_by(medcard_num=medcard_num)
+            .order_by(MedicalCertificate.cert_date)
+            .all()
+        )
         return medical_certificates
 
-    def get_medical_certificate_by_pk(self, user: User, medical_certificate_pk: MedicalCertificatePK):
-        if check_user_access_to_medcard(user=user, medcard_num=medical_certificate_pk.medcard_num):
-            medical_certificate = self._get_by_pk(
+    def get_medical_certificate_by_pk(self, medical_certificate_pk: MedicalCertificatePK):
+        medical_certificate = self._get_by_pk(
                 medical_certificate_pk.medcard_num, medical_certificate_pk.disease, medical_certificate_pk.cert_date)
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
         return medical_certificate
 
-    def add_new_medical_certificate(self, user: User, medical_certificate_data: MedicalCertificateCreate):
-        if check_user_access_to_medcard(user=user, medcard_num=medical_certificate_data.medcard_num):
-            medical_certificate = MedicalCertificate(
-                **medical_certificate_data.dict())
-            self.session.add(medical_certificate)
-            self.session.commit()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def add_new_medical_certificate(self, medical_certificate_data: MedicalCertificateCreate):
+        medical_certificate = MedicalCertificate(
+            **medical_certificate_data.dict())
+        self.session.add(medical_certificate)
+        self.session.commit()
         return medical_certificate
 
-    def update_medical_certificate(self, user: User, medical_certificate_data: MedicalCertificateUpdate):
-        if check_user_access_to_medcard(user=user, medcard_num=medical_certificate_data.medcard_num):
-            medical_certificate = self._get_by_pk(
-                medical_certificate_data.medcard_num, medical_certificate_data.prev_disease, medical_certificate_data.prev_cert_date)
-            for field, value in medical_certificate_data:
-                if field != 'prev_disease' and field != 'prev_cert_date':
-                    setattr(medical_certificate, field, value)
-            self.session.commit()
-            return medical_certificate
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def update_medical_certificate(self, medical_certificate_data: MedicalCertificateUpdate):
+        medical_certificate = self._get_by_pk(
+            medical_certificate_data.medcard_num, medical_certificate_data.prev_disease, medical_certificate_data.prev_cert_date)
+        for field, value in medical_certificate_data:
+            if field != 'prev_disease' and field != 'prev_cert_date':
+                setattr(medical_certificate, field, value)
+        self.session.commit()
+        return medical_certificate
 
-    def delete_medical_certificate(self, user: User, medical_certificate_pk: MedicalCertificatePK):
-        if check_user_access_to_medcard(user=user, medcard_num=medical_certificate_pk.medcard_num):
-            medical_certificate = self._get_by_pk(
-                medical_certificate_pk.medcard_num, medical_certificate_pk.disease, medical_certificate_pk.cert_date)
-            self.session.delete(medical_certificate)
-            self.session.commit()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def delete_medical_certificate(self, medical_certificate_pk: MedicalCertificatePK):
+        medical_certificate = self._get_by_pk(
+            medical_certificate_pk.medcard_num, medical_certificate_pk.disease, medical_certificate_pk.cert_date)
+        self.session.delete(medical_certificate)
+        self.session.commit()

@@ -24,7 +24,7 @@ async def get_ongoing_medical_supervisions_by_medcard_num(medcard_num: int,
                                                           user: User = Depends(
                                                               get_current_user),
                                                           service: OngoingMedicalSupervisionService = Depends()):
-    return service.get_ongoing_medical_supervisions_by_medcard_num(user=user, medcard_num=medcard_num)
+    return service.get_ongoing_medical_supervisions_by_medcard_num(medcard_num=medcard_num)
 
 
 @router.post('/one', response_model=OngoingMedicalSupervision)
@@ -32,7 +32,7 @@ async def get_ongoing_medical_supervision_by_pk(ongoing_medical_supervision_pk: 
                                                 user: User = Depends(
                                                     get_current_user),
                                                 service: OngoingMedicalSupervisionService = Depends()):
-    return service.get_ongoing_medical_supervision_by_pk(user=user, ongoing_medical_supervision_pk=ongoing_medical_supervision_pk)
+    return service.get_ongoing_medical_supervision_by_pk(ongoing_medical_supervision_pk=ongoing_medical_supervision_pk)
 
 
 @router.post('/', response_model=OngoingMedicalSupervision)
@@ -40,7 +40,7 @@ async def add_ongoing_medical_supervision(ongoing_medical_supervision_data: Ongo
                                           user: User = Depends(
                                               get_current_user),
                                           service: OngoingMedicalSupervisionService = Depends()):
-    return service.add_new_ongoing_medical_supervision(user=user, ongoing_medical_supervision_data=ongoing_medical_supervision_data)
+    return service.add_new_ongoing_medical_supervision(ongoing_medical_supervision_data=ongoing_medical_supervision_data)
 
 
 @router.put('/', response_model=OngoingMedicalSupervision)
@@ -48,7 +48,7 @@ async def update_ongoing_medical_supervision(ongoing_medical_supervision_data: O
                                              user: User = Depends(
                                                  get_current_user),
                                              service: OngoingMedicalSupervisionService = Depends()):
-    return service.update_ongoing_medical_supervision(user=user, ongoing_medical_supervision_data=ongoing_medical_supervision_data)
+    return service.update_ongoing_medical_supervision(ongoing_medical_supervision_data=ongoing_medical_supervision_data)
 
 
 @router.delete('/')
@@ -56,5 +56,4 @@ async def delete_ongoing_medical_supervision(ongoing_medical_supervision_pk: Ong
                                              user: User = Depends(
                                                  get_current_user),
                                              service: OngoingMedicalSupervisionService = Depends()):
-    service.delete_ongoing_medical_supervision(
-        user=user, ongoing_medical_supervision_pk=ongoing_medical_supervision_pk)
+    service.delete_ongoing_medical_supervision(ongoing_medical_supervision_pk=ongoing_medical_supervision_pk)

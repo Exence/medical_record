@@ -33,62 +33,37 @@ class SpaTreatmentService():
             )
         return spa_treatment
 
-    def get_spa_treatments_by_medcard_num(self, user: User, medcard_num: int) -> list[SpaTreatment]:
-        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
-            query = (
-                self.session.query(SpaTreatment)
-                .filter_by(medcard_num=medcard_num)
-                .order_by(SpaTreatment.start_date)
-            )
-            spa_treatments = query.all()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def get_spa_treatments_by_medcard_num(self, medcard_num: int) -> list[SpaTreatment]:
+        query = (
+            self.session.query(SpaTreatment)
+            .filter_by(medcard_num=medcard_num)
+            .order_by(SpaTreatment.start_date)
+        )
+        spa_treatments = query.all()
         return spa_treatments
 
-    def get_spa_treatment_by_pk(self, user: User, spa_treatment_pk: SpaTreatmentPK):
-        if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_pk.medcard_num):
-            spa_treatment = self._get_by_pk(
+    def get_spa_treatment_by_pk(self, spa_treatment_pk: SpaTreatmentPK):
+        spa_treatment = self._get_by_pk(
                 spa_treatment_pk.medcard_num, spa_treatment_pk.start_date)
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
         return spa_treatment
 
-    def add_new_spa_treatment(self, user: User, spa_treatment_data: SpaTreatmentCreate):
-        if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_data.medcard_num):
-            spa_treatment = SpaTreatment(**spa_treatment_data.dict())
-            self.session.add(spa_treatment)
-            self.session.commit()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def add_new_spa_treatment(self, spa_treatment_data: SpaTreatmentCreate):
+        spa_treatment = SpaTreatment(**spa_treatment_data.dict())
+        self.session.add(spa_treatment)
+        self.session.commit()
         return spa_treatment
 
-    def update_spa_treatment(self, user: User, spa_treatment_data: SpaTreatmentUpdate):
-        if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_data.medcard_num):
-            spa_treatment = self._get_by_pk(
-                spa_treatment_data.medcard_num, spa_treatment_data.prev_start_date)
-            for field, value in spa_treatment_data:
-                if field != 'prev_start_date':
-                    setattr(spa_treatment, field, value)
-            self.session.commit()
-            return spa_treatment
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def update_spa_treatment(self, spa_treatment_data: SpaTreatmentUpdate):
+        spa_treatment = self._get_by_pk(
+            spa_treatment_data.medcard_num, spa_treatment_data.prev_start_date)
+        for field, value in spa_treatment_data:
+            if field != 'prev_start_date':
+                setattr(spa_treatment, field, value)
+        self.session.commit()
+        return spa_treatment
 
-    def delete_spa_treatment(self, user: User, spa_treatment_pk: SpaTreatmentPK):
-        if check_user_access_to_medcard(user=user, medcard_num=spa_treatment_pk.medcard_num):
-            spa_treatment = self._get_by_pk(
-                spa_treatment_pk.medcard_num, spa_treatment_pk.start_date)
-            self.session.delete(spa_treatment)
-            self.session.commit()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def delete_spa_treatment(self, spa_treatment_pk: SpaTreatmentPK):
+        spa_treatment = self._get_by_pk(
+            spa_treatment_pk.medcard_num, spa_treatment_pk.start_date)
+        self.session.delete(spa_treatment)
+        self.session.commit()

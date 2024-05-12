@@ -35,18 +35,18 @@ async def get_clinic_by_id(id: int,
 async def add_clinic(clinic_data: ClinicCreate,
                      user: User = Depends(get_current_user),
                      service: ClinicService = Depends()):
-    return service.add_new_clinic(user=user, clinic_data=clinic_data)
+    return service.add_new_clinic(clinic_data=clinic_data)
 
 
 @router.put('/', response_model=Clinic)
 async def update_clinic(clinic_data: ClinicUpdate,
                         user: User = Depends(get_current_user),
                         service: ClinicService = Depends()):
-    return service.update_clinic(user=user, clinic_data=clinic_data)
+    return service.update_clinic(clinic_data=clinic_data)
 
 
 @router.delete('/')
 async def delete_clinic(clinic_pk: ClinicPK,
                         user: User = Depends(get_current_user),
                         service: ClinicService = Depends()):
-    service.delete_clinic(user=user, clinic_pk=clinic_pk)
+    service.delete_clinic(clinic_pk=clinic_pk)

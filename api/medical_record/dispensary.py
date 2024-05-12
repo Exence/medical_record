@@ -19,32 +19,32 @@ async def get_dispensaryes_by_medcard_num(medcard_num: int,
                                           user: User = Depends(
                                               get_current_user),
                                           service: DispensaryService = Depends()):
-    return service.get_dispensaryes_by_medcard_num(user=user, medcard_num=medcard_num)
+    return service.get_dispensaryes_by_medcard_num(medcard_num=medcard_num)
 
 
 @router.post('/one', response_model=Dispensary)
 async def get_dispensary_by_pk(dispensary_pk: DispensaryPK,
                                user: User = Depends(get_current_user),
                                service: DispensaryService = Depends()):
-    return service.get_dispensary_by_pk(user=user, dispensary_pk=dispensary_pk)
+    return service.get_dispensary_by_pk(dispensary_pk=dispensary_pk)
 
 
 @router.post('/', response_model=Dispensary)
 async def add_dispensary(dispensary_data: DispensaryCreate,
                          user: User = Depends(get_current_user),
                          service: DispensaryService = Depends()):
-    return service.add_new_dispensary(user=user, dispensary_data=dispensary_data)
+    return service.add_new_dispensary(dispensary_data=dispensary_data)
 
 
 @router.put('/', response_model=Dispensary)
 async def update_dispensary(dispensary_data: DispensaryUpdate,
                             user: User = Depends(get_current_user),
                             service: DispensaryService = Depends()):
-    return service.update_dispensary(user=user, dispensary_data=dispensary_data)
+    return service.update_dispensary(dispensary_data=dispensary_data)
 
 
 @router.delete('/')
 async def delete_dispensary(dispensary_pk: DispensaryPK,
                             user: User = Depends(get_current_user),
                             service: DispensaryService = Depends()):
-    service.delete_dispensary(user=user, dispensary_pk=dispensary_pk)
+    service.delete_dispensary(dispensary_pk=dispensary_pk)

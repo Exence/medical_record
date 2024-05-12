@@ -23,10 +23,10 @@ router = APIRouter(
 )
 
 @router.get('/', response_model=ParentsResponse)
-async def get_parents_by_medcard_num( medcard_num: int,
+async def get_parents_by_medcard_num(medcard_num: int,
                             user: User = Depends(get_current_user),
                             service: ParentService = Depends()):
-    return service.get_parents_by_medcard_num(user=user, medcard_num=medcard_num)
+    return service.get_parents_by_medcard_num(medcard_num=medcard_num)
 
 
 @router.post('/', response_model=Parent)
@@ -34,7 +34,7 @@ async def add_parent(parent_data: ParentCreate,
                      medcard_num: int,
                      user: User = Depends(get_current_user),
                      service: ParentService = Depends()):
-    return service.add_new_parent(user=user, medcard_num=medcard_num, parent_data=parent_data)
+    return service.add_new_parent(medcard_num=medcard_num, parent_data=parent_data)
 
 
 @router.put('/', response_model=Parent)
@@ -42,7 +42,7 @@ async def update_parent(parent_data: ParentUpdate,
                         medcard_num: int,
                         user: User = Depends(get_current_user),
                         service: ParentService = Depends()):
-    return service.update_parent(user=user, medcard_num=medcard_num, parent_data=parent_data)
+    return service.update_parent(medcard_num=medcard_num, parent_data=parent_data)
 
 
 @router.delete('/')
@@ -51,5 +51,5 @@ async def delete_parent(parent_type_request: ParentTypeRequest,
                         user: User = Depends(get_current_user),
                         service: ParentService = Depends(),
                         medcard_service: MedicalRecordService = Depends()):
-    medcard_service.delete_parent_by_type(user=user, medcard_num=medcard_num,
+    medcard_service.delete_parent_by_type(medcard_num=medcard_num,
                           parent_type=parent_type_request.parent_type, parent_service=service)

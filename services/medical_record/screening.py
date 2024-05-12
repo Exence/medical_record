@@ -33,64 +33,39 @@ class ScreeningService():
             )
         return screening
 
-    def get_screenings_by_medcard_num(self, user: User, medcard_num: int) -> list[Screening]:
-        if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
-            screenings = (
-                self.session.query(Screening)
-                .filter_by(medcard_num=medcard_num)
-                .order_by(Screening.age)
-                .all()
-            )
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def get_screenings_by_medcard_num(self, medcard_num: int) -> list[Screening]:
+        screenings = (
+            self.session.query(Screening)
+            .filter_by(medcard_num=medcard_num)
+            .order_by(Screening.age)
+            .all()
+        )
         return screenings
 
-    def get_screening_by_pk(self, user: User, screening_pk: ScreeningPK):
-        if check_user_access_to_medcard(user=user, medcard_num=screening_pk.medcard_num):
-            screening = self._get_by_pk(
+    def get_screening_by_pk(self, screening_pk: ScreeningPK):
+        screening = self._get_by_pk(
                 screening_pk.medcard_num, screening_pk.examination_date)
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
         return screening
 
-    def add_new_screening(self, user: User, screening_data: ScreeningCreate):
-        if check_user_access_to_medcard(user=user, medcard_num=screening_data.medcard_num):
-            screening = Screening(**screening_data.dict())
-            self.session.add(screening)
-            self.session.commit()
-            self.session.refresh(screening)
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def add_new_screening(self, screening_data: ScreeningCreate):
+        screening = Screening(**screening_data.dict())
+        self.session.add(screening)
+        self.session.commit()
+        self.session.refresh(screening)
         return screening
 
-    def update_screening(self, user: User, screening_data: ScreeningUpdate):
-        if check_user_access_to_medcard(user=user, medcard_num=screening_data.medcard_num):
-            screening = self._get_by_pk(
-                screening_data.medcard_num, screening_data.prev_examination_date)
-            for field, value in screening_data:
-                if field != 'prev_examination_date':
-                    setattr(screening, field, value)
-            self.session.commit()
-            self.session.refresh(screening)
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def update_screening(self, screening_data: ScreeningUpdate):
+        screening = self._get_by_pk(
+            screening_data.medcard_num, screening_data.prev_examination_date)
+        for field, value in screening_data:
+            if field != 'prev_examination_date':
+                setattr(screening, field, value)
+        self.session.commit()
+        self.session.refresh(screening)
         return screening
 
-    def delete_screening(self, user: User, screening_pk: ScreeningPK):
-        if check_user_access_to_medcard(user=user, medcard_num=screening_pk.medcard_num):
-            screening = self._get_by_pk(
-                screening_pk.medcard_num, screening_pk.examination_date)
-            self.session.delete(screening)
-            self.session.commit()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN
-            )
+    def delete_screening(self, screening_pk: ScreeningPK):
+        screening = self._get_by_pk(
+            screening_pk.medcard_num, screening_pk.examination_date)
+        self.session.delete(screening)
+        self.session.commit()

@@ -3,13 +3,13 @@ from fastapi import (
     Cookie,
     Depends,
     Form,
+    HTTPException,
     Response,
     Request,
 )
 from urllib.parse import unquote
 from fastapi.templating import Jinja2Templates
-
-from models.clinic import Clinic, ClinicCreate, ClinicUpdate
+from fastapi.responses import RedirectResponse
 
 from services.auth import (
     AuthService, 
@@ -29,6 +29,13 @@ async def show_all_clinics(request: Request,
                            service: ClinicService = Depends(),
                            msg: str = Cookie(None),
                            err: str = Cookie(None)):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
+        
     if msg:
         msg = unquote(msg)
     if err:

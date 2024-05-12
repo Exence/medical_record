@@ -23,7 +23,7 @@ router = APIRouter(
 async def get_tub_vac(tub_vac_pk: TuberculosisVaccinationPK,
                       user: User = Depends(get_current_user),
                       service: TuberculosisVaccinationService = Depends()):
-    tub_vac = service.get_tub_vac_by_pk(user=user, tub_vac_pk=tub_vac_pk)
+    tub_vac = service.get_tub_vac_by_pk(tub_vac_pk=tub_vac_pk)
     return tub_vac
 
 
@@ -31,18 +31,18 @@ async def get_tub_vac(tub_vac_pk: TuberculosisVaccinationPK,
 async def add_tub_vac(tub_vac_data: TuberculosisVaccinationCreate,
                           user: User = Depends(get_current_user),
                           service: TuberculosisVaccinationService = Depends()):
-    service.add_new_tub_vac(user=user, tub_vac_data=tub_vac_data)
+    service.add_new_tub_vac(tub_vac_data=tub_vac_data)
 
 
 @router.put('/')
 async def update_tub_vac(tub_vac_data: TuberculosisVaccinationUpdate,
                          user: User = Depends(get_current_user),
                          service: TuberculosisVaccinationService = Depends()):
-    service.update_tub_vac(user=user, tub_vac_data=tub_vac_data)
+    service.update_tub_vac(tub_vac_data=tub_vac_data)
 
 
 @router.delete('/')
 async def delete_tub_vac(tub_vac_pk: TuberculosisVaccinationPK,
                          user: User = Depends(get_current_user),
                          service: TuberculosisVaccinationService = Depends()):
-    service.delete_tub_vac(user=user, tub_vac_pk=tub_vac_pk)
+    service.delete_tub_vac(tub_vac_pk=tub_vac_pk)

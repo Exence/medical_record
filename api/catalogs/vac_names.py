@@ -36,18 +36,18 @@ async def get_vac_name_by_id(id: int,
 async def add_vac_name(vac_name_data: VacNameCreate,
                      user: User = Depends(get_current_user),
                      service: VacNameService = Depends()):
-    return service.add_new_vac_name(user=user, vac_name_data=vac_name_data)
+    return service.add_new_vac_name(vac_name_data=vac_name_data)
 
 
 @router.put('/', response_model=VacName)
 async def update_vac_name(vac_name_data: VacNameUpdate,
                         user: User = Depends(get_current_user),
                         service: VacNameService = Depends()):
-    return service.update_vac_name(user=user, vac_name_data=vac_name_data)
+    return service.update_vac_name(vac_name_data=vac_name_data)
 
 
 @router.delete('/')
 async def delete_vac_name(vac_name_pk: VacNamePK,
                         user: User = Depends(get_current_user),
                         service: VacNameService = Depends()):
-    service.delete_vac_name(user=user, vac_name_pk=vac_name_pk)
+    service.delete_vac_name(vac_name_pk=vac_name_pk)
