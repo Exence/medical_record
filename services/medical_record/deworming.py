@@ -34,12 +34,12 @@ class DewormingService():
         return deworming
 
     def get_dewormings_by_medcard_num(self, medcard_num: int) -> list[Deworming]:
-        query = (
+        dewormings = (
             self.session.query(Deworming)
             .filter_by(medcard_num=medcard_num)
             .order_by(Deworming.deworming_date)
+            .all()
         )
-        dewormings = query.all()
         return dewormings
 
     def get_deworming_by_pk(self, deworming_pk: DewormingPK):

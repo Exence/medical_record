@@ -34,12 +34,12 @@ class MedicalExaminationService():
         return medical_examination
 
     def get_medical_examinations_by_medcard_num(self, medcard_num: int) -> list[MedicalExamination]:
-        query = (
+        medical_examinations = (
             self.session.query(MedicalExamination)
             .filter_by(medcard_num=medcard_num)
             .order_by(MedicalExamination.age)
+            .all()
         )
-        medical_examinations = query.all()
         return medical_examinations
 
     def get_medical_examination_by_pk(self, medical_examination_pk: MedicalExaminationPK):

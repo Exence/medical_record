@@ -34,12 +34,12 @@ class AllergyService():
         return allergy
 
     def get_allergyes_by_medcard_num(self, medcard_num: int) -> list[Allergy]:
-        query = (
+        allergyes = (
             self.session.query(Allergy)
             .filter_by(medcard_num=medcard_num)
             .order_by(Allergy.start_age)
+            .all()
         )
-        allergyes = query.all()
         return allergyes
 
     def get_allergy_by_pk(self, allergy_pk: AllergyPK):

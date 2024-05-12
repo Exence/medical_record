@@ -34,12 +34,12 @@ class OngoingMedicalSupervisionService():
         return ongoing_medical_supervision
 
     def get_ongoing_medical_supervisions_by_medcard_num(self, medcard_num: int) -> list[OngoingMedicalSupervision]:
-        query = (
+        ongoing_medical_supervisions = (
             self.session.query(OngoingMedicalSupervision)
             .filter_by(medcard_num=medcard_num)
             .order_by(OngoingMedicalSupervision.examination_date)
+            .all()
         )
-        ongoing_medical_supervisions = query.all()
         return ongoing_medical_supervisions
 
     def get_ongoing_medical_supervision_by_pk(self, ongoing_medical_supervision_pk: OngoingMedicalSupervisionPK):

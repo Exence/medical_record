@@ -34,12 +34,12 @@ class OralSanationService():
         return oral_sanation
 
     def get_oral_sanations_by_medcard_num(self, medcard_num: int) -> list[OralSanation]:
-        query = (
+        oral_sanations = (
             self.session.query(OralSanation)
             .filter_by(medcard_num=medcard_num)
             .order_by(OralSanation.sanation_date)
+            .all()
         )
-        oral_sanations = query.all()
         return oral_sanations
 
     def get_oral_sanation_by_pk(self, oral_sanation_pk: OralSanationPK):

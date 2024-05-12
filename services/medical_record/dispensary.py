@@ -35,12 +35,12 @@ class DispensaryService():
         return dispensary
 
     def get_dispensaryes_by_medcard_num(self, medcard_num: int) -> list[Dispensary]:
-        query = (
+        dispensaryes = (
             self.session.query(Dispensary)
             .filter_by(medcard_num=medcard_num)
             .order_by(Dispensary.start_date)
+            .all()
         )
-        dispensaryes = query.all()
         return dispensaryes
 
     def get_dispensary_by_pk(self, dispensary_pk: DispensaryPK):

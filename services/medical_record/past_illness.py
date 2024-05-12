@@ -36,12 +36,12 @@ class PastIllnessService():
         return past_illness
 
     def get_past_illnesses_by_medcard_num(self, medcard_num: int) -> list[PastIllness]:
-        query = (
+        past_illnesses = (
             self.session.query(PastIllness)
             .filter_by(medcard_num=medcard_num)
             .order_by(PastIllness.start_date)
+            .all()
         )
-        past_illnesses = query.all()
         return past_illnesses
 
     def get_past_illness_by_pk(self, past_illness_pk: PastIllnessPK):

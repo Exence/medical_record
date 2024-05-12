@@ -40,12 +40,12 @@ class PrevaccinationCheckupService():
         return prevaccination_checkup
 
     def get_prevaccination_checkups_by_medcard_num(self, medcard_num: int) -> list[PrevaccinationCheckupModel]:
-        query = (
+        prevaccination_checkups = (
             self.session.query(PrevaccinationCheckup)
             .filter_by(medcard_num=medcard_num)
             .order_by(PrevaccinationCheckup.examination_date)
+            .all()
         )
-        prevaccination_checkups = query.all()
         return prevaccination_checkups
 
     def get_prevaccination_checkup_by_pk(self, prevaccination_checkup_pk: PrevaccinationCheckupPK):

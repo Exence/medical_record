@@ -34,12 +34,12 @@ class TuberculosisVaccinationService():
         return tub_vac
 
     def get_tub_vacs_by_medcard_num(self, medcard_num: int) -> list[TuberculosisVaccination]:
-        query = (
+        tub_vacs = (
             self.session.query(TuberculosisVaccination)
             .filter_by(medcard_num=medcard_num)
             .order_by(TuberculosisVaccination.vac_date)
+            .all()
         )
-        tub_vacs = query.all()
         return tub_vacs
 
     def get_tub_vac_by_pk(self, tub_vac_pk: TuberculosisVaccinationPK):

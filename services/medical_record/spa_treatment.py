@@ -34,12 +34,12 @@ class SpaTreatmentService():
         return spa_treatment
 
     def get_spa_treatments_by_medcard_num(self, medcard_num: int) -> list[SpaTreatment]:
-        query = (
+        spa_treatments = (
             self.session.query(SpaTreatment)
             .filter_by(medcard_num=medcard_num)
             .order_by(SpaTreatment.start_date)
+            .all()
         )
-        spa_treatments = query.all()
         return spa_treatments
 
     def get_spa_treatment_by_pk(self, spa_treatment_pk: SpaTreatmentPK):

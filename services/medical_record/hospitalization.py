@@ -34,12 +34,12 @@ class HospitalizationService():
         return hospitalization
 
     def get_hospitalizations_by_medcard_num(self, medcard_num: int) -> list[Hospitalization]:
-        query = (
+        hospitalizations = (
             self.session.query(Hospitalization)
             .filter_by(medcard_num=medcard_num)
             .order_by(Hospitalization.start_date)
+            .all()
         )
-        hospitalizations = query.all()
         return hospitalizations
 
     def get_hospitalization_by_pk(self, hospitalization_pk: HospitalizationPK):

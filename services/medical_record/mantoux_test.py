@@ -34,12 +34,12 @@ class MantouxTestService():
         return mantoux_test
 
     def get_mantoux_tests_by_medcard_num(self, medcard_num: int) -> list[MantouxTest]:
-        query = (
+        mantoux_tests = (
             self.session.query(MantouxTest)
             .filter_by(medcard_num=medcard_num)
             .order_by(MantouxTest.check_date)
+            .all()
         )
-        mantoux_tests = query.all()
         return mantoux_tests
 
     def get_mantoux_test_by_pk(self, mantoux_test_pk: MantouxTestPK):

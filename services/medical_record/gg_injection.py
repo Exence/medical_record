@@ -34,12 +34,12 @@ class GammaGlobulinInjectionService():
         return gg_injection
 
     def get_gg_injections_by_medcard_num(self, medcard_num: int) -> list[GammaGlobulinInjection]:
-        query = (
+        gg_injections = (
             self.session.query(GammaGlobulinInjection)
             .filter_by(medcard_num=medcard_num)
             .order_by(GammaGlobulinInjection.vac_date)
+            .all()
         )
-        gg_injections = query.all()
         return gg_injections
 
     def get_gg_injection_by_pk(self, gg_injection_pk: GammaGlobulinInjectionPK):

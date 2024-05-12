@@ -34,12 +34,12 @@ class VisitSpecialistControlService():
         return visit_specialist_control
 
     def get_visit_specialist_controls_by_medcard_num(self, medcard_num: int) -> list[VisitSpecialistControl]:
-        query = (
+        visit_specialist_controls = (
             self.session.query(VisitSpecialistControl)
             .filter_by(medcard_num=medcard_num)
             .order_by(VisitSpecialistControl.start_dispanser_date, VisitSpecialistControl.assigned_date)
+            .all()
         )
-        visit_specialist_controls = query.all()
         return visit_specialist_controls
 
     def get_visit_specialist_control_by_pk(self, visit_specialist_control_pk: VisitSpecialistControlPK):

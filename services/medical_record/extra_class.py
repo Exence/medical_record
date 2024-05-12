@@ -35,12 +35,12 @@ class ExtraClassService():
         return extra_class
 
     def get_extra_classes_by_medcard_num(self, medcard_num: int) -> list[ExtraClass]:
-        query = (
+        extra_classes = (
             self.session.query(ExtraClass)
             .filter_by(medcard_num=medcard_num)
             .order_by(ExtraClass.classes_type)
+            .all
         )
-        extra_classes = query.all()
         return extra_classes
 
     def get_extra_class_by_pk(self, extra_class_pk: ExtraClassPK):
