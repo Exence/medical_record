@@ -1,4 +1,4 @@
-<div name="div-dispensary-{{ dispensary.start_date }}" class="col-12 mb-3">
+<div name="div-dispensary-{{ dispensary.id }}" class="col-12 mb-3">
     <p><strong>{{ dispensary.diagnosis }}</strong> с <u><mark>{{ dispensary.start_date.strftime("%d.%m.%Y") }}</mark></u> по 
         {% if dispensary.end_date %}
         <u><mark>{{ dispensary.end_date.strftime("%d.%m.%Y") }}</mark></u> 
@@ -10,8 +10,8 @@
        <br>Специалист: <u><mark>{{ dispensary.specialist }}</mark></u>
     </p>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button type="button" class="btn btn-outline-info mt-2 btn-sm" data-bs-toggle="offcanvas" data-bs-target="#visitSpecialistControlOffcanvas" aria-controls="visitSpecialistControlOffcanvas" onclick="get_visit_specialist_control('{{ dispensary.start_date }}')">Контроль посещений специалиста</button>
-        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" name="update-dispensary-{{ dispensary.start_date }}-btn" onclick="update_dispensary('{{ dispensary.start_date }}')">Редактировать</button>
-        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-dispensary-{{ dispensary.start_date }}-btn" onclick="delete_dispensary('{{ dispensary.start_date }}')">Удалить</button>
+        <button type="button" class="btn btn-outline-info mt-2 btn-sm" data-bs-toggle="offcanvas" data-bs-target="#visitSpecialistControlOffcanvas" aria-controls="visitSpecialistControlOffcanvas" onclick="get_visit_specialist_control('{{ dispensary.id }}')">Контроль посещений специалиста</button>
+        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" name="update-dispensary-{{ dispensary.id }}-btn" onclick="update_dispensary('{{ dispensary.id }}')">Редактировать</button>
+        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-dispensary-{{ dispensary.id }}-btn" onclick="delete_dispensary('{{ dispensary.id }}')">Удалить</button>
     </div>
 </div>

@@ -1280,9 +1280,9 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
                         innerHTML += '<br>Специалист: <u><mark>' + dispensary.specialist + '</mark></u>\
                         </p>\
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
-                            <button type="button" class="btn btn-outline-info mt-2 btn-sm" data-bs-toggle="offcanvas" data-bs-target="#visitSpecialistControlOffcanvas" aria-controls="visitSpecialistControlOffcanvas" onclick="get_visit_specialist_control(\'' + dispensary.start_date + '\')">Контроль посещений специалиста</button>\
-                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" name="update-dispensary-' + dispensary.start_date + '-btn" onclick="update_dispensary(\'' + dispensary.start_date + '\')">Редактировать</button>\
-                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-dispensary-' + dispensary.start_date + '-btn" onclick="delete_dispensary(\'' + dispensary.start_date + '\')">Удалить</button>\
+                            <button type="button" class="btn btn-outline-info mt-2 btn-sm" data-bs-toggle="offcanvas" data-bs-target="#visitSpecialistControlOffcanvas" aria-controls="visitSpecialistControlOffcanvas" onclick="get_visit_specialist_control(\'' + dispensary.id + '\')">Контроль посещений специалиста</button>\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" name="update-dispensary-' + dispensary.id + '-btn" onclick="update_dispensary(\'' + dispensary.id + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-dispensary-' + dispensary.id + '-btn" onclick="delete_dispensary(\'' + dispensary.id + '\')">Удалить</button>\
                         </div>';
                         let dispensary_div = document.getElementsByName('div-dispensary-' + dispensary.id)[0]
                         dispensary_div.innerHTML = innerHTML;
@@ -1297,10 +1297,9 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
 
 
 /* VISIT SPECIALIST CONTROL */
-function get_visit_specialist_control(start_dispanser_date){
+function get_visit_specialist_control(dispensary_id){
     var visit_specialist_control = {
-        "medcard_num": medcard_num,
-        "start_dispanser_date": start_dispanser_date
+        "dispensary_id": dispensary_id
     }
     $.ajax({
         type: "POST",
@@ -1310,7 +1309,7 @@ function get_visit_specialist_control(start_dispanser_date){
         contentType: "application/json",
         dataType: 'json',
         success: function(visit_specialist_control){
-            visit_specialist_control_add_btn.value = start_dispanser_date;
+            visit_specialist_control_add_btn.value = dispensary_id;
             let visit_specialist_control_div = document.querySelector('#visit-specialist-control-main-div')
             innerHTML = ""
             visit_specialist_control.forEach(element => {
@@ -1355,8 +1354,7 @@ function delete_visit_specialist_control(assigned_date){
 
 visit_specialist_control_commit_modal_btn.addEventListener('click', () => {
     var visit_specialist_control = {
-        "medcard_num": medcard_num,
-        "start_dispanser_date": visit_specialist_control_add_btn.value,
+        "dispensary_id": visit_specialist_control_add_btn.value,
         "assigned_date": visit_specialist_control_assigned_date_modal_dtpkr.value,
         "fact_date": visit_specialist_control_fact_date_modal_dtpkr.value || null
     }
@@ -1383,7 +1381,7 @@ visit_specialist_control_commit_modal_btn.addEventListener('click', () => {
             break;
 
             case 'update':
-                visit_specialist_control["prev_assigned_date"] = visit_specialist_control_close_modal_btn.value || null
+                visit_specialist_control["prev_assigned_date"] = visit_specialist_control_close_modal_btn.value
                 $.ajax({
                     type: "PUT",
                     async: true,

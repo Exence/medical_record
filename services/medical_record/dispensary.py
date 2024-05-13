@@ -51,6 +51,7 @@ class DispensaryService():
         dispensary = Dispensary(**dispensary_data.dict())
         self.session.add(dispensary)
         self.session.commit()
+        self.session.refresh(dispensary)
         return dispensary
 
     def update_dispensary(self, dispensary_data: DispensaryUpdate):

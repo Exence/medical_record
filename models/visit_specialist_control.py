@@ -6,11 +6,10 @@ from pydantic import (
 
 
 class VisitSpecialistControlMain(BaseModel):
-    medcard_num: int = Field(...)
-    start_dispanser_date: date = Field(...)
-
+    dispensary_id: int = Field(...) 
 
 class VisitSpecialistControlPK(VisitSpecialistControlMain):
+    
     assigned_date: date = Field(...)
 
 
