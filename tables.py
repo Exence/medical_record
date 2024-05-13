@@ -96,8 +96,9 @@ class Deworming(BaseTable):
 class Dispensary(BaseTable):
     __tablename__ = 'dispensaryes'
 
-    medcard_num = sa.Column(sa.Integer, primary_key=True)
-    start_date = sa.Column(sa.Date, primary_key=True)
+    id = sa.Column(sa.Integer, primary_key=True)
+    medcard_num = sa.Column(sa.Integer)
+    start_date = sa.Column(sa.Date)
     diagnosis = sa.Column(sa.String)
     specialist = sa.Column(sa.String)
     end_date = sa.Column(sa.Date, nullable=True)
@@ -376,7 +377,6 @@ class EpidVaccination(BaseTable):
 class VisitSpecialistControl(BaseTable):
     __tablename__ = 'visit_specialist_controls'
 
-    medcard_num = sa.Column(sa.Integer, primary_key=True)
-    start_dispanser_date = sa.Column(sa.Date, primary_key=True)
+    dispensary_id = sa.Column(sa.Integer, sa.ForeignKey('dispensaryes.id', ondelete='CASCADE'), primary_key=True)
     assigned_date = sa.Column(sa.Date, primary_key=True)
     fact_date = sa.Column(sa.Date, nullable=True)

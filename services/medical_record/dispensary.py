@@ -19,11 +19,11 @@ class DispensaryService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, start_date: date) -> Dispensary:
+    def _get_by_id(self, id: int) -> Dispensary:
         dispensary = (
             self.session
             .query(Dispensary)
-            .filter_by(medcard_num=medcard_num, start_date=start_date)
+            .filter_by(id=id)
             .first()
         )
 
@@ -43,8 +43,8 @@ class DispensaryService():
         )
         return dispensaryes
 
-    def get_dispensary_by_pk(self, dispensary_pk: DispensaryPK):
-        dispensary = self._get_by_pk(dispensary_pk.medcard_num, dispensary_pk.start_date)
+    def get_dispensary_by_id(self, id: int):
+        dispensary = self._get_by_id(id=id)
         return dispensary
 
     def add_new_dispensary(self, dispensary_data: DispensaryCreate):
@@ -54,16 +54,13 @@ class DispensaryService():
         return dispensary
 
     def update_dispensary(self, dispensary_data: DispensaryUpdate):
-        dispensary = self._get_by_pk(
-            dispensary_data.medcard_num, dispensary_data.prev_start_date)
+        dispensary = self._get_by_id(id=dispensary_data.id)
         for field, value in dispensary_data:
-            if field != 'prev_start_date':
-                setattr(dispensary, field, value)
+            setattr(dispensary, field, value)
         self.session.commit()
         return dispensary
 
-    def delete_dispensary(self, dispensary_pk: DispensaryPK):
-        dispensary = self._get_by_pk(
-            dispensary_pk.medcard_num, dispensary_pk.start_date)
+    def delete_dispensary(self, id: int):
+        dispensary = self._get_by_id(id=id)
         self.session.delete(dispensary)
         self.session.commit()

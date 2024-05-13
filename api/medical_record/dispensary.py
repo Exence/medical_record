@@ -23,10 +23,10 @@ async def get_dispensaryes_by_medcard_num(medcard_num: int,
 
 
 @router.post('/one', response_model=Dispensary)
-async def get_dispensary_by_pk(dispensary_pk: DispensaryPK,
+async def get_dispensary_by_id(dispensary_pk: DispensaryPK,
                                user: User = Depends(get_current_user),
                                service: DispensaryService = Depends()):
-    return service.get_dispensary_by_pk(dispensary_pk=dispensary_pk)
+    return service.get_dispensary_by_id(id=dispensary_pk.id)
 
 
 @router.post('/', response_model=Dispensary)
@@ -47,4 +47,4 @@ async def update_dispensary(dispensary_data: DispensaryUpdate,
 async def delete_dispensary(dispensary_pk: DispensaryPK,
                             user: User = Depends(get_current_user),
                             service: DispensaryService = Depends()):
-    service.delete_dispensary(dispensary_pk=dispensary_pk)
+    service.delete_dispensary(id=dispensary_pk.id)

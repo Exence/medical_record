@@ -6,18 +6,19 @@ from pydantic import (
 
 
 class DispensaryPK(BaseModel):
+    id: int = Field(...)
+
+
+class DispensaryBase(BaseModel):
     medcard_num: int = Field(...)
     start_date: date = Field(...)
-
-
-class DispensaryBase(DispensaryPK):
     diagnosis: str = Field(...)
     specialist: str = Field(...)
     end_date: date | None
     end_reason: str | None
 
 
-class Dispensary(DispensaryBase):
+class Dispensary(DispensaryPK, DispensaryBase):
     class Config:
         orm_mode = True
 
@@ -26,5 +27,5 @@ class DispensaryCreate(DispensaryBase):
     pass
 
 
-class DispensaryUpdate(DispensaryCreate):
-    prev_start_date: date = Field(...)
+class DispensaryUpdate(DispensaryPK, DispensaryCreate):
+    pass

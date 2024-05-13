@@ -1185,10 +1185,9 @@ function dispensary_add_set_info(){
     dispensary_commit_modal_btn.value = 'add'; 
 }
 
-function update_dispensary(start_date){
+function update_dispensary(id){
     var dispensary = {
-        "medcard_num": medcard_num,
-        "start_date": start_date
+        "id": id
     }
     $.ajax({
         type: "POST",
@@ -1200,7 +1199,7 @@ function update_dispensary(start_date){
         success: function(dispensary){
             dispensary_modal_header.innerHTML = "Редактирование сведений о перенесенном заболевании";
             dispensary_commit_modal_btn.value = 'update';
-            dispensary_close_modal_btn.value = dispensary.start_date;
+            dispensary_close_modal_btn.value = dispensary.id;
             dispensary_diagnosis_modal_inpt.value = dispensary.diagnosis;
             dispensary_specialist_modal_inpt.value = dispensary.specialist;
             dispensary_start_date_modal_dtpkr.value = dispensary.start_date;
@@ -1210,9 +1209,9 @@ function update_dispensary(start_date){
     });    
 }
 
-function delete_dispensary(start_date){
+function delete_dispensary(id){
     delete_modal_header.innerHTML = 'Удалить сведения о диспансерном наблюдении';
-    close_delete_modal_btn.value = start_date;
+    close_delete_modal_btn.value = id;
     delete_commit_modal_btn.value = 'delete_dispensary'
 }
 
@@ -1234,8 +1233,8 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
                 data: JSON.stringify(dispensary),
                 contentType: "application/json",
                 dataType: 'json',
-                success: () => {
-                    innerHTML = '<div name="div-dispensary-' + dispensary.start_date + '" class="col-12 mb-3">\
+                success: (response) => {
+                    innerHTML = '<div name="div-dispensary-' + response.id + '" class="col-12 mb-3">\
                     <p><strong>' + dispensary.diagnosis + '</strong> с <u><mark>' + dispensary.start_date + '</mark></u> по'
                     if (dispensary.end_date){
                         innerHTML += '<u><mark>' + dispensary.end_date + '</mark></u>'
@@ -1248,9 +1247,9 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
                     innerHTML += '<br>Специалист: <u><mark>' + dispensary.specialist + '</mark></u>\
                     </p>\
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
-                        <button type="button" class="btn btn-outline-info mt-2 btn-sm" data-bs-toggle="offcanvas" data-bs-target="#visitSpecialistControlOffcanvas" aria-controls="visitSpecialistControlOffcanvas" onclick="get_visit_specialist_control(\'' + dispensary.start_date + '\')">Контроль посещений специалиста</button>\
-                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" name="update-dispensary-' + dispensary.start_date + '-btn" onclick="update_dispensary(\'' + dispensary.start_date + '\')">Редактировать</button>\
-                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-dispensary-' + dispensary.start_date + '-btn" onclick="delete_dispensary(\'' + dispensary.start_date + '\')">Удалить</button>\
+                        <button type="button" class="btn btn-outline-info mt-2 btn-sm" data-bs-toggle="offcanvas" data-bs-target="#visitSpecialistControlOffcanvas" aria-controls="visitSpecialistControlOffcanvas" onclick="get_visit_specialist_control(\'' + response.id + '\')">Контроль посещений специалиста</button>\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" name="update-dispensary-' + response.id + '-btn" onclick="update_dispensary(\'' + response.id + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-dispensary-' + response.id + '-btn" onclick="delete_dispensary(\'' + response.id + '\')">Удалить</button>\
                     </div>\
                     </div>'
                     let dispensary_div = document.querySelector('#dispensary-main-div')
@@ -1260,7 +1259,7 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
             break;
 
             case 'update':
-                dispensary["prev_start_date"] = dispensary_close_modal_btn.value;
+                dispensary["id"] = dispensary_close_modal_btn.value
                 $.ajax({
                     type: "PUT",
                     async: true,
@@ -1285,9 +1284,8 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
                             <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#dispensaryModal" name="update-dispensary-' + dispensary.start_date + '-btn" onclick="update_dispensary(\'' + dispensary.start_date + '\')">Редактировать</button>\
                             <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-dispensary-' + dispensary.start_date + '-btn" onclick="delete_dispensary(\'' + dispensary.start_date + '\')">Удалить</button>\
                         </div>';
-                        let dispensary_div = document.getElementsByName('div-dispensary-' + dispensary.prev_start_date)[0]
+                        let dispensary_div = document.getElementsByName('div-dispensary-' + dispensary.id)[0]
                         dispensary_div.innerHTML = innerHTML;
-                        dispensary_div.setAttribute('name', 'div-dispensary-' + dispensary.start_date) 
                     }
                 });
                 break;
@@ -3067,8 +3065,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
 
         case 'delete_dispensary':
             var dispensary = {
-                "medcard_num": medcard_num,
-                "start_date": close_delete_modal_btn.value
+                "id": close_delete_modal_btn.value
             }
             $.ajax({
                 type: "DELETE",
@@ -3078,7 +3075,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
                 contentType: "application/json",
                 dataType: 'json',
                 success: () => {
-                    var dispensary_div = document.getElementsByName('div-dispensary-' + dispensary.start_date)[0];
+                    var dispensary_div = document.getElementsByName('div-dispensary-' + dispensary.id)[0];
                     dispensary_div.remove();
                 }
             });
