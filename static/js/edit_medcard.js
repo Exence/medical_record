@@ -3353,5 +3353,14 @@ function deleteMedcard(medcard_num) {
     } else {
         alert(`Для удаления необходимо ввести в поле ввода текст: "${confirmDeleteString}"`)
     }
-    
+}
+
+function export_to_xlsx() {
+    const url = "/api/v1/children/" + medcard_num + "/xlsx";
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "data.xlsx";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }

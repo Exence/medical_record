@@ -22,6 +22,7 @@ from .spa_treatment import router as spa_treatment_router
 from .tub_vac import router as tub_vac_router
 from .vaccination import router as vaccination_router
 from .visit_specialist_control import router as visit_specialist_control_router
+from .export import router as export_router
 
 
 sub_routers = [
@@ -47,6 +48,7 @@ sub_routers = [
     tub_vac_router,
     vaccination_router,
     visit_specialist_control_router,
+    export_router,
 ]
 
 router = APIRouter(

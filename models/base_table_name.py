@@ -1,0 +1,26 @@
+from enum import Enum
+
+
+class BaseTableNameModel(str, Enum):
+  Child = 'Child'
+  Allergy = 'Allergy'
+  Clinic = 'Clinic'
+  Deworming = 'Deworming'
+  Dispensary = 'Dispensary'
+  ExtraClass = 'ExtraClass'
+  GammaGlobulinInjection = 'GammaGlobulinInjection'
+  Hospitalization = 'Hospitalization'
+  MantouxTest = 'MantouxTest'
+  MedicalCertificate = 'MedicalCertificate'
+  MedicalExamination = 'MedicalExamination'
+  OngoingMedicalSupervision = 'OngoingMedicalSupervision'
+  OralSanation = 'OralSanation'
+  Parent = 'Parent'
+  PastIllness = 'PastIllness'
+  PrevaccinationCheckup = 'PrevaccinationCheckup'
+  Screening = 'Screening'
+  SpaTreatment = 'SpaTreatment'
+  TuberculosisVaccination = 'TuberculosisVaccination'
+  VacName = 'VacName'
+  Vaccination = 'Vaccination'
+  VisitSpecialistControl = 'VisitSpecialistControl'
