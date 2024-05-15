@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from database import get_session
 from services.user import check_user_access_to_medcard
 
-from models.tub_vac import TuberculosisVaccinationUpdate, TuberculosisVaccinationCreate, TuberculosisVaccinationPK
+from models.medical_record.tub_vac import TuberculosisVaccinationUpdate, TuberculosisVaccinationCreate, TuberculosisVaccinationPK
 from models.user import User
 from tables import TuberculosisVaccination
 

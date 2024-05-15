@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.tub_vac import (
+from models.medical_record.tub_vac import (
     TuberculosisVaccinationPK,
     TuberculosisVaccination,
     TuberculosisVaccinationCreate,

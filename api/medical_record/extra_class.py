@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.extra_class import (
+from models.medical_record.extra_class import (
     ExtraClassPK,
     ExtraClass,
     ExtraClassCreate,

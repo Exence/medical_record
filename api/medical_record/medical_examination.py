@@ -2,7 +2,12 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.medical_examination import MedicalExamination, MedicalExaminationPK, MedicalExaminationCreate, MedicalExaminationUpdate
+from models.medical_record.medical_examination import (
+    MedicalExamination,
+    MedicalExaminationPK, 
+    MedicalExaminationCreate, 
+    MedicalExaminationUpdate,
+)
 from models.user import User
 from services.medical_record.medical_examination import MedicalExaminationService
 from services.auth import get_current_user

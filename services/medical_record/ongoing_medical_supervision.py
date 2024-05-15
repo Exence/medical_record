@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from database import get_session
 from services.user import check_user_access_to_medcard
 
-from models.ongoing_medical_supervision import OngoingMedicalSupervisionUpdate, OngoingMedicalSupervisionCreate, OngoingMedicalSupervisionPK
+from models.medical_record.ongoing_medical_supervision import OngoingMedicalSupervisionUpdate, OngoingMedicalSupervisionCreate, OngoingMedicalSupervisionPK
 from models.user import User
 from tables import OngoingMedicalSupervision
 

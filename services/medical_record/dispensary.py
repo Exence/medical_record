@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from database import get_session
 from services.user import check_user_access_to_medcard
 
-from models.dispensary import DispensaryUpdate, DispensaryCreate, DispensaryPK
+from models.medical_record.dispensary import DispensaryUpdate, DispensaryCreate, DispensaryPK
 from models.user import User
 from tables import Dispensary
 

@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from database import get_session
 from services.user import check_user_access_to_medcard
 
-from models.mantoux_test import MantouxTestUpdate, MantouxTestCreate, MantouxTestPK
+from models.medical_record.mantoux_test import MantouxTestUpdate, MantouxTestCreate, MantouxTestPK
 from models.user import User
 from tables import MantouxTest
 

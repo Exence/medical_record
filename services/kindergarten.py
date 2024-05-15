@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from database import get_session
 
-from models.child import ChildWithParentsView as ChildWithParentsViewModel
+from models.medical_record.child import ChildWithParentsView as ChildWithParentsViewModel
 from models.kindergarten import KindergartenUpdate, KindergartenCreate, KindergartenWithchildren
 from models.user import User
 

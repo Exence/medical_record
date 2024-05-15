@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from database import get_session
 from services.user import check_user_access_to_medcard
 
-from models.allergy import AllergyUpdate, AllergyCreate, AllergyPK
+from models.medical_record.allergy import AllergyUpdate, AllergyCreate, AllergyPK
 from models.user import User
 from tables import Allergy
 

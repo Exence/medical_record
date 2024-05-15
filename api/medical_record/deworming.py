@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.deworming import (
+from models.medical_record.deworming import (
     DewormingPK,
     Deworming,
     DewormingCreate,

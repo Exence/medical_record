@@ -11,7 +11,7 @@ from database import get_session
 
 from services.user import check_user_access_to_medcard
 
-from models.medical_certificate import MedicalCertificateUpdate, MedicalCertificateCreate, MedicalCertificatePK
+from models.medical_record.medical_certificate import MedicalCertificateUpdate, MedicalCertificateCreate, MedicalCertificatePK
 from models.user import User
 from tables import MedicalCertificate
 

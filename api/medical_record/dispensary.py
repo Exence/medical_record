@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.dispensary import Dispensary, DispensaryPK, DispensaryCreate, DispensaryUpdate
+from models.medical_record.dispensary import Dispensary, DispensaryPK, DispensaryCreate, DispensaryUpdate
 from models.user import User
 from services.medical_record.dispensary import DispensaryService
 from services.auth import get_current_user

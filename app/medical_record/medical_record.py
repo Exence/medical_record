@@ -6,7 +6,7 @@ from fastapi import (
 )
 from fastapi.templating import Jinja2Templates
 
-from models.child import ChildEdit, CreateChildForm
+from models.medical_record.child import ChildEdit, CreateChildForm
 from models.user import User
 
 from services.auth import get_current_user

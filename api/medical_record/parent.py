@@ -3,8 +3,8 @@ from fastapi import (
     Depends,
 )
 
-from models.child import ChildPK
-from models.parent import (
+from models.medical_record.child import ChildPK
+from models.medical_record.parent import (
     Parent,
     ParentCreate,
     ParentTypeRequest,

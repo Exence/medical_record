@@ -8,7 +8,7 @@ from fastapi import (
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 
-from models.child import CreateChildForm
+from models.medical_record.child import CreateChildForm
 from models.json import JsonForm
 from models.user import User
 

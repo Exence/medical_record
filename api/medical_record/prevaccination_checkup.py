@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.prevaccination_checkup import (
+from models.medical_record.prevaccination_checkup import (
     PrevaccinationCheckupPK,
     PrevaccinationCheckup,
     PrevaccinationCheckupCreate,

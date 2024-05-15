@@ -15,7 +15,7 @@ from models.reports.tub_diagnostic import TubDiagnostic
 from models.reports.dew_diagnostic import DewDiagnostic
 from models.reports.annual import AgeType
 from models.user import User
-from models.vaccination import VacReport
+from models.medical_record.vaccination import VacReport
 from services.auth import (
     AuthService,
     get_current_user,

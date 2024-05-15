@@ -8,7 +8,7 @@ from database import get_session
 from models.reports.tub_diagnostic import TubDiagnostic
 from models.reports.annual import AnnualReport, AgeType
 from models.user import User
-from models.vaccination import VacReport
+from models.medical_record.vaccination import VacReport
 from tables import (Allergy,
                     Child,
                     Deworming,

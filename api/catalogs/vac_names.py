@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.vac_name import (
+from models.catalogs.vac_name import (
     VacNamePK,
     VacName,
     VacNameCreate,

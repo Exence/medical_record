@@ -10,7 +10,7 @@ from database import get_session
 
 from services.user import check_user_access_to_medcard
 
-from models.extra_class import ExtraClassUpdate, ExtraClassCreate, ExtraClassPK
+from models.medical_record.extra_class import ExtraClassUpdate, ExtraClassCreate, ExtraClassPK
 from models.user import User
 from tables import ExtraClass
 

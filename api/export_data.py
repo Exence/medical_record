@@ -1,17 +1,15 @@
-import os
 from fastapi import (
     APIRouter,
     Depends,
     HTTPException,
     status,
     Request,
-    Response,
 )
 from fastapi.responses import FileResponse
 from models.user import User
 from models.base_table_name import BaseTableNameModel
-from models.visit_specialist_control import VisitSpecialistControlMain
-from services.export import create_file_with_child_tab, append_data_in_xlsx_file
+from models.medical_record.visit_specialist_control import VisitSpecialistControlMain
+from services.export_data import create_file_with_child_tab, append_data_in_xlsx_file
 
 from services.auth import get_current_user
 from services.medical_record.medical_record import MedicalRecordService
@@ -39,7 +37,7 @@ from services.medical_record.visit_specialist_control import VisitSpecialistCont
 
 
 router = APIRouter(
-    prefix='/xlsx',
+    prefix='/children/{medcard_num}/xlsx',
     tags=['Export to xlsx']
 )
 

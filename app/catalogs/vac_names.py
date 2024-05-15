@@ -12,7 +12,7 @@ from fastapi.responses import RedirectResponse
 
 from models.auth import Token
 from models.json import JsonForm
-from models.vac_name import VacName
+from models.catalogs.vac_name import VacName
 from models.user import User
 from services.auth import (
     AuthService,

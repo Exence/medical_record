@@ -2,7 +2,7 @@ from pydantic import BaseModel, validator
 from fastapi import HTTPException
 from enum import Enum
 
-from models.child import Child
+from models.medical_record.child import Child
 
 
 class AgeType(str, Enum):

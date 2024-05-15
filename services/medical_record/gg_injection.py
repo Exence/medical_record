@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from database import get_session
 from services.user import check_user_access_to_medcard
 
-from models.gg_injection import GammaGlobulinInjectionUpdate, GammaGlobulinInjectionCreate, GammaGlobulinInjectionPK
+from models.medical_record.gg_injection import GammaGlobulinInjectionUpdate, GammaGlobulinInjectionCreate, GammaGlobulinInjectionPK
 from models.user import User
 from tables import GammaGlobulinInjection
 

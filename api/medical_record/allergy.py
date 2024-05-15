@@ -4,7 +4,7 @@ from fastapi import (
     HTTPException,
     status,
 )
-from models.allergy import Allergy, AllergyPK, AllergyCreate, AllergyUpdate
+from models.medical_record.allergy import Allergy, AllergyPK, AllergyCreate, AllergyUpdate
 from models.user import User
 from services.medical_record.allergy import AllergyService
 from services.auth import get_current_user

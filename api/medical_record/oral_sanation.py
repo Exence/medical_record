@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.oral_sanation import (
+from models.medical_record.oral_sanation import (
     OralSanationPK,
     OralSanation,
     OralSanationCreate,

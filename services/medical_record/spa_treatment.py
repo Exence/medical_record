@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from database import get_session
 from services.user import check_user_access_to_medcard
 
-from models.spa_treatment import SpaTreatmentUpdate, SpaTreatmentCreate, SpaTreatmentPK
+from models.medical_record.spa_treatment import SpaTreatmentUpdate, SpaTreatmentCreate, SpaTreatmentPK
 from models.user import User
 from tables import SpaTreatment
 

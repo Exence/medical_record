@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.child import Child, ChildCreate
+from models.medical_record.child import Child, ChildCreate
 from models.user import User
 from services.medical_record.medical_record import MedicalRecordService
 from services.auth import get_current_user

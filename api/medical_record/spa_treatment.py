@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.spa_treatment import (
+from models.medical_record.spa_treatment import (
     SpaTreatmentPK,
     SpaTreatment,
     SpaTreatmentCreate,

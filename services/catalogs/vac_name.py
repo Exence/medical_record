@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from database import get_session
 
-from models.vac_name import VacNameUpdate, VacNameCreate, VacNamePK, VacNameTypeDict
+from models.catalogs.vac_name import VacNameUpdate, VacNameCreate, VacNamePK, VacNameTypeDict
 
 from models.user import User
 from tables import VacName, Vaccination, PrevaccinationCheckup

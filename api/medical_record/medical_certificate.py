@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.medical_certificate import (
+from models.medical_record.medical_certificate import (
     MedicalCertificatePK,
     MedicalCertificate,
     MedicalCertificateCreate,

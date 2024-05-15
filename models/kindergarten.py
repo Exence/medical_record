@@ -2,7 +2,7 @@ from pydantic import (
     BaseModel,
     Field,
 )
-from models.child import ChildWithParentsView
+from models.medical_record.child import ChildWithParentsView
 from typing import TypedDict
 
 

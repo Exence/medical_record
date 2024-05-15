@@ -3,7 +3,7 @@ from fastapi import (
     Depends,
 )
 
-from models.screening import (
+from models.medical_record.screening import (
     ScreeningPK,
     Screening,
     ScreeningCreate,

@@ -10,8 +10,8 @@ from database import get_session
 from services.medical_record.parent import ParentService
 from services.user import check_user_access_to_medcard
 
-from models.child import ChildCreate, ChildEdit, CreateChildForm, Child as ChildModel
-from models.parent import ParentCreate, ParentType
+from models.medical_record.child import ChildCreate, ChildEdit, CreateChildForm, Child as ChildModel
+from models.medical_record.parent import ParentCreate, ParentType
 from models.user import User
 from tables import Child, ChildWithParents
 

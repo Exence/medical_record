@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.hospitalization import (
+from models.medical_record.hospitalization import (
     HospitalizationPK,
     Hospitalization,
     HospitalizationCreate,

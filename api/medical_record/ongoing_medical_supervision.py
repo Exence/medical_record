@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.ongoing_medical_supervision import (
+from models.medical_record.ongoing_medical_supervision import (
     OngoingMedicalSupervisionPK,
     OngoingMedicalSupervision,
     OngoingMedicalSupervisionCreate,

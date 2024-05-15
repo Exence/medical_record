@@ -10,8 +10,8 @@ from pydantic import (
 )
 from datetime import date
 
-from models.parent import Parent
-from models.clinic import Clinic
+from models.medical_record.parent import Parent
+from models.catalogs.clinic import Clinic
 
 
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
@@ -69,7 +69,7 @@ class ChildEdit(ChildBase):
 class Child(ChildPK, ChildBase, ParentsIds):
     father: Parent | None
     mother: Parent | None
-    clinic: Clinic
+    clinic: Clinic | None
     
     class Config:
         orm_mode = True

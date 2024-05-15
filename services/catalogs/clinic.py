@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from database import get_session
 
-from models.clinic import ClinicUpdate, ClinicCreate, ClinicPK
+from models.catalogs.clinic import ClinicUpdate, ClinicCreate, ClinicPK
 
 from models.user import User
 from tables import Clinic, Child
@@ -46,6 +46,15 @@ class ClinicService():
 
     def get_clinic_by_id(self, id: int) -> Clinic:
         return self._get_by_pk(id)
+    
+    def get_clinic_by_name(self, name: str):
+        clinic = (
+            self.session
+            .query(Clinic)
+            .filter_by(name=name)
+            .first()
+        )
+        return clinic
 
     def add_new_clinic(self, clinic_data: ClinicCreate):
         clinic = Clinic(**clinic_data.dict())

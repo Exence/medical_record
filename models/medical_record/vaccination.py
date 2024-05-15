@@ -11,7 +11,7 @@ from pydantic import (
     validator,
 )
 
-from models.vac_name import VacName
+from models.catalogs.vac_name import VacName
 
 
 LETTER_MATCH_PATTERN_WITH_SPACE = re.compile(r"^[а-яА-Яa-zA-Z\- ]+$")

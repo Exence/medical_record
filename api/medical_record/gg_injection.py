@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.gg_injection import (
+from models.medical_record.gg_injection import (
     GammaGlobulinInjectionPK,
     GammaGlobulinInjection,
     GammaGlobulinInjectionCreate,

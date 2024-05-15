@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.visit_specialist_control import (
+from models.medical_record.visit_specialist_control import (
     VisitSpecialistControlMain,
     VisitSpecialistControlPK,
     VisitSpecialistControl,

@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.past_illness import (
+from models.medical_record.past_illness import (
     PastIllnessPK,
     PastIllness,
     PastIllnessCreate,

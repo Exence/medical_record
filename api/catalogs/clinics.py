@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.clinic import (
+from models.catalogs.clinic import (
     ClinicPK,
     Clinic,
     ClinicCreate,

@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.mantoux_test import (
+from models.medical_record.mantoux_test import (
     MantouxTestPK,
     MantouxTest,
     MantouxTestCreate,

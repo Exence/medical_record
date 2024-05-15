@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.vaccination import VaccinationPK
+from models.medical_record.vaccination import VaccinationPK
 from models.user import User
 from services.medical_record.vaccination import VaccinationService
 from services.auth import get_current_user

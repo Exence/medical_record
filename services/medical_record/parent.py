@@ -9,8 +9,8 @@ from database import get_session
 
 from services.user import check_user_access_to_medcard
 
-from models.child import Child
-from models.parent import Parent, ParentUpdate, ParentCreate, ParentsResponse
+from models.medical_record.child import Child
+from models.medical_record.parent import Parent, ParentUpdate, ParentCreate, ParentsResponse
 from models.user import User
 
 from tables import Parent, Child
@@ -44,6 +44,18 @@ class ParentService():
         
         return ParentsResponse(father=child.father, mother=child.mother)
             
+    def get_paren_by_full_data(self, parent_data: Parent):
+        parent = (self.session
+                  .query(Parent)
+                  .filter_by(surname = parent_data.surname)
+                  .filter_by(name = parent_data.name)
+                  .filter_by(patronymic = parent_data.patronymic)
+                  .filter_by(birthday_year = parent_data.birthday_year)
+                  .filter_by(education = parent_data.education)
+                  .filter_by(phone_num = parent_data.phone_num)
+                  .first()
+                  )
+        return parent
 
     def add_new_parent(self,  medcard_num: int, parent_data: ParentCreate):
         transaction = self.session.begin()
