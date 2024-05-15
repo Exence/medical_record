@@ -3082,8 +3082,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
         
         case 'delete_visit_specialist_control':
             var visit_specialist_control = {
-                "medcard_num": medcard_num,
-                "start_dispanser_date": visit_specialist_control_add_btn.value,
+                "dispensary_id": visit_specialist_control_add_btn.value,
                 "assigned_date": close_delete_modal_btn.value
             }
             $.ajax({
