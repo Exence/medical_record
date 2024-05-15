@@ -33,7 +33,7 @@ class TuberculosisVaccinationService():
             )
         return tub_vac
 
-    def get_tub_vacs_by_medcard_num(self, medcard_num: int) -> list[TuberculosisVaccination]:
+    def get_tuberculosis_vaccinations_by_medcard_num(self, medcard_num: int) -> list[TuberculosisVaccination]:
         tub_vacs = (
             self.session.query(TuberculosisVaccination)
             .filter_by(medcard_num=medcard_num)
@@ -42,18 +42,18 @@ class TuberculosisVaccinationService():
         )
         return tub_vacs
 
-    def get_tub_vac_by_pk(self, tub_vac_pk: TuberculosisVaccinationPK):
+    def get_tuberculosis_vaccination_by_pk(self, tub_vac_pk: TuberculosisVaccinationPK):
         tub_vac = self._get_by_pk(
                 tub_vac_pk.medcard_num, tub_vac_pk.vac_date)
         return tub_vac
 
-    def add_new_tub_vac(self, tub_vac_data: TuberculosisVaccinationCreate):
+    def add_new_tuberculosis_vaccination(self, tub_vac_data: TuberculosisVaccinationCreate):
         tub_vac = TuberculosisVaccination(**tub_vac_data.dict())
         self.session.add(tub_vac)
         self.session.commit()
         return tub_vac
 
-    def update_tub_vac(self, tub_vac_data: TuberculosisVaccinationUpdate):
+    def update_tuberculosis_vaccination(self, tub_vac_data: TuberculosisVaccinationUpdate):
         tub_vac = self._get_by_pk(
             tub_vac_data.medcard_num, tub_vac_data.prev_vac_date)
         for field, value in tub_vac_data:
@@ -62,7 +62,7 @@ class TuberculosisVaccinationService():
         self.session.commit()
         return tub_vac
 
-    def delete_tub_vac(self, tub_vac_pk: TuberculosisVaccinationPK):
+    def delete_tuberculosis_vaccination(self, tub_vac_pk: TuberculosisVaccinationPK):
         tub_vac = self._get_by_pk(
             tub_vac_pk.medcard_num, tub_vac_pk.vac_date)
         self.session.delete(tub_vac)

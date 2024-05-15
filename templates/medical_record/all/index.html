@@ -7,10 +7,11 @@
 {% block content %}
 	<div class="container">
     <div class="row">
-      <div class="col-8 offset-2">
+      <div class="col-6 offset-3">
           <h1 class="text-center">Все медкарты</h1>
       </div>
-      <div class="col-2 d-flex justify-content-end align-items-center">
+      <div class="col-3 d-flex justify-content-end align-items-center">
+          <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#importModal">Импорт</button>
           <a href="/medical_record/create" class="btn btn-outline-primary">Создать медкарту</a>
       </div>
     </div>
@@ -38,4 +39,29 @@
           </div> 
     </div>
 	</div>
+
+  <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Импортировать медкарту ребенка</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h1>Выберете файл для имрорта</h1>
+              <form id="uploadForm" enctype="multipart/form-data">
+                  <input type="file" id="fileInput" name="file">
+              </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="import-close-modal">Отмена</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="import-commit-modal" onclick="import_from_xlsx()">Импортировать</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', path='js/import_medcard.js') }}"></script>
 {% endblock %}

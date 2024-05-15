@@ -105,11 +105,11 @@ def get_child_medcard(medcard_num: int, request: Request,
         medcard_num=medcard_num)
     epid_vaccinations = vaccination_service.get_epid_vaccinations_by_medcard_num(
         medcard_num=medcard_num)
-    gg_injections = gg_injection_service.get_gg_injections_by_medcard_num(
+    gg_injections = gg_injection_service.get_gamma_globulin_injections_by_medcard_num(
         medcard_num=medcard_num)
     mantoux_tests = mantoux_test_service.get_mantoux_tests_by_medcard_num(
         medcard_num=medcard_num)
-    tub_vacs = tub_vac_service.get_tub_vacs_by_medcard_num(
+    tub_vacs = tub_vac_service.get_tuberculosis_vaccinations_by_medcard_num(
         medcard_num=medcard_num)
     medical_examinations = medical_examination_service.get_medical_examinations_by_medcard_num(
         medcard_num=medcard_num)

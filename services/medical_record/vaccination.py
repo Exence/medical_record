@@ -36,9 +36,7 @@ class VaccinationService():
     def get_vaccinations_by_medcard_num(self, medcard_num: int) -> list[Vaccination]:
         vaccinations = (
             self.session.query(Vaccination)
-            .join(VacName, Vaccination.vac_name_id == VacName.id)
             .filter_by(medcard_num=medcard_num)
-            .order_by(VacName.name)
             .order_by(Vaccination.vac_date)
             .all()
         )

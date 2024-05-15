@@ -1974,7 +1974,7 @@ function gg_injection_add_set_info(){
     gg_injection_commit_modal_btn.value = 'add'; 
 }
 
-function update_gg_injection(vac_date){
+function update_gamma_globulin_injection(vac_date){
     var gg_injection = {
         "medcard_num": medcard_num,
         "vac_date": vac_date
@@ -2000,10 +2000,10 @@ function update_gg_injection(vac_date){
     });    
 }
 
-function delete_gg_injection(vac_date){
+function delete_gamma_globulin_injection(vac_date){
     delete_modal_header.innerHTML = 'Удалить сведения о введении гамма-глобулина';
     close_delete_modal_btn.value = vac_date;
-    delete_commit_modal_btn.value = 'delete_gg_injection';
+    delete_commit_modal_btn.value = 'delete_gamma_globulin_injection';
 }
 
 gg_injection_commit_modal_btn.addEventListener('click', () =>{    
@@ -2033,8 +2033,8 @@ gg_injection_commit_modal_btn.addEventListener('click', () =>{
                         Врач: <u><mark>' + gg_injection.doctor + '</mark></u>\
                     </p>\
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
-                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#ggInjectionModal" name="update-gg-injection-' + gg_injection.vac_date + '-btn" onclick="update_gg_injection(\'' + gg_injection.vac_date + '\')">Редактировать</button>\
-                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-gg-injection-' + gg_injection.vac_date + '-btn" onclick="delete_gg_injection(\'' + gg_injection.vac_date + '\')">Удалить</button>\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#ggInjectionModal" name="update-gg-injection-' + gg_injection.vac_date + '-btn" onclick="update_gamma_globulin_injection(\'' + gg_injection.vac_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-gg-injection-' + gg_injection.vac_date + '-btn" onclick="delete_gamma_globulin_injection(\'' + gg_injection.vac_date + '\')">Удалить</button>\
                     </div>\
                     </div>';
                     let gg_injection_div = document.querySelector('#gg-injection-main-div');
@@ -2059,8 +2059,8 @@ gg_injection_commit_modal_btn.addEventListener('click', () =>{
                         Врач: <u><mark>' + gg_injection.doctor + '</mark></u>\
                         </p>\
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
-                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#ggInjectionModal" name="update-gg-injection-' + gg_injection.vac_date + '-btn" onclick="update_gg_injection(\'' + gg_injection.vac_date + '\')">Редактировать</button>\
-                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-gg-injection-' + gg_injection.vac_date + '-btn" onclick="delete_gg_injection(\'' + gg_injection.vac_date + '\')">Удалить</button>\
+                            <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#ggInjectionModal" name="update-gg-injection-' + gg_injection.vac_date + '-btn" onclick="update_gamma_globulin_injection(\'' + gg_injection.vac_date + '\')">Редактировать</button>\
+                            <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-gg-injection-' + gg_injection.vac_date + '-btn" onclick="delete_gamma_globulin_injection(\'' + gg_injection.vac_date + '\')">Удалить</button>\
                         </div>';
                         let gg_injection_div = document.getElementsByName('div-gg-injection-' + gg_injection.prev_vac_date)[0]
                         gg_injection_div.innerHTML = innerHTML;
@@ -2182,7 +2182,7 @@ function tub_vac_add_set_info(){
     tub_vac_commit_modal_btn.value = 'add'; 
 }
 
-function update_tub_vac(vac_date){
+function update_tuberculosis_vaccination(vac_date){
     var tub_vac = {
         "medcard_num": medcard_num,
         "vac_date": vac_date
@@ -2206,10 +2206,10 @@ function update_tub_vac(vac_date){
     });    
 }
 
-function delete_tub_vac(vac_date){
+function delete_tuberculosis_vaccination(vac_date){
     delete_modal_header.innerHTML = 'Удалить сведения о введении прививки против туберкулеза (БЦЖ)';
     close_delete_modal_btn.value = vac_date;
-    delete_commit_modal_btn.value = 'delete_tub_vac';
+    delete_commit_modal_btn.value = 'delete_tuberculosis_vaccination';
 }
 
 tub_vac_commit_modal_btn.addEventListener('click', () =>{    
@@ -2236,8 +2236,8 @@ tub_vac_commit_modal_btn.addEventListener('click', () =>{
                         Врач: <u><mark>' + tub_vac.doctor + '</mark></u>\
                     </p>\
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
-                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#tubVacModal" name="update-tub-vac-' + tub_vac.vac_date + '-btn" onclick="update_tub_vac(\'' + tub_vac.vac_date + '\')">Редактировать</button>\
-                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-tub-vac-' + tub_vac.vac_date + '-btn" onclick="delete_tub_vac(\'' + tub_vac.vac_date + '\')">Удалить</button>\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#tubVacModal" name="update-tub-vac-' + tub_vac.vac_date + '-btn" onclick="update_tuberculosis_vaccination(\'' + tub_vac.vac_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-tub-vac-' + tub_vac.vac_date + '-btn" onclick="delete_tuberculosis_vaccination(\'' + tub_vac.vac_date + '\')">Удалить</button>\
                     </div>\
                 </div>';
                     let tub_vac_div = document.querySelector('#tub-vac-main-div');
@@ -2261,8 +2261,8 @@ tub_vac_commit_modal_btn.addEventListener('click', () =>{
                         Врач: <u><mark>' + tub_vac.doctor + '</mark></u>\
                     </p>\
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">\
-                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#tubVacModal" name="update-tub-vac-' + tub_vac.vac_date + '-btn" onclick="update_tub_vac(\'' + tub_vac.vac_date + '\')">Редактировать</button>\
-                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-tub-vac-' + tub_vac.vac_date + '-btn" onclick="delete_tub_vac(\'' + tub_vac.vac_date + '\')">Удалить</button>\
+                        <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#tubVacModal" name="update-tub-vac-' + tub_vac.vac_date + '-btn" onclick="update_tuberculosis_vaccination(\'' + tub_vac.vac_date + '\')">Редактировать</button>\
+                        <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" name="delete-tub-vac-' + tub_vac.vac_date + '-btn" onclick="delete_tuberculosis_vaccination(\'' + tub_vac.vac_date + '\')">Удалить</button>\
                     </div>';
                         let tub_vac_div = document.getElementsByName('div-tub-vac-' + tub_vac.prev_vac_date)[0]
                         tub_vac_div.innerHTML = innerHTML;
@@ -3205,7 +3205,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             
             break;
 
-        case 'delete_gg_injection':
+        case 'delete_gamma_globulin_injection':
             var gg_injection = {
                 "medcard_num": medcard_num,
                 "vac_date": close_delete_modal_btn.value
@@ -3245,7 +3245,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             
             break;
 
-        case 'delete_tub_vac':
+        case 'delete_tuberculosis_vaccination':
             var tub_vac = {
                 "medcard_num": medcard_num,
                 "vac_date": close_delete_modal_btn.value

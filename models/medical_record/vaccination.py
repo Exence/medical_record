@@ -34,7 +34,7 @@ class VaccinationBase(VaccinationPK):
 
 
 class Vaccination(VaccinationBase):
-    vac_name: VacName
+    vac_name: VacName | None
 
     class Config:
         orm_mode = True

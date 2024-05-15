@@ -10,7 +10,7 @@ from database import get_session
 from services.user import check_user_access_to_medcard
 
 from models.medical_record.child import Child
-from models.medical_record.parent import Parent, ParentUpdate, ParentCreate, ParentsResponse
+from models.medical_record.parent import Parent, ParentUpdate, ParentCreate, ParentsResponse, ParentType
 from models.user import User
 
 from tables import Parent, Child
@@ -81,7 +81,17 @@ class ParentService():
             print(error)
             transaction.rollback()
             transaction.close()
-        
+    def add_parent_to_medcard(self, medcard_num: int, parent_id: int, parent_type: ParentType):
+        child = (
+                self.session
+                .query(Child)
+                .filter_by(medcard_num=medcard_num)
+                .first()
+            )
+        setattr(child, f"{parent_type.value}_id", parent_id)
+        self.session.commit()
+        return parent_id
+
     def update_parent(self,  medcard_num: int, parent_data: ParentUpdate):
         parent = self._get(parent_data.id)
         for field, value in parent_data:

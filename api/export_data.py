@@ -107,18 +107,16 @@ async def get_xlsx_data_by_medcard_num(medcard_num: int, request: Request,
             prevaccination_checkups = prevaccination_checkup_service.get_prevaccination_checkups_by_medcard_num(
                 medcard_num=medcard_num)
             append_data_in_xlsx_file(data=prevaccination_checkups,tab_name=BaseTableNameModel.PrevaccinationCheckup, filename=filename)
-            prof_vaccinations = vaccination_service.get_prof_vaccinations_by_medcard_num(
+            vaccinations = vaccination_service.get_vaccinations_by_medcard_num(
                 medcard_num=medcard_num)
-            epid_vaccinations = vaccination_service.get_epid_vaccinations_by_medcard_num(
-                medcard_num=medcard_num)
-            append_data_in_xlsx_file(data=prof_vaccinations + epid_vaccinations,tab_name=BaseTableNameModel.Vaccination, filename=filename)
-            gg_injections = gg_injection_service.get_gg_injections_by_medcard_num(
+            append_data_in_xlsx_file(data=vaccinations,tab_name=BaseTableNameModel.Vaccination, filename=filename)
+            gg_injections = gg_injection_service.get_gamma_globulin_injections_by_medcard_num(
                 medcard_num=medcard_num)
             append_data_in_xlsx_file(data=gg_injections,tab_name=BaseTableNameModel.GammaGlobulinInjection, filename=filename)
             mantoux_tests = mantoux_test_service.get_mantoux_tests_by_medcard_num(
                 medcard_num=medcard_num)
             append_data_in_xlsx_file(data=mantoux_tests,tab_name=BaseTableNameModel.MantouxTest, filename=filename)
-            tub_vacs = tub_vac_service.get_tub_vacs_by_medcard_num(
+            tub_vacs = tub_vac_service.get_tuberculosis_vaccinations_by_medcard_num(
                 medcard_num=medcard_num)
             append_data_in_xlsx_file(data=tub_vacs,tab_name=BaseTableNameModel.TuberculosisVaccination, filename=filename)
             medical_examinations = medical_examination_service.get_medical_examinations_by_medcard_num(
