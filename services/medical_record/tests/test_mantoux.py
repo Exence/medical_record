@@ -4,8 +4,8 @@ from pytest import (
 )
 
 from fastapi import HTTPException, status
-from services.medical_record.mantoux_test import MantouxTestService
-from models.medical_record.mantoux_test import MantouxTest, MantouxTestCreate, MantouxTestUpdate, MantouxTestPK
+from services.medical_record.mantoux import MantouxTestService
+from models.medical_record.mantoux import MantouxTest, MantouxTestCreate, MantouxTestUpdate, MantouxTestPK
 from tables import MantouxTest as MantouxTestTable
 
 
@@ -68,7 +68,7 @@ def test_add_new_mantoux_test(mantoux_test_service, db_mantoux_test, mocker):
     mock_mantoux_test = mocker.MagicMock(spec=MantouxTestTable)
 
     mock_add = mocker.patch.object(mantoux_test_service.session, 'add')
-    mocker.patch('services.medical_record.mantoux_test.MantouxTest', return_value=mock_mantoux_test)
+    mocker.patch('services.medical_record.mantoux.MantouxTest', return_value=mock_mantoux_test)
     mantoux_test = mantoux_test_service.add_new_mantoux_test(mantoux_test_create)
 
     mock_add.assert_called_once_with(mock_mantoux_test)

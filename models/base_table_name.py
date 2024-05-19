@@ -8,7 +8,7 @@ from models.medical_record.dispensary import Dispensary
 from models.medical_record.extra_class import ExtraClass
 from models.medical_record.gg_injection import GammaGlobulinInjection
 from models.medical_record.hospitalization import Hospitalization
-from models.medical_record.mantoux_test import MantouxTest
+from models.medical_record.mantoux import MantouxTest
 from models.medical_record.medical_certificate import MedicalCertificate
 from models.medical_record.medical_examination import MedicalExamination
 from models.medical_record.ongoing_medical_supervision import OngoingMedicalSupervision

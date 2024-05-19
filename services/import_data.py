@@ -21,7 +21,7 @@ from services.medical_record.oral_sanation import OralSanationService
 from services.medical_record.prevaccination_checkup import PrevaccinationCheckupService
 from services.medical_record.vaccination import VaccinationService
 from services.medical_record.gg_injection import GammaGlobulinInjectionService
-from services.medical_record.mantoux_test import MantouxTestService
+from services.medical_record.mantoux import MantouxTestService
 from services.medical_record.tub_vac import TuberculosisVaccinationService
 from services.medical_record.medical_examination import MedicalExaminationService
 from services.medical_record.ongoing_medical_supervision import OngoingMedicalSupervisionService
@@ -38,7 +38,7 @@ from models.medical_record.deworming import DewormingCreate
 from models.medical_record.extra_class import ExtraClassCreate
 from models.medical_record.gg_injection import GammaGlobulinInjectionCreate
 from models.medical_record.hospitalization import HospitalizationCreate
-from models.medical_record.mantoux_test import MantouxTestCreate
+from models.medical_record.mantoux import MantouxTestCreate
 from models.medical_record.medical_certificate import MedicalCertificateCreate
 from models.medical_record.medical_examination import MedicalExaminationCreate
 from models.medical_record.ongoing_medical_supervision import OngoingMedicalSupervisionCreate

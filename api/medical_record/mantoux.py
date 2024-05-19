@@ -2,14 +2,14 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.medical_record.mantoux_test import (
+from models.medical_record.mantoux import (
     MantouxTestPK,
     MantouxTest,
     MantouxTestCreate,
     MantouxTestUpdate,
 )
 from models.user import User
-from services.medical_record.mantoux_test import MantouxTestService
+from services.medical_record.mantoux import MantouxTestService
 from services.auth import get_current_user
 
 

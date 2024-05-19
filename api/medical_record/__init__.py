@@ -8,7 +8,7 @@ from .epid_vaccination import router as epid_vaccination_router
 from .extra_class import router as extra_class_router
 from .gg_injection import router as gg_injection_router
 from .hospitalization import router as hospitalization_router
-from .mantoux_test import router as mantoux_test_router
+from .mantoux import router as mantoux_test_router
 from .medical_certificate import router as medical_certificate_router
 from .medical_examination import router as medical_examination_router
 from .ongoing_medical_supervision import router as ongoing_medical_supervision_router
