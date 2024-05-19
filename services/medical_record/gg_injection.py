@@ -18,7 +18,7 @@ class GammaGlobulinInjectionService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, vac_date: date) -> GammaGlobulinInjection:
+    def _get(self, medcard_num: int, vac_date: date) -> GammaGlobulinInjection:
         gg_injection = (
             self.session
             .query(GammaGlobulinInjection)
@@ -43,7 +43,7 @@ class GammaGlobulinInjectionService():
         return gg_injections
 
     def get_gamma_globulin_injection_by_pk(self, gg_injection_pk: GammaGlobulinInjectionPK):
-        gg_injection = self._get_by_pk(gg_injection_pk.medcard_num, gg_injection_pk.vac_date)
+        gg_injection = self._get(gg_injection_pk.medcard_num, gg_injection_pk.vac_date)
         return gg_injection
 
     def add_new_gamma_globulin_injection(self, gg_injection_data: GammaGlobulinInjectionCreate):
@@ -53,7 +53,7 @@ class GammaGlobulinInjectionService():
         return gg_injection
 
     def update_gamma_globulin_injection(self, gg_injection_data: GammaGlobulinInjectionUpdate):
-        gg_injection = self._get_by_pk(
+        gg_injection = self._get(
             gg_injection_data.medcard_num, gg_injection_data.prev_vac_date)
         for field, value in gg_injection_data:
             if field != 'prev_vac_date':
@@ -62,7 +62,7 @@ class GammaGlobulinInjectionService():
         return gg_injection
 
     def delete_gamma_globulin_injection(self, gg_injection_pk: GammaGlobulinInjectionPK):
-        gg_injection = self._get_by_pk(
+        gg_injection = self._get(
             gg_injection_pk.medcard_num, gg_injection_pk.vac_date)
         self.session.delete(gg_injection)
         self.session.commit()

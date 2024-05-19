@@ -23,7 +23,7 @@ class VisitSpecialistControlService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, dispensary_id: int, assigned_date: date) -> VisitSpecialistControl:
+    def _get(self, dispensary_id: int, assigned_date: date) -> VisitSpecialistControl:
         visit_specialist_control = (
             self.session
             .query(VisitSpecialistControl)
@@ -48,7 +48,7 @@ class VisitSpecialistControlService():
         return visit_specialist_controls
 
     def get_visit_specialist_control_by_pk(self, visit_specialist_control_pk: VisitSpecialistControlPK):
-        visit_specialist_control = self._get_by_pk(
+        visit_specialist_control = self._get(
                 dispensary_id=visit_specialist_control_pk.dispensary_id, assigned_date=visit_specialist_control_pk.assigned_date)
         return visit_specialist_control
 
@@ -60,7 +60,7 @@ class VisitSpecialistControlService():
         return visit_specialist_control
 
     def update_visit_specialist_control(self, visit_specialist_control_data: VisitSpecialistControlUpdate):
-        visit_specialist_control = self._get_by_pk(
+        visit_specialist_control = self._get(
             visit_specialist_control_data.dispensary_id, visit_specialist_control_data.prev_assigned_date)
         for field, value in visit_specialist_control_data:
             if not field in ['prev_assigned_date']:
@@ -69,7 +69,7 @@ class VisitSpecialistControlService():
         return visit_specialist_control
 
     def delete_visit_specialist_control(self, visit_specialist_control_pk: VisitSpecialistControlPK):
-        visit_specialist_control = self._get_by_pk(
+        visit_specialist_control = self._get(
             dispensary_id=visit_specialist_control_pk.dispensary_id, assigned_date=visit_specialist_control_pk.assigned_date)
         self.session.delete(visit_specialist_control)
         self.session.commit()

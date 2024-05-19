@@ -19,7 +19,7 @@ class DispensaryService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_id(self, id: int) -> Dispensary:
+    def _get(self, id: int) -> Dispensary:
         dispensary = (
             self.session
             .query(Dispensary)
@@ -34,17 +34,17 @@ class DispensaryService():
             )
         return dispensary
 
-    def get_dispensaryes_by_medcard_num(self, medcard_num: int) -> list[Dispensary]:
-        dispensaryes = (
+    def get_dispensaries_by_medcard_num(self, medcard_num: int) -> list[Dispensary]:
+        dispensaries = (
             self.session.query(Dispensary)
             .filter_by(medcard_num=medcard_num)
             .order_by(Dispensary.start_date)
             .all()
         )
-        return dispensaryes
+        return dispensaries
 
-    def get_dispensary_by_id(self, id: int):
-        dispensary = self._get_by_id(id=id)
+    def get_dispensary_by_pk(self, id: int):
+        dispensary = self._get(id=id)
         return dispensary
 
     def add_new_dispensary(self, dispensary_data: DispensaryCreate):
@@ -55,13 +55,13 @@ class DispensaryService():
         return dispensary
 
     def update_dispensary(self, dispensary_data: DispensaryUpdate):
-        dispensary = self._get_by_id(id=dispensary_data.id)
+        dispensary = self._get(id=dispensary_data.id)
         for field, value in dispensary_data:
             setattr(dispensary, field, value)
         self.session.commit()
         return dispensary
 
     def delete_dispensary(self, id: int):
-        dispensary = self._get_by_id(id=id)
+        dispensary = self._get(id=id)
         self.session.delete(dispensary)
         self.session.commit()

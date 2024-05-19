@@ -164,8 +164,8 @@ def import_from_xlsx(filename: str,
 
     try:
         ws = wb["Dispensary"]
-        dispensaryes_gen = create_obj_generator_from_ws(ws=ws, tab_name="Dispensary")
-        for dispensary in dispensaryes_gen:
+        dispensaries_gen = create_obj_generator_from_ws(ws=ws, tab_name="Dispensary")
+        for dispensary in dispensaries_gen:
             old_dispensary_id = dispensary.id
             dispensary.medcard_num = child.medcard_num
             dispensary = dispensary_service.add_new_dispensary(dispensary_data=DispensaryCreate(**dispensary.dict()))

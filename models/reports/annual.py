@@ -50,8 +50,8 @@ class AnnualReport(BaseModel):
   attention_and_memory_disorders_list: list[Child] = list()
   social_contacts_disorders: int = 0
   social_contacts_disorders_list: list[Child] = list()
-  allergyes: int = 0
-  allergyes_list: list[Child] = list()
+  allergies: int = 0
+  allergies_list: list[Child] = list()
 
   @validator('year')
   def check_year_range(cls, year):

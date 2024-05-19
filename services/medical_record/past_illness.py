@@ -20,7 +20,7 @@ class PastIllnessService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, start_date: date, diagnosis: str) -> PastIllness:
+    def _get(self, medcard_num: int, start_date: date, diagnosis: str) -> PastIllness:
         past_illness = (
             self.session
             .query(PastIllness)
@@ -45,7 +45,7 @@ class PastIllnessService():
         return past_illnesses
 
     def get_past_illness_by_pk(self, past_illness_pk: PastIllnessPK):
-        past_illness = self._get_by_pk(medcard_num=past_illness_pk.medcard_num,
+        past_illness = self._get(medcard_num=past_illness_pk.medcard_num,
                                            start_date=past_illness_pk.start_date, diagnosis=past_illness_pk.diagnosis)
         return past_illness
 
@@ -56,7 +56,7 @@ class PastIllnessService():
         return past_illness
 
     def update_past_illness(self, past_illness_data: PastIllnessUpdate):
-        past_illness = self._get_by_pk(
+        past_illness = self._get(
             past_illness_data.medcard_num, past_illness_data.prev_start_date, past_illness_data.prev_diagnosis)
         for field, value in past_illness_data:
             if field != 'prev_start_date' and field != 'prev_diagnosis':
@@ -65,7 +65,7 @@ class PastIllnessService():
         return past_illness
 
     def delete_past_illness(self, past_illness_pk: PastIllnessPK):
-        past_illness = self._get_by_pk(
+        past_illness = self._get(
             past_illness_pk.medcard_num, past_illness_pk.start_date, past_illness_pk.diagnosis)
         self.session.delete(past_illness)
         self.session.commit()

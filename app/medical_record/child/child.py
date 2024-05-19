@@ -77,7 +77,7 @@ def get_child_medcard(medcard_num: int, request: Request,
     child = service.get_medcard_by_num(medcard_num=medcard_num)
     father, mother = service.get_parents_by_medcard_num(medcard_num=medcard_num,parent_service=parents_service)
     kindergartens = [{"number": user.kindergarten_num, "name": user.kindergarten_name}]
-    allergyes = allergy_service.get_allergyes_by_medcard_num(
+    allergies = allergy_service.get_allergies_by_medcard_num(
         medcard_num=medcard_num)
     clinics = clinic_service.get_all_clinics_as_dict()
     extra_classes = extra_class_service.get_extra_classes_by_medcard_num(
@@ -90,7 +90,7 @@ def get_child_medcard(medcard_num: int, request: Request,
         medcard_num=medcard_num)
     medical_certificates = medical_certificate_service.get_medical_certificates_by_medcard_num(
         medcard_num=medcard_num)
-    dispensaryes = dispensary_service.get_dispensaryes_by_medcard_num(
+    dispensaries = dispensary_service.get_dispensaries_by_medcard_num(
         medcard_num=medcard_num)
     dewormings = deworming_service.get_dewormings_by_medcard_num(
         medcard_num=medcard_num)
@@ -121,7 +121,7 @@ def get_child_medcard(medcard_num: int, request: Request,
         "/medical_record/children/index.html", {"request": request,
                                             "child": child,
                                             "kindergartens": kindergartens,
-                                            "allergyes": allergyes,
+                                            "allergies": allergies,
                                             "clinics": clinics,
                                             "father": father,
                                             "mother": mother,
@@ -130,7 +130,7 @@ def get_child_medcard(medcard_num: int, request: Request,
                                             "hospitalizations": hospitalizations,
                                             "spa_treatments": spa_treatments,
                                             "medical_certificates": medical_certificates,
-                                            "dispensaryes": dispensaryes,
+                                            "dispensaries": dispensaries,
                                             "dewormings": dewormings,
                                             "oral_sanations": oral_sanations,
                                             "prof_vac_names": prof_vac_names,

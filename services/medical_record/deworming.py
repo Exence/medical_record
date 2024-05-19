@@ -18,7 +18,7 @@ class DewormingService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, deworming_date: date) -> Deworming:
+    def _get(self, medcard_num: int, deworming_date: date) -> Deworming:
         deworming = (
             self.session
             .query(Deworming)
@@ -43,7 +43,7 @@ class DewormingService():
         return dewormings
 
     def get_deworming_by_pk(self, deworming_pk: DewormingPK):
-        deworming = self._get_by_pk(deworming_pk.medcard_num, deworming_pk.deworming_date)
+        deworming = self._get(deworming_pk.medcard_num, deworming_pk.deworming_date)
         return deworming
 
     def add_new_deworming(self, deworming_data: DewormingCreate):
@@ -53,7 +53,7 @@ class DewormingService():
         return deworming
 
     def update_deworming(self, deworming_data: DewormingUpdate):
-        deworming = self._get_by_pk(
+        deworming = self._get(
             deworming_data.medcard_num, deworming_data.prev_deworming_date)
         for field, value in deworming_data:
             if field != 'prev_deworming_date':
@@ -62,7 +62,7 @@ class DewormingService():
         return deworming
 
     def delete_deworming(self, deworming_pk: DewormingPK):
-        deworming = self._get_by_pk(
+        deworming = self._get(
             deworming_pk.medcard_num, deworming_pk.deworming_date)
         self.session.delete(deworming)
         self.session.commit()

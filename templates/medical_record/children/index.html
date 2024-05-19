@@ -49,7 +49,7 @@
         <div id="allergy-collapse" class="accordion-collapse collapse" aria-labelledby="allergy-header">
           <div class="accordion-body" >
             <div id="allergy-block">
-              {% for allergy in allergyes %}
+              {% for allergy in allergies %}
                 {% include '/medical_record/children/main_divs/allergy.html' %}                               
               {% endfor %} 
             </div>                    
@@ -150,7 +150,7 @@
         <div id="dispensary-collapse" class="accordion-collapse collapse" aria-labelledby="dispensary-header">
           <div class="accordion-body" >
             <div id="dispensary-main-div">
-              {% for dispensary in dispensaryes %}
+              {% for dispensary in dispensaries %}
                 {% include '/medical_record/children/main_divs/dispensary.html' %}                               
               {% endfor %} 
             </div>                    

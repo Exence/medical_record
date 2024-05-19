@@ -20,7 +20,7 @@ class MedicalCertificateService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, disease: str, cert_date: date) -> MedicalCertificate:
+    def _get(self, medcard_num: int, disease: str, cert_date: date) -> MedicalCertificate:
         medical_certificate = (
             self.session
             .query(MedicalCertificate)
@@ -45,7 +45,7 @@ class MedicalCertificateService():
         return medical_certificates
 
     def get_medical_certificate_by_pk(self, medical_certificate_pk: MedicalCertificatePK):
-        medical_certificate = self._get_by_pk(
+        medical_certificate = self._get(
                 medical_certificate_pk.medcard_num, medical_certificate_pk.disease, medical_certificate_pk.cert_date)
         return medical_certificate
 
@@ -57,7 +57,7 @@ class MedicalCertificateService():
         return medical_certificate
 
     def update_medical_certificate(self, medical_certificate_data: MedicalCertificateUpdate):
-        medical_certificate = self._get_by_pk(
+        medical_certificate = self._get(
             medical_certificate_data.medcard_num, medical_certificate_data.prev_disease, medical_certificate_data.prev_cert_date)
         for field, value in medical_certificate_data:
             if field != 'prev_disease' and field != 'prev_cert_date':
@@ -66,7 +66,7 @@ class MedicalCertificateService():
         return medical_certificate
 
     def delete_medical_certificate(self, medical_certificate_pk: MedicalCertificatePK):
-        medical_certificate = self._get_by_pk(
+        medical_certificate = self._get(
             medical_certificate_pk.medcard_num, medical_certificate_pk.disease, medical_certificate_pk.cert_date)
         self.session.delete(medical_certificate)
         self.session.commit()

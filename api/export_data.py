@@ -75,8 +75,8 @@ async def get_xlsx_data_by_medcard_num(medcard_num: int, request: Request,
             father, mother = service.get_parents_by_medcard_num(medcard_num=medcard_num,parent_service=parents_service)
             if father or mother:
               append_data_in_xlsx_file(data=[father, mother],tab_name=BaseTableNameModel.Parent, filename=filename)
-            allergyes = allergy_service.get_allergyes_by_medcard_num(medcard_num=medcard_num)
-            append_data_in_xlsx_file(data=allergyes,tab_name=BaseTableNameModel.Allergy, filename=filename)
+            allergies = allergy_service.get_allergies_by_medcard_num(medcard_num=medcard_num)
+            append_data_in_xlsx_file(data=allergies,tab_name=BaseTableNameModel.Allergy, filename=filename)
             extra_classes = extra_class_service.get_extra_classes_by_medcard_num(
                 medcard_num=medcard_num)
             append_data_in_xlsx_file(data=extra_classes,tab_name=BaseTableNameModel.ExtraClass, filename=filename)
@@ -92,9 +92,9 @@ async def get_xlsx_data_by_medcard_num(medcard_num: int, request: Request,
             medical_certificates = medical_certificate_service.get_medical_certificates_by_medcard_num(
                 medcard_num=medcard_num)
             append_data_in_xlsx_file(data=medical_certificates,tab_name=BaseTableNameModel.MedicalCertificate, filename=filename)
-            dispensaryes = dispensary_service.get_dispensaryes_by_medcard_num(
+            dispensaries = dispensary_service.get_dispensaries_by_medcard_num(
                 medcard_num=medcard_num)
-            append_data_in_xlsx_file(data=dispensaryes,tab_name=BaseTableNameModel.Dispensary, filename=filename)
+            append_data_in_xlsx_file(data=dispensaries,tab_name=BaseTableNameModel.Dispensary, filename=filename)
             dewormings = deworming_service.get_dewormings_by_medcard_num(
                 medcard_num=medcard_num)
             append_data_in_xlsx_file(data=dewormings,tab_name=BaseTableNameModel.Deworming, filename=filename)
@@ -129,7 +129,7 @@ async def get_xlsx_data_by_medcard_num(medcard_num: int, request: Request,
                 medcard_num=medcard_num)
             append_data_in_xlsx_file(data=screenings,tab_name=BaseTableNameModel.Screening, filename=filename)
             visit_specialist_controls = []
-            for dispensary in dispensaryes:
+            for dispensary in dispensaries:
                 visit_specialist_control = visit_specialist_control_service.get_visit_specialist_controls_by_dispensary(VisitSpecialistControlMain(dispensary_id=dispensary.id))
                 visit_specialist_controls += visit_specialist_control
             append_data_in_xlsx_file(data=visit_specialist_controls,tab_name=BaseTableNameModel.VisitSpecialistControl, filename=filename)

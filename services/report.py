@@ -181,7 +181,7 @@ class ReportService():
                     report.social_contacts_disorders += 1
                     report.social_contacts_disorders_list.append(child)
 
-            ### Allergyes
+            ### Allergies
             allergy = (
                 self.session
                 .query(Allergy)
@@ -190,8 +190,8 @@ class ReportService():
                 .first()
             )
             if allergy:
-                report.allergyes += 1
-                report.allergyes_list.append(child)
+                report.allergies += 1
+                report.allergies_list.append(child)
 
             ### END FOR
 

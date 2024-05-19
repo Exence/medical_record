@@ -9,24 +9,24 @@ from services.auth import get_current_user
 
 
 router = APIRouter(
-    prefix='/dispensaryes',
+    prefix='/dispensaries',
     tags=['Dispensary']
 )
 
 
 @router.get('/', response_model=list[Dispensary])
-async def get_dispensaryes_by_medcard_num(medcard_num: int,
+async def get_dispensaries_by_medcard_num(medcard_num: int,
                                           user: User = Depends(
                                               get_current_user),
                                           service: DispensaryService = Depends()):
-    return service.get_dispensaryes_by_medcard_num(medcard_num=medcard_num)
+    return service.get_dispensaries_by_medcard_num(medcard_num=medcard_num)
 
 
 @router.post('/one', response_model=Dispensary)
-async def get_dispensary_by_id(dispensary_pk: DispensaryPK,
+async def get_dispensary_by_pk(dispensary_pk: DispensaryPK,
                                user: User = Depends(get_current_user),
                                service: DispensaryService = Depends()):
-    return service.get_dispensary_by_id(id=dispensary_pk.id)
+    return service.get_dispensary_by_pk(id=dispensary_pk.id)
 
 
 @router.post('/', response_model=Dispensary)

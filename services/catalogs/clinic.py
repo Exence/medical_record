@@ -18,7 +18,7 @@ class ClinicService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, id: int) -> Clinic:
+    def _get(self, id: int) -> Clinic:
         clinic = (
             self.session
             .query(Clinic)
@@ -45,7 +45,7 @@ class ClinicService():
         return clinics
 
     def get_clinic_by_id(self, id: int) -> Clinic:
-        return self._get_by_pk(id)
+        return self._get(id)
     
     def get_clinic_by_name(self, name: str):
         clinic = (
@@ -79,7 +79,7 @@ class ClinicService():
             )
 
     def update_clinic(self, clinic_data: ClinicUpdate):
-        clinic = self._get_by_pk(clinic_data.id)
+        clinic = self._get(clinic_data.id)
         for field, value in clinic_data:
             setattr(clinic, field, value)
         
@@ -108,7 +108,7 @@ class ClinicService():
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Невозможно удалить поликлинику, так как есть дети, записанные в эту поликлинику"
             )
-        clinic = self._get_by_pk(clinic_pk.id)
+        clinic = self._get(clinic_pk.id)
         try:
             self.session.delete(clinic)
             self.session.commit()

@@ -18,7 +18,7 @@ class AllergyService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, allergen: str) -> Allergy:
+    def _get(self, medcard_num: int, allergen: str) -> Allergy:
         allergy = (
             self.session
             .query(Allergy)
@@ -33,17 +33,17 @@ class AllergyService():
             )
         return allergy
 
-    def get_allergyes_by_medcard_num(self, medcard_num: int) -> list[Allergy]:
-        allergyes = (
+    def get_allergies_by_medcard_num(self, medcard_num: int) -> list[Allergy]:
+        allergies = (
             self.session.query(Allergy)
             .filter_by(medcard_num=medcard_num)
             .order_by(Allergy.start_age)
             .all()
         )
-        return allergyes
+        return allergies
 
     def get_allergy_by_pk(self, allergy_pk: AllergyPK):
-        allergy = self._get_by_pk(allergy_pk.medcard_num, allergy_pk.allergen)
+        allergy = self._get(allergy_pk.medcard_num, allergy_pk.allergen)
         return allergy
 
     def add_new_allergy(self, allergy_data: AllergyCreate):
@@ -53,7 +53,7 @@ class AllergyService():
         return allergy
 
     def update_allergy(self, allergy_data: AllergyUpdate):
-        allergy = self._get_by_pk(
+        allergy = self._get(
             allergy_data.medcard_num, allergy_data.prev_allergen)
         for field, value in allergy_data:
             if field != 'prev_allergen':
@@ -62,7 +62,7 @@ class AllergyService():
         return allergy
 
     def delete_allergy(self, allergy_pk: AllergyPK):
-        allergy = self._get_by_pk(
+        allergy = self._get(
             allergy_pk.medcard_num, allergy_pk.allergen)
         self.session.delete(allergy)
         self.session.commit()

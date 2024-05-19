@@ -245,10 +245,10 @@ CREATE VIEW public.all_children AS
 ALTER TABLE public.all_children OWNER TO postgres;
 
 --
--- Name: allergyes; Type: TABLE; Schema: public; Owner: postgres
+-- Name: allergies; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.allergyes (
+CREATE TABLE public.allergies (
     medcard_num integer NOT NULL,
     allergen character varying(200) NOT NULL,
     allergy_type character varying(35) NOT NULL,
@@ -256,11 +256,11 @@ CREATE TABLE public.allergyes (
     reaction_type character varying(200) NOT NULL,
     diagnosis_date date NOT NULL,
     note text,
-    CONSTRAINT allergyes_allergy_type_check CHECK ((((allergy_type)::text = 'Вакцинальная'::text) OR ((allergy_type)::text = 'Лекарственная'::text) OR ((allergy_type)::text = 'Аллергические заболевания'::text)))
+    CONSTRAINT allergies_allergy_type_check CHECK ((((allergy_type)::text = 'Вакцинальная'::text) OR ((allergy_type)::text = 'Лекарственная'::text) OR ((allergy_type)::text = 'Аллергические заболевания'::text)))
 );
 
 
-ALTER TABLE public.allergyes OWNER TO postgres;
+ALTER TABLE public.allergies OWNER TO postgres;
 
 --
 -- Name: children_medcard_num_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -298,10 +298,10 @@ CREATE TABLE public.dewormings (
 ALTER TABLE public.dewormings OWNER TO postgres;
 
 --
--- Name: dispensaryes; Type: TABLE; Schema: public; Owner: postgres
+-- Name: dispensaries; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.dispensaryes (
+CREATE TABLE public.dispensaries (
     medcard_num integer NOT NULL,
     start_date date NOT NULL,
     diagnosis text NOT NULL,
@@ -311,7 +311,7 @@ CREATE TABLE public.dispensaryes (
 );
 
 
-ALTER TABLE public.dispensaryes OWNER TO postgres;
+ALTER TABLE public.dispensaries OWNER TO postgres;
 
 --
 -- Name: extra_classes; Type: TABLE; Schema: public; Owner: postgres
@@ -709,10 +709,10 @@ ALTER TABLE ONLY public.vac_names ALTER COLUMN id SET DEFAULT nextval('public.va
 
 
 --
--- Data for Name: allergyes; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: allergies; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.allergyes (medcard_num, allergen, allergy_type, start_age, reaction_type, diagnosis_date, note) FROM stdin;
+COPY public.allergies (medcard_num, allergen, allergy_type, start_age, reaction_type, diagnosis_date, note) FROM stdin;
 3	Пыльца трав	Вакцинальная	2	Аллергическая реакция I типа	2023-04-09	
 44	Трезвость	Аллергические заболевания	2	Смерть	2021-06-16	Такие дела
 \.
@@ -743,10 +743,10 @@ COPY public.dewormings (medcard_num, deworming_date, result) FROM stdin;
 
 
 --
--- Data for Name: dispensaryes; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: dispensaries; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.dispensaryes (medcard_num, start_date, diagnosis, specialist, end_date, end_reason) FROM stdin;
+COPY public.dispensaries (medcard_num, start_date, diagnosis, specialist, end_date, end_reason) FROM stdin;
 3	2022-01-01	Гастроэнтерит	Гастроэнтеролог	2023-01-06	Выздоровление
 \.
 
@@ -963,11 +963,11 @@ SELECT pg_catalog.setval('public.vac_names_id_seq', 8, true);
 
 
 --
--- Name: allergyes allergyes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: allergies allergies_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.allergyes
-    ADD CONSTRAINT allergyes_pkey PRIMARY KEY (medcard_num, allergen);
+ALTER TABLE ONLY public.allergies
+    ADD CONSTRAINT allergies_pkey PRIMARY KEY (medcard_num, allergen);
 
 
 --
@@ -987,11 +987,11 @@ ALTER TABLE ONLY public.dewormings
 
 
 --
--- Name: dispensaryes dispensaryes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: dispensaries dispensaries_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.dispensaryes
-    ADD CONSTRAINT dispensaryes_pkey PRIMARY KEY (medcard_num, start_date);
+ALTER TABLE ONLY public.dispensaries
+    ADD CONSTRAINT dispensaries_pkey PRIMARY KEY (medcard_num, start_date);
 
 
 --
@@ -1197,11 +1197,11 @@ CREATE TRIGGER users_insert_trigger BEFORE INSERT ON public.users FOR EACH ROW E
 
 
 --
--- Name: allergyes allergyes_medcard_num_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: allergies allergies_medcard_num_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.allergyes
-    ADD CONSTRAINT allergyes_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
+ALTER TABLE ONLY public.allergies
+    ADD CONSTRAINT allergies_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --
@@ -1237,11 +1237,11 @@ ALTER TABLE ONLY public.dewormings
 
 
 --
--- Name: dispensaryes dispensaryes_medcard_num_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: dispensaries dispensaries_medcard_num_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.dispensaryes
-    ADD CONSTRAINT dispensaryes_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
+ALTER TABLE ONLY public.dispensaries
+    ADD CONSTRAINT dispensaries_medcard_num_fkey FOREIGN KEY (medcard_num) REFERENCES public.children(medcard_num) ON DELETE CASCADE;
 
 
 --

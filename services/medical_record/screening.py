@@ -18,7 +18,7 @@ class ScreeningService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, examination_date: date) -> Screening:
+    def _get(self, medcard_num: int, examination_date: date) -> Screening:
         screening = (
             self.session
             .query(Screening)
@@ -43,7 +43,7 @@ class ScreeningService():
         return screenings
 
     def get_screening_by_pk(self, screening_pk: ScreeningPK):
-        screening = self._get_by_pk(
+        screening = self._get(
                 screening_pk.medcard_num, screening_pk.examination_date)
         return screening
 
@@ -55,7 +55,7 @@ class ScreeningService():
         return screening
 
     def update_screening(self, screening_data: ScreeningUpdate):
-        screening = self._get_by_pk(
+        screening = self._get(
             screening_data.medcard_num, screening_data.prev_examination_date)
         for field, value in screening_data:
             if field != 'prev_examination_date':
@@ -65,7 +65,7 @@ class ScreeningService():
         return screening
 
     def delete_screening(self, screening_pk: ScreeningPK):
-        screening = self._get_by_pk(
+        screening = self._get(
             screening_pk.medcard_num, screening_pk.examination_date)
         self.session.delete(screening)
         self.session.commit()

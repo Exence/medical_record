@@ -18,7 +18,7 @@ class VacNameService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, id: int) -> VacName:
+    def _get(self, id: int) -> VacName:
         vac_name = (
             self.session
             .query(VacName)
@@ -51,7 +51,7 @@ class VacNameService():
         return vac_names
 
     def get_vac_name_by_id(self, id: int) -> VacName:
-        return self._get_by_pk(id)
+        return self._get(id)
 
     def get_vac_names_by_type(self, vac_type: str) -> list[VacName]:
         return (
@@ -86,7 +86,7 @@ class VacNameService():
             )
 
     def update_vac_name(self, vac_name_data: VacNameUpdate):
-        vac_name = self._get_by_pk(vac_name_data.id)
+        vac_name = self._get(vac_name_data.id)
         for field, value in vac_name_data:
             setattr(vac_name, field, value)
         try:
@@ -119,6 +119,6 @@ class VacNameService():
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Невозможно удалить прививку, так как есть дети, которые осмотр перед данной прививкой"
             )
-        vac_name = self._get_by_pk(vac_name_pk.id)
+        vac_name = self._get(vac_name_pk.id)
         self.session.delete(vac_name)
         self.session.commit()

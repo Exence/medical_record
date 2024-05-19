@@ -18,7 +18,7 @@ class VaccinationService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, vac_name_id: int, vac_type: str) -> Vaccination:
+    def _get(self, medcard_num: int, vac_name_id: int, vac_type: str) -> Vaccination:
         vaccination = (
             self.session
             .query(Vaccination)
@@ -43,7 +43,7 @@ class VaccinationService():
         return vaccinations
 
     def get_vaccination_by_pk(self, vaccination_pk: VaccinationPK):
-        vaccination = self._get_by_pk(
+        vaccination = self._get(
                 vaccination_pk.medcard_num, vaccination_pk.vac_name_id, vaccination_pk.vac_type)
         return vaccination
 
@@ -54,7 +54,7 @@ class VaccinationService():
         return vaccination
 
     def update_vaccination(self, vaccination_data: VaccinationUpdate):
-        vaccination = self._get_by_pk(
+        vaccination = self._get(
             vaccination_data.medcard_num, vaccination_data.prev_vac_name_id, vaccination_data.prev_vac_type)
         for field, value in vaccination_data:
             if not field in ['prev_vac_name_id', 'prev_vac_type']:
@@ -63,7 +63,7 @@ class VaccinationService():
         return vaccination
 
     def delete_vaccination(self, vaccination_pk: VaccinationPK):
-        vaccination = self._get_by_pk(
+        vaccination = self._get(
             vaccination_pk.medcard_num, vaccination_pk.vac_name_id, vaccination_pk.vac_type)
         self.session.delete(vaccination)
         self.session.commit()

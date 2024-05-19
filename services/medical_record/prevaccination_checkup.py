@@ -24,7 +24,7 @@ class PrevaccinationCheckupService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, examination_date: date) -> PrevaccinationCheckup:
+    def _get(self, medcard_num: int, examination_date: date) -> PrevaccinationCheckup:
         prevaccination_checkup = (
             self.session
             .query(PrevaccinationCheckup)
@@ -49,7 +49,7 @@ class PrevaccinationCheckupService():
         return prevaccination_checkups
 
     def get_prevaccination_checkup_by_pk(self, prevaccination_checkup_pk: PrevaccinationCheckupPK):
-        prevaccination_checkup = self._get_by_pk(
+        prevaccination_checkup = self._get(
                 prevaccination_checkup_pk.medcard_num, prevaccination_checkup_pk.examination_date)
         return prevaccination_checkup
 
@@ -61,7 +61,7 @@ class PrevaccinationCheckupService():
         return prevaccination_checkup
 
     def update_prevaccination_checkup(self, prevaccination_checkup_data: PrevaccinationCheckupUpdate):
-        prevaccination_checkup = self._get_by_pk(
+        prevaccination_checkup = self._get(
             prevaccination_checkup_data.medcard_num, prevaccination_checkup_data.examination_date)
         for field, value in prevaccination_checkup_data:
             if field != 'prev_examination_date':
@@ -70,7 +70,7 @@ class PrevaccinationCheckupService():
         return prevaccination_checkup
 
     def delete_prevaccination_checkup(self, prevaccination_checkup_pk: PrevaccinationCheckupPK):
-        prevaccination_checkup = self._get_by_pk(
+        prevaccination_checkup = self._get(
             prevaccination_checkup_pk.medcard_num, prevaccination_checkup_pk.examination_date)
         self.session.delete(prevaccination_checkup)
         self.session.commit()

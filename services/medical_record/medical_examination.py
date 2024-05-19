@@ -18,7 +18,7 @@ class MedicalExaminationService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, period: str) -> MedicalExamination:
+    def _get(self, medcard_num: int, period: str) -> MedicalExamination:
         medical_examination = (
             self.session
             .query(MedicalExamination)
@@ -43,7 +43,7 @@ class MedicalExaminationService():
         return medical_examinations
 
     def get_medical_examination_by_pk(self, medical_examination_pk: MedicalExaminationPK):
-        medical_examination = self._get_by_pk(
+        medical_examination = self._get(
                 medical_examination_pk.medcard_num, medical_examination_pk.period)
         return medical_examination
 
@@ -55,7 +55,7 @@ class MedicalExaminationService():
         return medical_examination
 
     def update_medical_examination(self, medical_examination_data: MedicalExaminationUpdate):
-        medical_examination = self._get_by_pk(
+        medical_examination = self._get(
             medical_examination_data.medcard_num, medical_examination_data.prev_period)
         for field, value in medical_examination_data:
             if field != 'prev_period':
@@ -64,7 +64,7 @@ class MedicalExaminationService():
         return medical_examination
 
     def delete_medical_examination(self, medical_examination_pk: MedicalExaminationPK):
-        medical_examination = self._get_by_pk(
+        medical_examination = self._get(
             medical_examination_pk.medcard_num, medical_examination_pk.period)
         self.session.delete(medical_examination)
         self.session.commit()

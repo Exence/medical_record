@@ -18,7 +18,7 @@ class SpaTreatmentService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, start_date: date) -> SpaTreatment:
+    def _get(self, medcard_num: int, start_date: date) -> SpaTreatment:
         spa_treatment = (
             self.session
             .query(SpaTreatment)
@@ -43,7 +43,7 @@ class SpaTreatmentService():
         return spa_treatments
 
     def get_spa_treatment_by_pk(self, spa_treatment_pk: SpaTreatmentPK):
-        spa_treatment = self._get_by_pk(
+        spa_treatment = self._get(
                 spa_treatment_pk.medcard_num, spa_treatment_pk.start_date)
         return spa_treatment
 
@@ -54,7 +54,7 @@ class SpaTreatmentService():
         return spa_treatment
 
     def update_spa_treatment(self, spa_treatment_data: SpaTreatmentUpdate):
-        spa_treatment = self._get_by_pk(
+        spa_treatment = self._get(
             spa_treatment_data.medcard_num, spa_treatment_data.prev_start_date)
         for field, value in spa_treatment_data:
             if field != 'prev_start_date':
@@ -63,7 +63,7 @@ class SpaTreatmentService():
         return spa_treatment
 
     def delete_spa_treatment(self, spa_treatment_pk: SpaTreatmentPK):
-        spa_treatment = self._get_by_pk(
+        spa_treatment = self._get(
             spa_treatment_pk.medcard_num, spa_treatment_pk.start_date)
         self.session.delete(spa_treatment)
         self.session.commit()

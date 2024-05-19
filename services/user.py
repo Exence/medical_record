@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from database import get_session
 
-from passlib.hash import bcrypt
+import bcrypt
 from typing import Any
 
 from models.user import (
@@ -30,7 +30,7 @@ def check_user_access_to_medcard(user: User, medcard_num: int, session: Session 
 class UserService():
     @classmethod
     def get_hashed_password(cls, password: str) -> str:
-        return bcrypt.encrypt(password + settings.password_salt)
+        return bcrypt.hashpw(password.encode('utf-8'), settings.password_salt.encode())
 
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
@@ -65,11 +65,17 @@ class UserService():
     
     def update_user(self, current_data: UserModel, updated_data: UserModel) -> UserModel:
         user = self._get(current_data.kindergarten_num)
-        for key, value in updated_data.dict().items():
-            setattr(user, key, value)
-        self.session.commit()
-        user_dict = {column.name: getattr(user, column.name) for column in user.__table__.columns}
-        return UserModel(**user_dict)
+        if user:
+            for key, value in updated_data.dict().items():
+                setattr(user, key, value)
+            self.session.commit()
+            user_dict = {column.name: getattr(user, column.name) for column in user.__table__.columns}
+            return UserModel(**user_dict)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='User is not found'
+            )
     
     def change_password(self, user: UserModel, new_password: str) -> UserModel:
         new_password_hash = self.get_hashed_password(new_password)

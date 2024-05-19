@@ -18,7 +18,7 @@ class MantouxTestService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, check_date: date) -> MantouxTest:
+    def _get(self, medcard_num: int, check_date: date) -> MantouxTest:
         mantoux_test = (
             self.session
             .query(MantouxTest)
@@ -43,7 +43,7 @@ class MantouxTestService():
         return mantoux_tests
 
     def get_mantoux_test_by_pk(self, mantoux_test_pk: MantouxTestPK):
-        mantoux_test = self._get_by_pk(
+        mantoux_test = self._get(
                 mantoux_test_pk.medcard_num, mantoux_test_pk.check_date)
         return mantoux_test
 
@@ -54,7 +54,7 @@ class MantouxTestService():
         return mantoux_test
 
     def update_mantoux_test(self, mantoux_test_data: MantouxTestUpdate):
-        mantoux_test = self._get_by_pk(
+        mantoux_test = self._get(
             mantoux_test_data.medcard_num, mantoux_test_data.prev_check_date)
         for field, value in mantoux_test_data:
             if field != 'prev_check_date':
@@ -63,7 +63,7 @@ class MantouxTestService():
         return mantoux_test
 
     def delete_mantoux_test(self, mantoux_test_pk: MantouxTestPK):
-        mantoux_test = self._get_by_pk(
+        mantoux_test = self._get(
             mantoux_test_pk.medcard_num, mantoux_test_pk.check_date)
         self.session.delete(mantoux_test)
         self.session.commit()

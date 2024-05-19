@@ -11,17 +11,17 @@ from services.auth import get_current_user
 
 
 router = APIRouter(
-    prefix='/allergyes',
+    prefix='/allergies',
     tags=['Allergy']
 )
 
 
 @router.get('/', response_model=list[Allergy])
-async def get_allergyes_by_medcard_num(medcard_num: int,
+async def get_allergies_by_medcard_num(medcard_num: int,
                                        user: User = Depends(get_current_user),
                                        service: AllergyService = Depends()):
     if user:
-        return service.get_allergyes_by_medcard_num(medcard_num=medcard_num)
+        return service.get_allergies_by_medcard_num(medcard_num=medcard_num)
     else:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN

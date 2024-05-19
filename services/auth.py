@@ -1,6 +1,7 @@
 from datetime import (
     datetime,
     timedelta,
+    UTC
 )
 from fastapi import (
     Cookie,
@@ -12,7 +13,7 @@ from jose import (
     jwt,
     JWTError,
 )
-from passlib.hash import bcrypt
+import bcrypt
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
@@ -36,7 +37,7 @@ def get_current_user(access_token: str = Depends(oauth2_scheme)) -> User:
 class AuthService():
     @classmethod
     def verify_password(cls, password: str, password_hash: str) -> bool:
-        return bcrypt.verify(password + settings.password_salt, password_hash)
+        return bcrypt.checkpw((password).encode('utf-8'), password_hash.encode('utf-8'))
 
     @classmethod
     def validate_token(cls, token: str) -> UserModel:
@@ -67,7 +68,7 @@ class AuthService():
 
     @classmethod
     def create_token(cls, user_data: User) -> Token:
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         payload = {
             'iat': now,
             'nbf': now,
@@ -105,7 +106,7 @@ class AuthService():
 
         user = UserModel(**user.__dict__)
 
-        #if not self.verify_password(password, user.password_hash):
-        #    raise exception
+        if not self.verify_password(password, user.password_hash):
+            raise exception
 
         return self.create_token(user)

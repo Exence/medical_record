@@ -352,20 +352,20 @@
                 </div>
             </div>
 
-            <div class="accordion col-12" id="accordionGroupAllergyes">
+            <div class="accordion col-12" id="accordionGroupAllergies">
                 <div class="accordion-item col-12">
                     <h2 class="accordion-header">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAllergyes" aria-expanded="true" aria-controls="collapseAllergyes">
-                        <h3 class="text-left">Аллергические заболевания - <u><mark>{{ report.allergyes }}</mark></u></h3>
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAllergies" aria-expanded="true" aria-controls="collapseAllergies">
+                        <h3 class="text-left">Аллергические заболевания - <u><mark>{{ report.allergies }}</mark></u></h3>
                       </button>
                     </h2>
                     {% set count.n = count.n + 1 %}
-                    <div id="collapseAllergyes" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
+                    <div id="collapseAllergies" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionGroup{{ count.n }}">
                       <div class="accordion-body">
-                        {% if report.allergyes %}
+                        {% if report.allergies %}
                             {% set count.n = count.n + 1 %}
                             <div class="accordion col-12" id="accordionGroup{{ count.n }}">
-                                {% for child in report.allergyes_list %}
+                                {% for child in report.allergies_list %}
                                     {% include '/medical_record/all/divs/child.html' %}                                
                                 {% endfor %}
                             </div>

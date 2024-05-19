@@ -18,7 +18,7 @@ class OngoingMedicalSupervisionService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, examination_date: date) -> OngoingMedicalSupervision:
+    def _get(self, medcard_num: int, examination_date: date) -> OngoingMedicalSupervision:
         ongoing_medical_supervision = (
             self.session
             .query(OngoingMedicalSupervision)
@@ -43,7 +43,7 @@ class OngoingMedicalSupervisionService():
         return ongoing_medical_supervisions
 
     def get_ongoing_medical_supervision_by_pk(self, ongoing_medical_supervision_pk: OngoingMedicalSupervisionPK):
-        ongoing_medical_supervision = self._get_by_pk(
+        ongoing_medical_supervision = self._get(
                 ongoing_medical_supervision_pk.medcard_num, ongoing_medical_supervision_pk.examination_date)
         return ongoing_medical_supervision
 
@@ -55,7 +55,7 @@ class OngoingMedicalSupervisionService():
         return ongoing_medical_supervision
 
     def update_ongoing_medical_supervision(self, ongoing_medical_supervision_data: OngoingMedicalSupervisionUpdate):
-        ongoing_medical_supervision = self._get_by_pk(
+        ongoing_medical_supervision = self._get(
             ongoing_medical_supervision_data.medcard_num, ongoing_medical_supervision_data.prev_examination_date)
         for field, value in ongoing_medical_supervision_data:
             if field != 'prev_examination_date':
@@ -64,7 +64,7 @@ class OngoingMedicalSupervisionService():
         return ongoing_medical_supervision
 
     def delete_ongoing_medical_supervision(self, ongoing_medical_supervision_pk: OngoingMedicalSupervisionPK):
-        ongoing_medical_supervision = self._get_by_pk(
+        ongoing_medical_supervision = self._get(
             ongoing_medical_supervision_pk.medcard_num, ongoing_medical_supervision_pk.examination_date)
         self.session.delete(ongoing_medical_supervision)
         self.session.commit()

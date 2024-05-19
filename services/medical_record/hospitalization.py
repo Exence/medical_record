@@ -18,7 +18,7 @@ class HospitalizationService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, start_date: date) -> Hospitalization:
+    def _get(self, medcard_num: int, start_date: date) -> Hospitalization:
         hospitalization = (
             self.session
             .query(Hospitalization)
@@ -43,7 +43,7 @@ class HospitalizationService():
         return hospitalizations
 
     def get_hospitalization_by_pk(self, hospitalization_pk: HospitalizationPK):
-        hospitalization = self._get_by_pk(
+        hospitalization = self._get(
                 hospitalization_pk.medcard_num, hospitalization_pk.start_date)
         return hospitalization
 
@@ -54,7 +54,7 @@ class HospitalizationService():
         return hospitalization
 
     def update_hospitalization(self, hospitalization_data: HospitalizationUpdate):
-        hospitalization = self._get_by_pk(
+        hospitalization = self._get(
             hospitalization_data.medcard_num, hospitalization_data.prev_start_date)
         for field, value in hospitalization_data:
             if field != 'prev_start_date':
@@ -63,7 +63,7 @@ class HospitalizationService():
         return hospitalization
 
     def delete_hospitalization(self, hospitalization_pk: HospitalizationPK):
-        hospitalization = self._get_by_pk(
+        hospitalization = self._get(
             hospitalization_pk.medcard_num, hospitalization_pk.start_date)
         self.session.delete(hospitalization)
         self.session.commit()

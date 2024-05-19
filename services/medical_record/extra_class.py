@@ -19,7 +19,7 @@ class ExtraClassService():
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def _get_by_pk(self, medcard_num: int, classes_type: str, age: int) -> ExtraClass:
+    def _get(self, medcard_num: int, classes_type: str, age: int) -> ExtraClass:
         extra_class = (
             self.session
             .query(ExtraClass)
@@ -44,7 +44,7 @@ class ExtraClassService():
         return extra_classes
 
     def get_extra_class_by_pk(self, extra_class_pk: ExtraClassPK):
-        extra_class = self._get_by_pk(extra_class_pk.medcard_num, extra_class_pk.classes_type, extra_class_pk.age)
+        extra_class = self._get(extra_class_pk.medcard_num, extra_class_pk.classes_type, extra_class_pk.age)
         return extra_class
 
     def add_new_extra_class(self, extra_class_data: ExtraClassCreate):
@@ -54,7 +54,7 @@ class ExtraClassService():
         return extra_class
 
     def update_extra_class(self, extra_class_data: ExtraClassUpdate):
-        extra_class = self._get_by_pk(
+        extra_class = self._get(
             extra_class_data.medcard_num, extra_class_data.prev_classes_type, extra_class_data.prev_age)
         for field, value in extra_class_data:
             if field != 'prev_classes_type' and field != 'prev_age':
@@ -63,7 +63,7 @@ class ExtraClassService():
         return extra_class
 
     def delete_extra_class(self, extra_class_pk: ExtraClassPK):
-        extra_class = self._get_by_pk(
+        extra_class = self._get(
             extra_class_pk.medcard_num, extra_class_pk.classes_type, extra_class_pk.age)
         self.session.delete(extra_class)
         self.session.commit()

@@ -1,5 +1,5 @@
 import sqlalchemy as sa
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
 
 
@@ -67,7 +67,7 @@ class ChildWithParents(BaseTable):
 
 
 class Allergy(BaseTable):
-    __tablename__ = 'allergyes'
+    __tablename__ = 'allergies'
 
     medcard_num = sa.Column(sa.Integer, primary_key=True)
     allergen = sa.Column(sa.String, primary_key=True)
@@ -94,7 +94,7 @@ class Deworming(BaseTable):
 
 
 class Dispensary(BaseTable):
-    __tablename__ = 'dispensaryes'
+    __tablename__ = 'dispensaries'
 
     id = sa.Column(sa.Integer, primary_key=True)
     medcard_num = sa.Column(sa.Integer)
@@ -377,6 +377,6 @@ class EpidVaccination(BaseTable):
 class VisitSpecialistControl(BaseTable):
     __tablename__ = 'visit_specialist_controls'
 
-    dispensary_id = sa.Column(sa.Integer, sa.ForeignKey('dispensaryes.id', ondelete='CASCADE'), primary_key=True)
+    dispensary_id = sa.Column(sa.Integer, sa.ForeignKey('dispensaries.id', ondelete='CASCADE'), primary_key=True)
     assigned_date = sa.Column(sa.Date, primary_key=True)
     fact_date = sa.Column(sa.Date, nullable=True)

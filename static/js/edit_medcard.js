@@ -366,7 +366,7 @@ allergy_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/children/" + medcard_num + "/allergyes/",
+                url: "/api/v1/children/" + medcard_num + "/allergies/",
                 data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
@@ -395,7 +395,7 @@ allergy_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "PUT",
                 async: true,
-                url: "/api/v1/children/" + medcard_num + "/allergyes/",
+                url: "/api/v1/children/" + medcard_num + "/allergies/",
                 data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1192,7 +1192,7 @@ function update_dispensary(id){
     $.ajax({
         type: "POST",
         async: true,
-        url: "/api/v1/children/" + medcard_num + "/dispensaryes/one",
+        url: "/api/v1/children/" + medcard_num + "/dispensaries/one",
         data: JSON.stringify(dispensary),
         contentType: "application/json",
         dataType: 'json',
@@ -1229,7 +1229,7 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/v1/children/" + medcard_num + "/dispensaryes/",
+                url: "/api/v1/children/" + medcard_num + "/dispensaries/",
                 data: JSON.stringify(dispensary),
                 contentType: "application/json",
                 dataType: 'json',
@@ -1263,7 +1263,7 @@ dispensary_commit_modal_btn.addEventListener('click', () =>{
                 $.ajax({
                     type: "PUT",
                     async: true,
-                    url: "/api/v1/children/" + medcard_num + "/dispensaryes/",
+                    url: "/api/v1/children/" + medcard_num + "/dispensaries/",
                     data: JSON.stringify(dispensary),
                     contentType: "application/json",
                     dataType: 'json',
@@ -2913,7 +2913,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/children/" + medcard_num + "/allergyes/",
+                url: "/api/v1/children/" + medcard_num + "/allergies/",
                 data: JSON.stringify(allergy),
                 contentType: "application/json",
                 dataType: 'json',
@@ -3068,7 +3068,7 @@ delete_commit_modal_btn.addEventListener('click', () => {
             $.ajax({
                 type: "DELETE",
                 async: true,
-                url: "/api/v1/children/" + medcard_num + "/dispensaryes",
+                url: "/api/v1/children/" + medcard_num + "/dispensaries",
                 data: JSON.stringify(dispensary),
                 contentType: "application/json",
                 dataType: 'json',
