@@ -12,6 +12,7 @@ from models.medical_record.visit_specialist_control import VisitSpecialistContro
 from services.export_data import create_file_with_child_tab, append_data_in_xlsx_file
 
 from services.auth import get_current_user
+from services.user import check_user_access_to_medcard
 from services.medical_record.medical_record import MedicalRecordService
 from services.medical_record.allergy import AllergyService
 from services.catalogs.clinic import ClinicService
@@ -66,7 +67,7 @@ async def get_xlsx_data_by_medcard_num(medcard_num: int, request: Request,
                                       screening_service: ScreeningService = Depends(),
                                       visit_specialist_control_service: VisitSpecialistControlService = Depends(),
                                       user: User = Depends(get_current_user)):
-    if user:
+    if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         filename = f"./static/files/{medcard_num}.xlsx"
         child = service.get_medcard_by_num(medcard_num=medcard_num)
         if child:

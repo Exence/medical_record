@@ -23,9 +23,10 @@ from tables import User
 
 
 def check_user_access_to_medcard(user: User, medcard_num: int, session: Session = Depends(get_session)) -> bool:
-    
     return True
 
+def check_user_access_to_catalogs(user: User, medcard_num: int, session: Session = Depends(get_session)) -> bool:
+    return True
 
 class UserService():
     @classmethod

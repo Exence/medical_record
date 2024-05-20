@@ -28,7 +28,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get('/create')
-def show_create_medcard_form(request: Request, 
+def show_create_medcard_form(request: Request,
                              user: User = Depends(get_current_user), 
                              clinic_service: ClinicService = Depends()):
     clinics = clinic_service.get_all_clinics_as_dict()

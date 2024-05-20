@@ -10,6 +10,7 @@ from fastapi import (
 )
 from models.user import User
 from services.auth import get_current_user
+from services.user import check_user_access_to_medcard
 from services.import_data import import_from_xlsx
 from services.catalogs.clinic import ClinicService
 from services.medical_record.medical_record import MedicalRecordService
@@ -66,47 +67,53 @@ async def import_data_from_xlsx(request: Request,
                           ongoing_medical_supervision_service: OngoingMedicalSupervisionService = Depends(),
                           screening_service: ScreeningService = Depends(),
                           vac_name_service: VacNameService = Depends(),):
-    try:
-        contents = await file.read()
-        filename = f"./static/files/{user.kindergarten_num}_{file.filename}"
-        with open(filename, "wb") as f:
-            f.write(contents)
-    except:
-        raise HTTPException(
-            status_code=422,
-            detail='Проблемы при загрузке файла'
-        )
+    if user:
+        try:
+            contents = await file.read()
+            filename = f"./static/files/{user.kindergarten_num}_{file.filename}"
+            with open(filename, "wb") as f:
+                f.write(contents)
+        except:
+            raise HTTPException(
+                status_code=422,
+                detail='Проблемы при загрузке файла'
+            )
 
-    try:
-        import_from_xlsx(filename=filename, 
-                        kindergarten_num=user.kindergarten_num,
-                        medcard_service=medcard_service,
-                        clinic_service=clinic_service,
-                        parent_service=parent_service,
-                        dispensary_service=dispensary_service,
-                        visit_s_control_service=visit_s_control_service,
-                        allergy_service=allergy_service,
-                        extra_class_service=extra_class_service,
-                        past_illness_service=past_illness_service,
-                        hospitalization_service=hospitalization_service,
-                        spa_treatment_service=spa_treatment_service,
-                        medical_certificate_service=medical_certificate_service,
-                        deworming_service=deworming_service,
-                        oral_sanation_service=oral_sanation_service,
-                        prevaccination_checkup_service=prevaccination_checkup_service,
-                        vaccination_service=vaccination_service,
-                        gg_injection_service=gg_injection_service,
-                        mantoux_test_service=mantoux_test_service,
-                        tub_vac_service=tub_vac_service,
-                        medical_examination_service=medical_examination_service,
-                        ongoing_medical_supervision_service=ongoing_medical_supervision_service,
-                        screening_service=screening_service,
-                        vac_name_service=vac_name_service)
-    except Exception as e:
-        print(e)
+        try:
+            import_from_xlsx(filename=filename, 
+                            kindergarten_num=user.kindergarten_num,
+                            medcard_service=medcard_service,
+                            clinic_service=clinic_service,
+                            parent_service=parent_service,
+                            dispensary_service=dispensary_service,
+                            visit_s_control_service=visit_s_control_service,
+                            allergy_service=allergy_service,
+                            extra_class_service=extra_class_service,
+                            past_illness_service=past_illness_service,
+                            hospitalization_service=hospitalization_service,
+                            spa_treatment_service=spa_treatment_service,
+                            medical_certificate_service=medical_certificate_service,
+                            deworming_service=deworming_service,
+                            oral_sanation_service=oral_sanation_service,
+                            prevaccination_checkup_service=prevaccination_checkup_service,
+                            vaccination_service=vaccination_service,
+                            gg_injection_service=gg_injection_service,
+                            mantoux_test_service=mantoux_test_service,
+                            tub_vac_service=tub_vac_service,
+                            medical_examination_service=medical_examination_service,
+                            ongoing_medical_supervision_service=ongoing_medical_supervision_service,
+                            screening_service=screening_service,
+                            vac_name_service=vac_name_service)
+        except Exception as e:
+            print(e)
+            raise HTTPException(
+                status_code=422,
+                detail='Проблемы при импорте данных. Возможно не все данные были добавлены'
+            )
+        if os.path.exists(filename):
+            os.remove(filename)
+    else:
         raise HTTPException(
-            status_code=422,
-            detail='Проблемы при импорте данных. Возможно не все данные были добавлены'
+            status_code=status.HTTP_403_FORBIDDEN
         )
-    if os.path.exists(filename):
-        os.remove(filename)
+    
