@@ -2,8 +2,10 @@ from fastapi import (
     APIRouter,
     Cookie,
     Depends,
+    HTTPException,
     Request,
 )
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from models.medical_record.child import ChildEdit, CreateChildForm
@@ -29,8 +31,13 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get('/create')
 def show_create_medcard_form(request: Request,
-                             user: User = Depends(get_current_user), 
                              clinic_service: ClinicService = Depends()):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        user = get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
     clinics = clinic_service.get_all_clinics_as_dict()
     if user:
         return templates.TemplateResponse(
@@ -50,11 +57,16 @@ def show_create_medcard_form(request: Request,
 async def create_user(request: Request,
                 service: MedicalRecordService = Depends(),
                 parent_service: ParentService = Depends(),
-                user: User = Depends(get_current_user),
                 clinic_service: ClinicService = Depends()):
     """
     Процедура добавления новой медкарты на ребенка
     """
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        user = get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
     if user:
         form_data = await request.form()
         child_form = CreateChildForm(**form_data, kindergarten_num=user.kindergarten_num)
@@ -77,8 +89,13 @@ async def create_user(request: Request,
 
 @router.get('/all')
 def show_all_medcards(request: Request,
-                      service: KindergartenService = Depends(),
-                      user: User = Depends(get_current_user)):
+                      service: KindergartenService = Depends()):
+    try:
+        access_token=str(request.cookies.get("access_token")).replace("bearer ","")
+        user = get_current_user(access_token=access_token) 
+    except HTTPException as e:
+        if e.status_code == 401:
+            return RedirectResponse('/')
     if user:
         kindergarten = service.get_kindergarten_with_children(
             user)

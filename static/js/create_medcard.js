@@ -27,7 +27,7 @@ mother_btn.addEventListener('click', () => {
 
 modal_only_letters_inputs.forEach(input => {
     input.addEventListener('keydown', function(e){
-            if(!e.key.match(/[а-яА-Яa-zA-Z\-]/) ) return e.preventDefault();
+            if(!e.key.match(/[а-яА-Яa-zA-Z\-]/)) return e.preventDefault();
         });
         input.addEventListener('input', function(e){
             if (!input.value.match(/^[а-яА-Яa-zA-Z\-]+$/) ) input.value="";
@@ -38,6 +38,7 @@ modal_only_letters_inputs.forEach(input => {
                 input.classList.add("is-invalid");
                 input.classList.remove("is-valid");
             }
+
         });
 })
 
@@ -72,7 +73,7 @@ phone_input.addEventListener('input', function(e){
 modal_commit_btn.addEventListener('click', function(e){
     var check = true;
     modal_only_letters_inputs.forEach(input => {
-        if (input.value.length === 0) {
+        if (input.value.length === 0 || input.value.length > 139) {
             check = false;
             input.classList.add("is-invalid");
         }

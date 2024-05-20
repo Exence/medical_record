@@ -70,12 +70,14 @@ def get_child_medcard(medcard_num: int, request: Request,
                       screening_service: ScreeningService = Depends()):
     try:
         access_token=str(request.cookies.get("access_token")).replace("bearer ","")
-        user = get_current_user(access_token=access_token) 
+        user = get_current_user(access_token=access_token)
+        child = service.get_medcard_by_num(medcard_num=medcard_num)
     except HTTPException as e:
         if e.status_code == 401:
             return RedirectResponse('/')
+        if e.status_code == 404:
+            return templates.TemplateResponse("/errors/404.html", {"request": request})
 
-    child = service.get_medcard_by_num(medcard_num=medcard_num)
     father, mother = service.get_parents_by_medcard_num(medcard_num=medcard_num,parent_service=parents_service)
     kindergartens = [{"number": user.kindergarten_num, "name": user.kindergarten_name}]
     allergies = allergy_service.get_allergies_by_medcard_num(
