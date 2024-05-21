@@ -27,7 +27,7 @@ async def get_gamma_globulin_injections_by_medcard_num(medcard_num: int,
                                            user: User = Depends(get_current_user),
                                            service: GammaGlobulinInjectionService = Depends()):
     """
-    Получение списка сведений о введении гамма-глобулина по номеру медкарты
+    Получение списка сведений о введениях гамма-глобулина по номеру медкарты
     """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_gamma_globulin_injections_by_medcard_num(medcard_num=medcard_num)

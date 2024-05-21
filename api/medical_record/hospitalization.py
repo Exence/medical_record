@@ -27,7 +27,7 @@ async def get_hospitalizations_by_medcard_num(medcard_num: int,
                                               user: User = Depends(get_current_user),
                                               service: HospitalizationService = Depends()):
     """
-    Получение списка сведений о госпитализации по номеру медкарты
+    Получение списка сведений о госпитализациях по номеру медкарты
     """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_hospitalizations_by_medcard_num(medcard_num=medcard_num)

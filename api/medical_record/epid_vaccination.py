@@ -23,7 +23,7 @@ async def get_epid_vaccination(epid_vaccination_pk: VaccinationPK,
                                user: User = Depends(get_current_user),
                                service: VaccinationService = Depends()):
     """
-    Получение сведений о прививках по показаниям по первичному ключу
+    Получение сведений о прививке по показаниям по первичному ключу
     """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_epid_vaccination_by_pk(epid_vaccination_pk=epid_vaccination_pk)

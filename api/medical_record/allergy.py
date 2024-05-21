@@ -22,7 +22,7 @@ async def get_allergies_by_medcard_num(medcard_num: int,
                                        user: User = Depends(get_current_user),
                                        service: AllergyService = Depends()):
     """
-    Получение аллергии по номеру медкарты
+    Получение списка имеющихся у ребенка аллергий по номеру медкарты
     """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_allergies_by_medcard_num(medcard_num=medcard_num)
@@ -37,6 +37,9 @@ async def get_allergy_by_pk(medcard_num: int,
                             allergy_pk: AllergyPK,
                             user: User = Depends(get_current_user),
                             service: AllergyService = Depends()):
+    """
+    Получение сведений об аллергии по первичному ключу
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_allergy_by_pk(allergy_pk=allergy_pk)
     else:
@@ -50,6 +53,9 @@ async def add_allergy(allergy_data: AllergyCreate,
                       medcard_num: int,
 user: User = Depends(get_current_user),
                       service: AllergyService = Depends()):
+    """
+    Добавление сведений об аллергии
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_allergy(allergy_data=allergy_data)
     else:
@@ -63,6 +69,9 @@ async def update_allergy(allergy_data: AllergyUpdate,
                          medcard_num: int,
 user: User = Depends(get_current_user),
                          service: AllergyService = Depends()):
+    """
+    Редактирование сведений об аллергии
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_allergy(allergy_data=allergy_data)
     else:
@@ -76,6 +85,9 @@ async def delete_allergy(allergy_pk: AllergyPK,
                          medcard_num: int,
 user: User = Depends(get_current_user),
                          service: AllergyService = Depends()):
+    """
+    Удаление сведений об аллергии
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         service.delete_allergy(allergy_pk=allergy_pk)
     else:

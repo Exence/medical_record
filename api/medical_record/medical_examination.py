@@ -27,7 +27,7 @@ async def get_medical_examinations_by_medcard_num(medcard_num: int,
                                                   user: User = Depends(get_current_user),
                                                   service: MedicalExaminationService = Depends()):
     """
-    Получение списка сведений о медицинском осмотре по номеру медкарты
+    Получение списка сведений о плановых медицинских осмотрах по номеру медкарты
     """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_medical_examinations_by_medcard_num(medcard_num=medcard_num)
@@ -43,7 +43,7 @@ async def get_medical_examination_by_pk(medical_examination_pk: MedicalExaminati
                                         user: User = Depends(get_current_user),
                                         service: MedicalExaminationService = Depends()):
     """
-    Получение сведений о медицинском осмотре по первичному ключу
+    Получение сведений о плановом медицинском осмотре по первичному ключу
     """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_medical_examination_by_pk(medical_examination_pk=medical_examination_pk)
@@ -59,7 +59,7 @@ async def add_medical_examination(medical_examination_data: MedicalExaminationCr
                                   user: User = Depends(get_current_user),
                                   service: MedicalExaminationService = Depends()):
     """
-    Добавление сведений о медицинском осмотре
+    Добавление сведений о плановом медицинском осмотре
     """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_medical_examination(medical_examination_data=medical_examination_data)
@@ -75,7 +75,7 @@ async def update_medical_examination(medical_examination_data: MedicalExaminatio
                                      user: User = Depends(get_current_user),
                                      service: MedicalExaminationService = Depends()):
     """
-    Редактирование сведений о медицинском осмотре
+    Редактирование сведений о плановом медицинском осмотре
     """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_medical_examination(medical_examination_data=medical_examination_data)
@@ -91,7 +91,7 @@ async def delete_medical_examination(medical_examination_pk: MedicalExaminationP
                                      user: User = Depends(get_current_user),
                                      service: MedicalExaminationService = Depends()):
     """
-    Удаление сведений о медицинском осмотре
+    Удаление сведений о плановом медицинском осмотре
     """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.delete_medical_examination(medical_examination_pk=medical_examination_pk)

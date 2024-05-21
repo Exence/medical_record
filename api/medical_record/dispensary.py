@@ -22,7 +22,7 @@ async def get_dispensaries_by_medcard_num(medcard_num: int,
                                           user: User = Depends(get_current_user),
                                           service: DispensaryService = Depends()):
     """
-    Получение списка сведений о диспансерном наблюдении по номеру медкарты
+    Получение списка сведений о диспансерных наблюдениях по номеру медкарты
     """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_dispensaries_by_medcard_num(medcard_num=medcard_num)
