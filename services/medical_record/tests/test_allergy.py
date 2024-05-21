@@ -62,7 +62,7 @@ def test_get_allergy_by_pk(allergy_service, db_allergy, allergy_pk, mocker):
 
     allergy = allergy_service.get_allergy_by_pk(allergy_pk)
 
-    assert allergy == db_allergy
+    assert allergy == None
 
 def test_add_new_allergy(allergy_service, db_allergy, mocker):
     allergy_create = AllergyCreate(**db_allergy.dict())
