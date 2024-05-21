@@ -29,6 +29,9 @@ router = APIRouter(
 async def get_parents_by_medcard_num(medcard_num: int,
                                      user: User = Depends(get_current_user),
                                      service: ParentService = Depends()):
+    """
+    Получение сведений о родителях по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_parents_by_medcard_num(medcard_num=medcard_num)
     else:
@@ -42,6 +45,9 @@ async def add_parent(parent_data: ParentCreate,
                      medcard_num: int,
                      user: User = Depends(get_current_user),
                      service: ParentService = Depends()):
+    """
+    Добавление сведений о родителе
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_parent(medcard_num=medcard_num, parent_data=parent_data)
     else:
@@ -54,6 +60,9 @@ async def update_parent(parent_data: ParentUpdate,
                         medcard_num: int,
                         user: User = Depends(get_current_user),
                         service: ParentService = Depends()):
+    """
+    Редактирование сведений о родителе
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_parent(medcard_num=medcard_num, parent_data=parent_data)
     else:
@@ -68,6 +77,9 @@ async def delete_parent(parent_type_request: ParentTypeRequest,
                         user: User = Depends(get_current_user),
                         service: ParentService = Depends(),
                         medcard_service: MedicalRecordService = Depends()):
+    """
+    Удаление сведений о родителе
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return medcard_service.delete_parent_by_type(medcard_num=medcard_num,
                                                      parent_type=parent_type_request.parent_type,

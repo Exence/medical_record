@@ -26,6 +26,9 @@ router = APIRouter(
 async def get_gamma_globulin_injections_by_medcard_num(medcard_num: int,
                                            user: User = Depends(get_current_user),
                                            service: GammaGlobulinInjectionService = Depends()):
+    """
+    Получение списка сведений о введении гамма-глобулина по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_gamma_globulin_injections_by_medcard_num(medcard_num=medcard_num)
     else:
@@ -39,6 +42,9 @@ async def get_gamma_globulin_injection_by_pk(gg_injection_pk: GammaGlobulinInjec
                                              medcard_num: int,
                                              user: User = Depends(get_current_user),
                                              service: GammaGlobulinInjectionService = Depends()):
+    """
+    Получение сведений о введении гамма-глобулина по первичному ключу
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_gamma_globulin_injection_by_pk(gg_injection_pk=gg_injection_pk)
     else:
@@ -52,6 +58,9 @@ async def add_gamma_globulin_injection(gg_injection_data: GammaGlobulinInjection
                                        medcard_num: int,
                                        user: User = Depends(get_current_user),
                                        service: GammaGlobulinInjectionService = Depends()):
+    """
+    Добавление сведений о введении гамма-глобулина
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_gamma_globulin_injection(gg_injection_data=gg_injection_data)
     else:
@@ -65,6 +74,9 @@ async def update_gamma_globulin_injection(gg_injection_data: GammaGlobulinInject
                                           medcard_num: int,
                                           user: User = Depends(get_current_user),
                                           service: GammaGlobulinInjectionService = Depends()):
+    """
+    Редактирование сведений о введении гамма-глобулина
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_gamma_globulin_injection(gg_injection_data=gg_injection_data)
     else:
@@ -78,6 +90,9 @@ async def delete_gamma_globulin_injection(gg_injection_pk: GammaGlobulinInjectio
                                           medcard_num: int,
                                           user: User = Depends(get_current_user),
                                           service: GammaGlobulinInjectionService = Depends()):
+    """
+    Удаление сведений о введении гамма-глобулина
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.delete_gamma_globulin_injection(gg_injection_pk=gg_injection_pk)
     else:

@@ -67,6 +67,9 @@ async def import_data_from_xlsx(request: Request,
                           ongoing_medical_supervision_service: OngoingMedicalSupervisionService = Depends(),
                           screening_service: ScreeningService = Depends(),
                           vac_name_service: VacNameService = Depends(),):
+    """
+    Импорт медкарты из файла
+    """
     if user:
         try:
             contents = await file.read()

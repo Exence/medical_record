@@ -19,6 +19,9 @@ router = APIRouter(
 async def get_child_by_medcard_num(medcard_num: int,
                                    user: User = Depends(get_current_user),
                                    service: MedicalRecordService = Depends()):
+    """
+    Получение сведений о ребенке по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_medcard_by_num(medcard_num=medcard_num)
     else:
@@ -31,6 +34,9 @@ async def update_child(medcard_num: int,
                        medcard_data: ChildEdit,
                        user: User = Depends(get_current_user),
                        service: MedicalRecordService = Depends()):
+    """
+    Редактирование сведений о ребенке
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_medcard(medcard_num=medcard_num, medcard_data=medcard_data)
     else:
@@ -43,6 +49,9 @@ async def update_child(medcard_num: int,
 async def delete_child_by_medcard_num(medcard_num: int,
                                       user: User = Depends(get_current_user),
                                       service: MedicalRecordService = Depends()):
+    """
+    Удаление сведений о ребенке
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.delete_medcard(medcard_num=medcard_num)
     else:

@@ -26,6 +26,9 @@ router = APIRouter(
 async def get_mantoux_tests_by_medcard_num(medcard_num: int,
                                            user: User = Depends(get_current_user),
                                            service: MantouxTestService = Depends()):
+    """
+    Получение списка сведений о реакции Манту по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_mantoux_tests_by_medcard_num(medcard_num=medcard_num)
     else:
@@ -39,6 +42,9 @@ async def get_mantoux_test_by_pk(mantoux_test_pk: MantouxTestPK,
                                  medcard_num: int,
                                  user: User = Depends(get_current_user),
                                  service: MantouxTestService = Depends()):
+    """
+    Получение сведений о реакции Манту по первичному ключу
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_mantoux_test_by_pk(mantoux_test_pk=mantoux_test_pk)
     else:
@@ -52,6 +58,9 @@ async def add_mantoux_test(mantoux_test_data: MantouxTestCreate,
                            medcard_num: int,
                            user: User = Depends(get_current_user),
                            service: MantouxTestService = Depends()):
+    """
+    Добавление сведений о реакции Манту
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_mantoux_test(mantoux_test_data=mantoux_test_data)
     else:
@@ -65,6 +74,9 @@ async def update_mantoux_test(mantoux_test_data: MantouxTestUpdate,
                               medcard_num: int,
                               user: User = Depends(get_current_user),
                               service: MantouxTestService = Depends()):
+    """
+    Редактирование сведений о реакции Манту
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_mantoux_test(mantoux_test_data=mantoux_test_data)
     else:
@@ -78,6 +90,9 @@ async def delete_mantoux_test(mantoux_test_pk: MantouxTestPK,
                               medcard_num: int,
                               user: User = Depends(get_current_user),
                               service: MantouxTestService = Depends()):
+    """
+    Удаление сведений о реакции Манту
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.delete_mantoux_test(mantoux_test_pk=mantoux_test_pk)
     else:

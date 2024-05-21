@@ -28,6 +28,9 @@ async def get_visit_specialist_control(visit_specialist_control: VisitSpecialist
                                        medcard_num: int,
                                        user: User = Depends(get_current_user),
                                        service: VisitSpecialistControlService = Depends()):
+    """
+    Получение списка сведений о контролях посещений специалистов по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_visit_specialist_controls_by_dispensary(visit_specialist_control=visit_specialist_control)
     else:
@@ -41,6 +44,9 @@ async def get_visit_specialist_control(visit_specialist_control_pk: VisitSpecial
                                        medcard_num: int,
                                        user: User = Depends(get_current_user),
                                        service: VisitSpecialistControlService = Depends()):
+    """
+    Получение сведений о контроле посещения специалиста по первичному ключу
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_visit_specialist_control_by_pk(visit_specialist_control_pk=visit_specialist_control_pk)
     else:
@@ -54,6 +60,9 @@ async def add_extra_class(visit_specialist_control: VisitSpecialistControlCreate
                           medcard_num: int,
                           user: User = Depends(get_current_user),
                           service: VisitSpecialistControlService = Depends()):
+    """
+    Добавление сведений о контроле посещения специалиста
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_visit_specialist_control(visit_specialist_control_data=visit_specialist_control)
     else:
@@ -68,6 +77,9 @@ async def update_visit_specialist_control(visit_specialist_control: VisitSpecial
                                           user: User = Depends(
                                               get_current_user),
                                           service: VisitSpecialistControlService = Depends()):
+    """
+    Редактирование сведений о контроле посещения специалиста
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_visit_specialist_control(visit_specialist_control_data=visit_specialist_control)
     else:
@@ -82,6 +94,9 @@ async def delete_visit_specialist_control(visit_specialist_control_pk: VisitSpec
                                           user: User = Depends(
                                               get_current_user),
                                           service: VisitSpecialistControlService = Depends()):
+    """
+    Удаление сведений о контроле посещения специалиста
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.delete_visit_specialist_control(visit_specialist_control_pk=visit_specialist_control_pk)
     else:

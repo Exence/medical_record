@@ -26,6 +26,9 @@ router = APIRouter(
 async def get_prevaccination_checkup_by_medcard_num(medcard_num: int,
                                                     user: User = Depends(get_current_user),
                                                     service: PrevaccinationCheckupService = Depends()):
+    """
+    Получение списка сведений об осмотрах перед прививками по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_prevaccination_checkups_by_medcard_num(medcard_num=medcard_num)
     else:
@@ -39,6 +42,9 @@ async def get_prevaccination_checkup_by_pk(prevaccination_checkup_pk: Prevaccina
                                            medcard_num: int,
                                            user: User = Depends(get_current_user),
                                            service: PrevaccinationCheckupService = Depends()):
+    """
+    Получение сведений об осмотре перед прививкой по первичному ключу
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_prevaccination_checkup_by_pk(prevaccination_checkup_pk=prevaccination_checkup_pk)
     else:
@@ -52,6 +58,9 @@ async def add_prevaccination_checkup(prevaccination_checkup_data: Prevaccination
                                      medcard_num: int,
                                      user: User = Depends(get_current_user),
                                      service: PrevaccinationCheckupService = Depends()):
+    """
+    Добавление сведений об осмотре перед прививкой
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_prevaccination_checkup(prevaccination_checkup_data=prevaccination_checkup_data)
     else:
@@ -65,6 +74,9 @@ async def update_prevaccination_checkup(prevaccination_checkup_data: Prevaccinat
                                         medcard_num: int,
                                         user: User = Depends(get_current_user),
                                         service: PrevaccinationCheckupService = Depends()):
+    """
+    Редактирование сведений об осмотре перед прививкой
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_prevaccination_checkup(prevaccination_checkup_data=prevaccination_checkup_data)
     else:
@@ -78,6 +90,9 @@ async def delete_prevaccination_checkup(prevaccination_checkup_pk: Prevaccinatio
                                         medcard_num: int,
                                         user: User = Depends(get_current_user),
                                         service: PrevaccinationCheckupService = Depends()):
+    """
+    Удаление сведений об осмотре перед прививкой
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.delete_prevaccination_checkup(prevaccination_checkup_pk=prevaccination_checkup_pk)
     else:

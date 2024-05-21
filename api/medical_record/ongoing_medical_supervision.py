@@ -26,6 +26,9 @@ router = APIRouter(
 async def get_ongoing_medical_supervisions_by_medcard_num(medcard_num: int,
                                                           user: User = Depends(get_current_user),
                                                           service: OngoingMedicalSupervisionService = Depends()):
+    """
+    Получение списка сведений о текущем медицинском осмотре по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_ongoing_medical_supervisions_by_medcard_num(medcard_num=medcard_num)
     else:
@@ -39,6 +42,9 @@ async def get_ongoing_medical_supervision_by_pk(ongoing_medical_supervision_pk: 
                                                 medcard_num: int,
                                                 user: User = Depends(get_current_user),
                                                 service: OngoingMedicalSupervisionService = Depends()):
+    """
+    Получение сведений о текущем медицинском осмотре по первичному ключу
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_ongoing_medical_supervision_by_pk(ongoing_medical_supervision_pk=ongoing_medical_supervision_pk)
     else:
@@ -52,6 +58,9 @@ async def add_ongoing_medical_supervision(ongoing_medical_supervision_data: Ongo
                                           medcard_num: int,
                                           user: User = Depends(get_current_user),
                                           service: OngoingMedicalSupervisionService = Depends()):
+    """
+    Добавление сведений о текущем медицинском осмотре
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_ongoing_medical_supervision(ongoing_medical_supervision_data=ongoing_medical_supervision_data)
     else:
@@ -65,6 +74,9 @@ async def update_ongoing_medical_supervision(ongoing_medical_supervision_data: O
                                              medcard_num: int,
                                              user: User = Depends(get_current_user),
                                              service: OngoingMedicalSupervisionService = Depends()):
+    """
+    Редактирование сведений о текущем медицинском осмотре
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_ongoing_medical_supervision(ongoing_medical_supervision_data=ongoing_medical_supervision_data)
     else:
@@ -78,6 +90,9 @@ async def delete_ongoing_medical_supervision(ongoing_medical_supervision_pk: Ong
                                              medcard_num: int,
                                              user: User = Depends(get_current_user),
                                              service: OngoingMedicalSupervisionService = Depends()):
+    """
+    Удаление сведений о текущем медицинском осмотре
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.delete_ongoing_medical_supervision(ongoing_medical_supervision_pk=ongoing_medical_supervision_pk)
     else:

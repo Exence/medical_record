@@ -26,6 +26,9 @@ router = APIRouter(
 async def get_dewormings_by_medcard_num(medcard_num: int,
                                         user: User = Depends(get_current_user),
                                         service: DewormingService = Depends()):
+    """
+    Получение списка сведений о дегильментизации по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_dewormings_by_medcard_num(medcard_num=medcard_num)
     else:
@@ -39,6 +42,9 @@ async def get_deworming_by_pk(deworming_pk: DewormingPK,
                               medcard_num: int,
                               user: User = Depends(get_current_user),
                               service: DewormingService = Depends()):
+    """
+    Получение сведений о дегильментизации по первичному ключу
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_deworming_by_pk(deworming_pk=deworming_pk)
     else:
@@ -52,6 +58,9 @@ async def add_deworming(deworming_data: DewormingCreate,
                         medcard_num: int,
                         user: User = Depends(get_current_user),
                         service: DewormingService = Depends()):
+    """
+    Добавление сведений о дегильментизации
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_deworming(deworming_data=deworming_data)
     else:
@@ -65,6 +74,9 @@ async def update_deworming(deworming_data: DewormingUpdate,
                            medcard_num: int,
                            user: User = Depends(get_current_user),
                            service: DewormingService = Depends()):
+    """
+    Редактирование сведений о дегильментизации
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_deworming(deworming_data=deworming_data)
     else:
@@ -78,6 +90,9 @@ async def delete_deworming(deworming_pk: DewormingPK,
                            medcard_num: int,
                            user: User = Depends(get_current_user),
                            service: DewormingService = Depends()):
+    """
+    Удаление сведений о дегильментизации
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.delete_deworming(deworming_pk=deworming_pk)
     else:

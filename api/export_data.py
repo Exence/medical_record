@@ -67,6 +67,9 @@ async def get_xlsx_data_by_medcard_num(medcard_num: int, request: Request,
                                       screening_service: ScreeningService = Depends(),
                                       visit_specialist_control_service: VisitSpecialistControlService = Depends(),
                                       user: User = Depends(get_current_user)):
+    """
+    Экспорт данных медкарты (по ее номеру) в файл
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         filename = f"./static/files/{medcard_num}.xlsx"
         child = service.get_medcard_by_num(medcard_num=medcard_num)

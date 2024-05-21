@@ -21,6 +21,9 @@ router = APIRouter(
 async def get_allergies_by_medcard_num(medcard_num: int,
                                        user: User = Depends(get_current_user),
                                        service: AllergyService = Depends()):
+    """
+    Получение аллергии по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_allergies_by_medcard_num(medcard_num=medcard_num)
     else:

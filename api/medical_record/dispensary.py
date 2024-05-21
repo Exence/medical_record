@@ -21,6 +21,9 @@ router = APIRouter(
 async def get_dispensaries_by_medcard_num(medcard_num: int,
                                           user: User = Depends(get_current_user),
                                           service: DispensaryService = Depends()):
+    """
+    Получение списка сведений о диспансерном наблюдении по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_dispensaries_by_medcard_num(medcard_num=medcard_num)
     else:
@@ -34,6 +37,9 @@ async def get_dispensary_by_pk(dispensary_pk: DispensaryPK,
                                medcard_num: int,
                                user: User = Depends(get_current_user),
                                service: DispensaryService = Depends()):
+    """
+    Получение сведений о диспансерном наблюдении по первичному ключу
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_dispensary_by_pk(id=dispensary_pk.id)
     else:
@@ -47,6 +53,9 @@ async def add_dispensary(dispensary_data: DispensaryCreate,
                          medcard_num: int,
                          user: User = Depends(get_current_user),
                          service: DispensaryService = Depends()):
+    """
+    Добавление сведений о диспансерном наблюдении
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_dispensary(dispensary_data=dispensary_data)
     else:
@@ -60,6 +69,9 @@ async def update_dispensary(dispensary_data: DispensaryUpdate,
                             medcard_num: int,
                             user: User = Depends(get_current_user),
                             service: DispensaryService = Depends()):
+    """
+    Редактирование сведений о диспансерном наблюдении
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_dispensary(dispensary_data=dispensary_data)
     else:
@@ -73,6 +85,9 @@ async def delete_dispensary(dispensary_pk: DispensaryPK,
                             medcard_num: int,
                             user: User = Depends(get_current_user),
                             service: DispensaryService = Depends()):
+    """
+    Удаление сведений о диспансерном наблюдении
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.delete_dispensary(id=dispensary_pk.id)
     else:

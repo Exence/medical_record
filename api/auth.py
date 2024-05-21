@@ -22,6 +22,9 @@ router = APIRouter(
 @router.post('/sign-in', response_model=Token)
 async def sign_in(form_data: OAuth2PasswordRequestForm = Depends(),
                   service: AuthService = Depends()) -> Token:
+    """
+    Процедура авторизации Пользователя
+    """
     return service.authenticate_user(
         password=form_data.password
     )

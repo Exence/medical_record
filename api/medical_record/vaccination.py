@@ -26,6 +26,9 @@ router = APIRouter(
 async def get_vaccinations_by_medcard_num(medcard_num: int,
                                           user: User = Depends(get_current_user),
                                           service: VaccinationService = Depends()):
+    """
+    Получение списка сведений о прививках по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_vaccinations_by_medcard_num(medcard_num=medcard_num)
     else:
@@ -39,6 +42,9 @@ async def get_vaccination_by_pk(vaccination_pk: VaccinationPK,
                                 medcard_num: int,
                                 user: User = Depends(get_current_user),
                                 service: VaccinationService = Depends()):
+    """
+    Получение сведений о прививке по первичному ключу
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_vaccination_by_pk(vaccination_pk=vaccination_pk)
     else:
@@ -52,6 +58,9 @@ async def add_vaccination(vaccination_data: VaccinationCreate,
                           medcard_num: int,
                           user: User = Depends(get_current_user),
                           service: VaccinationService = Depends()):
+    """
+    Добавление сведений о прививке
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_vaccination(vaccination_data=vaccination_data)
     else:
@@ -65,6 +74,9 @@ async def update_vaccination(vaccination_data: VaccinationUpdate,
                              medcard_num: int,
                              user: User = Depends(get_current_user),
                              service: VaccinationService = Depends()):
+    """
+    Редактирование сведений о прививке
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_vaccination(vaccination_data=vaccination_data)
     else:
@@ -78,6 +90,9 @@ async def delete_vaccination(vaccination_pk: VaccinationPK,
                              medcard_num: int,
                              user: User = Depends(get_current_user),
                              service: VaccinationService = Depends()):
+    """
+    Удаление сведений о прививке
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.delete_vaccination(vaccination_pk=vaccination_pk)
     else:

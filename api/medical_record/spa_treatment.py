@@ -26,6 +26,9 @@ router = APIRouter(
 async def get_spa_treatments_by_medcard_num(medcard_num: int,
                                             user: User = Depends(get_current_user),
                                             service: SpaTreatmentService = Depends()):
+    """
+    Получение списка сведений о санаторно-курортных лчениях по номеру медкарты
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_spa_treatments_by_medcard_num(medcard_num=medcard_num)
     else:
@@ -39,6 +42,9 @@ async def get_spa_treatment_by_pk(spa_treatment_pk: SpaTreatmentPK,
                                   medcard_num: int,
                                   user: User = Depends(get_current_user),
                                   service: SpaTreatmentService = Depends()):
+    """
+    Получение сведений о санаторно-курортном лчении по первичному ключу
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.get_spa_treatment_by_pk(spa_treatment_pk=spa_treatment_pk)
     else:
@@ -52,6 +58,9 @@ async def add_spa_treatment(spa_treatment_data: SpaTreatmentCreate,
                             medcard_num: int,
                             user: User = Depends(get_current_user),
                             service: SpaTreatmentService = Depends()):
+    """
+    Добавление сведений о санаторно-курортном лчении
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.add_new_spa_treatment(spa_treatment_data=spa_treatment_data)
     else:
@@ -65,6 +74,9 @@ async def update_spa_treatment(spa_treatment_data: SpaTreatmentUpdate,
                                medcard_num: int,
                                user: User = Depends(get_current_user),
                                service: SpaTreatmentService = Depends()):
+    """
+    Редактирование сведений о санаторно-курортном лчении
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.update_spa_treatment(spa_treatment_data=spa_treatment_data)
     else:
@@ -78,6 +90,9 @@ async def delete_spa_treatment(spa_treatment_pk: SpaTreatmentPK,
                                medcard_num: int,
                                user: User = Depends(get_current_user),
                                service: SpaTreatmentService = Depends()):
+    """
+    Удаление сведений о санаторно-курортном лчении
+    """
     if check_user_access_to_medcard(user=user, medcard_num=medcard_num):
         return service.delete_spa_treatment(spa_treatment_pk=spa_treatment_pk)
     else:
