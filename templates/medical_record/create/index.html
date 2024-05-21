@@ -33,15 +33,15 @@
             </div>
             <div class="col-md-4">
               <label for="surname" class="form-label">Фамилия</label>
-              <input type="text" class="form-control only-letters" name="surname" id="surname" placeholder="Иванов" required>
+              <input type="text" class="form-control only-letters" name="surname" id="surname" placeholder="Иванов" required  maxlength="139" pattern="[а-яА-Яa-zA-Z]+" title="Пожалуйста, введите только буквы">
             </div>
             <div class="col-md-4">
               <label for="name" class="form-label">Имя</label>
-              <input type="text" class="form-control only-letters" name="name" id="name" placeholder="Иван" required>
+              <input type="text" class="form-control only-letters" name="name" id="name" placeholder="Иван" required  maxlength="139" pattern="[а-яА-Яa-zA-Z]+" title="Пожалуйста, введите только буквы">
             </div>
             <div class="col-md-4">
               <label for="patronymic" class="form-label">Отчество</label>
-              <input type="text" class="form-control only-letters" name="patronymic" id="patronymic" placeholder="Иванович" required>
+              <input type="text" class="form-control only-letters" name="patronymic" id="patronymic" placeholder="Иванович" required  maxlength="139" pattern="[а-яА-Яa-zA-Z]+" title="Пожалуйста, введите только буквы">
             </div>
             <div class="form-group col-md-2" >
                 <label for="birthday" class="form-label">Дата рождения</label>
@@ -93,7 +93,7 @@
             </div> 
             <div class="col-12">
                 <label for="address" class="form-label">Домашний адрес</label>
-              <input type="text" class="form-control" name="address" id="address" placeholder="Город, улица, дом, квартира" required>
+              <input type="text" class="form-control" name="address" id="address" placeholder="Город, улица, дом, квартира" required  maxlength="254">
             </div> 
             <div class="col-md-4">
                 <label for="exampleDataList" class="form-label">Отец</label>
@@ -158,19 +158,19 @@
             <div class="modal-body">
                 <div class="col-md-12">
                     <label for="surname-modal" class="form-label">Фамилия</label>
-                    <input type="text" class="form-control only-letters-modal" id="surname-modal" placeholder="Иванов" required>
+                    <input type="text" class="form-control only-letters-modal" id="surname-modal" placeholder="Иванов" required  maxlength="139" pattern="[а-яА-Яa-zA-Z]+" title="Пожалуйста, введите только буквы">
                 </div>
                 <div class="col-md-12">
                     <label for="name-modal" class="form-label">Имя</label>
-                    <input type="text" class="form-control only-letters-modal" id="name-modal" placeholder="Иван" required>
+                    <input type="text" class="form-control only-letters-modal" id="name-modal" placeholder="Иван" required  maxlength="139" pattern="[а-яА-Яa-zA-Z]+" title="Пожалуйста, введите только буквы">
                 </div>
                 <div class="col-md-12">
                     <label for="patronymic-modal" class="form-label">Отчество</label>
-                    <input type="text" class="form-control only-letters-modal" id="patronymic-modal " placeholder="Иванович" required>
+                    <input type="text" class="form-control only-letters-modal" id="patronymic-modal " placeholder="Иванович" required  maxlength="139" pattern="[а-яА-Яa-zA-Z]+" title="Пожалуйста, введите только буквы">
                 </div>
                 <div class="col-md-4">
                     <label for="birthday_year" class="form-label">Год рождения</label>
-                    <input type="text" class="form-control only-digits-modal" id="birthday_year" placeholder="ГГГГ" required>
+                    <input type="text" class="form-control" id="birthday_year" placeholder="ГГГГ" required  maxlength="4" pattern="\d+" title="Пожалуйста, введите только цифры">
                 </div>
                 <div class="col-md-4">
                     <label for="education" class="form-label">Образование</label>
@@ -187,7 +187,7 @@
                     <label for="phone" class="form-label">Номер телефона</label>
                     <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">+7</span>                        
-                        <input type="tel" class="form-control only-digits-modal" id="phone-modal" placeholder="1234567890" required>
+                        <input type="tel" class="form-control" id="phone-modal" placeholder="1234567890" required pattern="\d+" maxlength="10" title="Пожалуйста, введите только цифры">
                     </div>                    
                 </div>
             </div>

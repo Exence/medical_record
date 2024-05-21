@@ -44,10 +44,10 @@ def user_data(password_data):
             'name': 'name',
             'patronymic': 'patronymic'
         }
+
 @fixture
 def db_user(user_data):
     return User(**user_data)
-
 
 
 def test_verify_password(auth_service, password_data):

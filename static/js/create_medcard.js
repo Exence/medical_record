@@ -25,51 +25,6 @@ mother_btn.addEventListener('click', () => {
     modal_lable.textContent = 'Внести данные о матери'
 })
 
-modal_only_letters_inputs.forEach(input => {
-    input.addEventListener('keydown', function(e){
-            if(!e.key.match(/[а-яА-Яa-zA-Z\-]/)) return e.preventDefault();
-        });
-        input.addEventListener('input', function(e){
-            if (!input.value.match(/^[а-яА-Яa-zA-Z\-]+$/) ) input.value="";
-            if (input.value.length > 0){
-                input.classList.remove("is-invalid");
-                input.classList.add("is-valid");
-            } else {
-                input.classList.add("is-invalid");
-                input.classList.remove("is-valid");
-            }
-
-        });
-})
-
-birthday_year_input.addEventListener('keydown', function(e){
-    if((!e.key.match(/[0-9]/) || birthday_year_input.value.length > 3) && e.key != "Delete" && e.key != "Backspace" ) return e.preventDefault();
-});
-birthday_year_input.addEventListener('input', function(e){
-    if (!birthday_year_input.value.match(/[0-9]{0,4}/) ) birthday_year_input.value="";
-    if (birthday_year_input.value.length === 4){
-        birthday_year_input.classList.remove("is-invalid");
-        birthday_year_input.classList.add("is-valid");
-    } else {
-        birthday_year_input.classList.add("is-invalid");
-        birthday_year_input.classList.remove("is-valid");
-    }
-});
-
-phone_input.addEventListener('keydown', function(e){
-    if((!e.key.match(/[0-9]/) || phone_input.value.length > 9) && e.key != "Delete" && e.key != "Backspace" ) return e.preventDefault();
-});
-phone_input.addEventListener('input', function(e){
-    if (!phone_input.value.match(/[0-9]{0,10}/) ) phone_input.value="";
-    if (phone_input.value.length === 10){
-        phone_input.classList.remove("is-invalid");
-        phone_input.classList.add("is-valid");
-    } else {
-        phone_input.classList.add("is-invalid");
-        phone_input.classList.remove("is-valid");
-    }
-});
-
 modal_commit_btn.addEventListener('click', function(e){
     var check = true;
     modal_only_letters_inputs.forEach(input => {
