@@ -23,7 +23,9 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="/medical_record/create">Создание</a></li>
-              <li><a class="dropdown-item" href="/medical_record/all">Просмотр</a></li>
+              <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#importModal">Импорт из файла</button>
+              <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#importModal">Экспорт всех медкарт</button>
+              <li><a class="dropdown-item" href="/medical_record/all">Просмотр/редактирование</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -48,6 +50,7 @@
     </div>
   </nav>
 <!-- MODALS -->
+<!--tubReport -->
 <div class="modal fade" id="tubReportModal" tabindex="-1" aria-labelledby="tubReportModalLabel" aria-hidden="true">
   <div class="modal-dialog">
   <div class="modal-content">
@@ -83,6 +86,7 @@
   </div>
 </div>
 
+<!--dewReport -->
 <div class="modal fade" id="dewReportModal" tabindex="-1" aria-labelledby="dewReportModalLabel" aria-hidden="true">
   <div class="modal-dialog">
   <div class="modal-content">
@@ -118,6 +122,7 @@
   </div>
 </div>
 
+<!--vacReport -->
 <div class="modal fade" id="vacReportModal" tabindex="-1" aria-labelledby="vacReportModalLabel" aria-hidden="true">
   <div class="modal-dialog">
   <div class="modal-content">
@@ -155,6 +160,8 @@
   </div>
   </div>
 </div>
+
+<!--annualReport -->
 <div class="modal fade" id="annualReportModal" tabindex="-1" aria-labelledby="annualReportModalLabel" aria-hidden="true">
   <div class="modal-dialog">
   <div class="modal-content">
@@ -184,6 +191,28 @@
           </div>
         </form>
   </div>
+  </div>
+</div>
+
+<!--importModal -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="importModalLabel">Импортировать медкарту ребенка</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h1>Выберете файл для имрорта</h1>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="file">
+            </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="import-close-modal">Отмена</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="import-commit-modal" onclick="import_from_xlsx()">Импортировать</button>
+          </div>
+      </div>
   </div>
 </div>
 
