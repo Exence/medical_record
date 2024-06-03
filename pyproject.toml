@@ -6,7 +6,7 @@ authors = ["Alisher Mansurov <lmn.94@mail.ru>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "<3.13,>=3.8"
 anyio = "^3.6.2"
 bcrypt = "^4.0.1"
 cffi = "^1.15.1"
@@ -36,6 +36,7 @@ sqlalchemy = "^2.0.23"
 openpyxl = "^3.1.2"
 pytest = "^8.2.0"
 pytest-mock = "^3.14.0"
+pyinstaller = "^6.7.0"
 
 
 [build-system]
