@@ -8,7 +8,7 @@ from fastapi import (
     Request,
 )
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.templating import Jinja2Templates
+from settings import templates
 from fastapi.responses import RedirectResponse
 
 from models.reports.tub_diagnostic import TubDiagnostic
@@ -29,7 +29,7 @@ router = APIRouter(
     prefix='/reports',
     tags=['Reports']
 )
-templates = Jinja2Templates(directory="templates")
+
 
 
 @router.get('/tuberculin/{start_date}/{end_date}')

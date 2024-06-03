@@ -7,7 +7,7 @@ from fastapi import (
     Request,
 )
 from urllib.parse import unquote
-from fastapi.templating import Jinja2Templates
+from settings import templates
 from fastapi.responses import RedirectResponse
 
 from models.auth import Token
@@ -25,7 +25,7 @@ router = APIRouter(
     prefix='/vac_names',
     tags=['Vaccine Name']
 )
-templates = Jinja2Templates(directory="templates")
+
 
 
 @router.get('/')

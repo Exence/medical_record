@@ -6,7 +6,7 @@ from fastapi import (
     Request,
 )
 from fastapi.responses import RedirectResponse
-from fastapi.templating import Jinja2Templates
+from settings import templates
 
 from models.medical_record.child import ChildEdit, CreateChildForm
 from models.user import User
@@ -26,7 +26,7 @@ router = APIRouter(
 )
 router.include_router(child_router)
 
-templates = Jinja2Templates(directory="templates")
+
 
 
 @router.get('/create')

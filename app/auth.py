@@ -5,7 +5,7 @@ from fastapi import (
     Request,
 )
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.templating import Jinja2Templates
+from settings import templates
 
 from services.auth import (
     AuthService,
@@ -16,7 +16,7 @@ router = APIRouter(
     prefix='/auth',
     tags=['Auth']
 )
-templates = Jinja2Templates(directory="templates")
+
 
 
 @router.post('/')

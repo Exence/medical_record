@@ -1,5 +1,6 @@
 import uvicorn
 import locale
+from os import path
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -18,7 +19,8 @@ app = FastAPI(
 app.include_router(app_router, include_in_schema=False)
 app.include_router(api_router)
 
-app.mount('/static', StaticFiles(directory='static'), name='static')
+static_path = path.join(settings.current_path, "static")
+app.mount('/static', StaticFiles(directory=static_path), name='static')
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host=settings.server_host, port=settings.server_port, reload=True)

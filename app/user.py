@@ -9,7 +9,7 @@ from fastapi import (
     
 )
 from fastapi.responses import RedirectResponse
-from fastapi.templating import Jinja2Templates
+from settings import templates
 
 from models.user import User, UserUpdate
 
@@ -24,7 +24,7 @@ router = APIRouter(
     prefix='/users',
     tags=['User']
 )
-templates = Jinja2Templates(directory="templates")
+
 
 
 def update_user_data(request: Request, auth_service: AuthService, updated_user: User, msg: str):

@@ -8,7 +8,7 @@ from fastapi import (
     Request,
 )
 from urllib.parse import unquote
-from fastapi.templating import Jinja2Templates
+from settings import templates
 from fastapi.responses import RedirectResponse
 
 from services.auth import (
@@ -22,7 +22,7 @@ router = APIRouter(
     prefix='/clinics',
     tags=['Clinic']
 )
-templates = Jinja2Templates(directory="templates")
+
 
 @router.get('/')
 async def show_all_clinics(request: Request,
