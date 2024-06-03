@@ -1,3 +1,4 @@
+from os import path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import Engine
@@ -15,8 +16,9 @@ def _set_sqlite_pragma(dbapi_connection, connection_record):
         cursor.execute('PRAGMA foreign_keys=ON;')
         cursor.close()
 
+db_path = path.join(s.current_path, "medical_record.db")
 engine = create_engine(
-    f"sqlite:///medical_record.db"
+    f"sqlite:///{db_path}"
 )
 
 Session = sessionmaker(
