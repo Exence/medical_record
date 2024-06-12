@@ -2,4 +2,5 @@ scss/
 __pycache__/
 env/
 .env
-
+build/
+dist/
