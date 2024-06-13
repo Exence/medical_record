@@ -1,4 +1,4 @@
-<div class="modal fade" id="parentModal" tabindex="-1" aria-labelledby="parentModalLabel" aria-hidden="true">
+<div class="modal fade" id="parentModal" tabindex="-1" aria-labelledby="parentModalLabel" aria-hidden="true" style="overflow-y: auto;">
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -8,22 +8,22 @@
         <div class="modal-body">
             <div class="col-md-12">
                 <label for="surname-modal" class="form-label">Фамилия</label>
-                <input type="text" class="form-control only-letters-modal" id="surname-modal" placeholder="Иванов" required>
+                <input type="text" class="form-control only-letters-modal" id="surname-modal" placeholder="Иванов" required  maxlength="139" pattern="[а-яА-Яa-zA-Z]+" title="Пожалуйста, введите только буквы">
             </div>
             <div class="col-md-12">
                 <label for="name-modal" class="form-label">Имя</label>
-                <input type="text" class="form-control only-letters-modal" id="name-modal" placeholder="Иван" required>
+                <input type="text" class="form-control only-letters-modal" id="name-modal" placeholder="Иван" required  maxlength="139" pattern="[а-яА-Яa-zA-Z]+" title="Пожалуйста, введите только буквы">
             </div>
             <div class="col-md-12">
                 <label for="patronymic-modal" class="form-label">Отчество</label>
-                <input type="text" class="form-control only-letters-modal" id="patronymic-modal" placeholder="Иванович" required>
+                <input type="text" class="form-control only-letters-modal" id="patronymic-modal" placeholder="Иванович" required  maxlength="139" pattern="[а-яА-Яa-zA-Z]+" title="Пожалуйста, введите только буквы">
             </div>
             <div class="col-md-4">
-                <label for="birthday_year" class="form-label">Год рождения</label>
-                <input type="text" class="form-control only-digits-modal" id="birthday_year" placeholder="ГГГГ" required>
+                <label for="birthday-year" class="form-label">Год рождения</label>
+                <input type="text" class="form-control" id="birthday-year" placeholder="ГГГГ" required  maxlength="4" pattern="\d+" title="Пожалуйста, введите только цифры">
             </div>
             <div class="col-md-4">
-                <label for="education-modal" class="form-label">Образование</label>
+                <label for="education" class="form-label">Образование</label>
                 <select class="form-select" id="education-modal" required>
                   <option selected>б/обр.</option>
                   <option>н/ср.</option>
@@ -37,7 +37,7 @@
                 <label for="phone" class="form-label">Номер телефона</label>
                 <div class="input-group has-validation">
                     <span class="input-group-text" id="inputGroupPrepend">+7</span>                        
-                    <input type="tel" class="form-control only-digits-modal" id="phone-modal" placeholder="1234567890" required>
+                    <input type="tel" class="form-control" id="phone-modal" placeholder="1234567890" required pattern="\d+" maxlength="10" title="Пожалуйста, введите только цифры">
                 </div>                    
             </div>
         </div>
@@ -47,5 +47,4 @@
         </div>
     </div>
     </div>
-  </div>
-  
+</div>

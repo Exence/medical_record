@@ -38,7 +38,7 @@ const parent_modal_header = document.querySelector('#parentModalLabel');
 const parent_surname_inpt = document.querySelector('#surname-modal');
 const parent_name_inpt = document.querySelector('#name-modal');
 const parent_patronymic_inpt = document.querySelector('#patronymic-modal');
-const parent_birthday_year_dtpkr = document.querySelector('#birthday_year');
+const parent_birthday_year_dtpkr = document.querySelector('#birthday-year');
 const parent_edu_slct = document.querySelector('#education-modal');
 const parent_phone_inpt = document.querySelector('#phone-modal');
 const parent_close_modal_btn = document.querySelector('#parent-close-modal');
@@ -276,16 +276,22 @@ const close_delete_modal_btn = document.querySelector('#delete_close_modal');
 
 const onlyLetters = (str) => /^[a-zA-Zа-яА-Я\s]+$/.test(str);
 const onlyDigits = (str) => /^\d+$/.test(str);
+const hasEmptyInput = (inputsArray) => {
+    let hasEmpty = false;
+    inputsArray.forEach(input => {
+        if (!input.value) {
+            input.classList.add('is-invalid');
+            hasEmpty = true;
+        } else {
+            input.classList.remove('is-invalid');
+        } 
+    });
+    
+    return hasEmpty
+}
 
 
 /* CHILD */
-const ValidateChildFields = () => {
-    child_surname_modal_inpt.value = child.surname;
-    child_name_modal_inpt.value = child.name;
-    child_patronymic_modal_inpt.value = child.patronymic;
-    child_birthday_modal_inpt.value = child.birthday;
-    child_address_modal_inpt.value = child.address;
-}
 function update_child(){
     $.ajax({
         type: "GET",
@@ -314,7 +320,23 @@ function update_child(){
     });  
 }
 
-child_commit_modal_btn.addEventListener('click', () => {
+child_commit_modal_btn.addEventListener('click', (event) => {
+    const requaredInputs = [  
+        child_surname_modal_inpt,
+        child_name_modal_inpt,
+        child_patronymic_modal_inpt,
+        child_birthday_modal_inpt,
+        child_address_modal_inpt,
+        child_entering_date_modal_dtpk
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const childModal = new bootstrap.Modal(document.getElementById('childModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        childModal.show();
+        return
+    }
     var child = {
         "surname": child_surname_modal_inpt.value,
         "name": child_name_modal_inpt.value,
@@ -361,13 +383,12 @@ child_commit_modal_btn.addEventListener('click', () => {
 
 /* ALLERGY */
 const validateAllergyFields = () => {
-    let isValid = true;
-    if (!allergen.value) {
-        allergen.classList.add('is-invalid');
-        isValid = false;
-    } else {
-        allergen.classList.remove('is-invalid');
-    }
+    const requaredInputs = [ 
+        allergen,
+        allergy_reaction_type,
+        allergy_diagnosis_date 
+    ]
+    let isValid = !hasEmptyInput(requaredInputs);
 
     if (!onlyDigits(allergy_start_age.value.trim())) {
         allergy_start_age.classList.add('is-invalid');
@@ -376,24 +397,18 @@ const validateAllergyFields = () => {
         allergy_start_age.classList.remove('is-invalid');
     }
 
-    if (!allergy_reaction_type.value) {
-        allergy_reaction_type.classList.add('is-invalid');
-        isValid = false;
-    } else {
-        allergy_reaction_type.classList.remove('is-invalid');
-    }
-
-    if (!allergy_diagnosis_date.value) {
-        allergy_diagnosis_date.classList.add('is-invalid');
-        isValid = false;
-    } else {
-        allergy_diagnosis_date.classList.remove('is-invalid');
-    }
-
     return isValid;
 };
 
 allergy_commit_modal_btn.addEventListener('click', (event) => {
+    if (!validateAllergyFields()) {
+        const allergyModal = new bootstrap.Modal(document.getElementById('allergyModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        allergyModal.show();
+        return
+    }
+
     var allergy = {
             "medcard_num": medcard_num,
             "allergen": allergen.value,
@@ -403,14 +418,6 @@ allergy_commit_modal_btn.addEventListener('click', (event) => {
             "diagnosis_date": allergy_diagnosis_date.value,
             "note": allergy_note.value
         };
-    
-    if (!validateAllergyFields()) {
-        const allergyModal = new bootstrap.Modal(document.getElementById('allergyModal'));
-        event.preventDefault();
-        event.stopPropagation();
-        allergyModal.show();
-        return
-    }
 
     switch (allergy_commit_modal_btn.value) {
         case 'add':
@@ -560,7 +567,33 @@ function mother_update_btn_click(){
     parent_update_set_info(mother_update_btn.value);
 }
 
-parent_commit_modal_btn.addEventListener('click', () => {
+const validateParentFields = () => {
+    const requaredInputs = [ 
+        parent_name_inpt,
+        parent_surname_inpt,
+        parent_patronymic_inpt,
+        parent_birthday_year_dtpkr
+    ]
+    let isValid = !hasEmptyInput(requaredInputs);
+
+    if (!onlyDigits(parent_phone_inpt.value.trim())) {
+        parent_phone_inpt.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        parent_phone_inpt.classList.remove('is-invalid');
+    }
+
+    return isValid;
+};
+
+parent_commit_modal_btn.addEventListener('click', (event) => { 
+    if (!validateParentFields()) {
+        const parentModal = new bootstrap.Modal(document.getElementById('parentModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        parentModal.show();
+        return
+    }
     var parent = {
         "surname": parent_surname_inpt.value,
         "name": parent_name_inpt.value,
@@ -706,7 +739,40 @@ function delete_class(class_type, class_age){
     delete_commit_modal_btn.value = 'delete_extra_class'
 }
 
-class_commit_modal_btn.addEventListener('click', () =>{
+const validateExtraClassesFields = () => {
+    let isValid = true;
+    if (!class_type_modal_inpt.value) {
+        class_type_modal_inpt.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        class_type_modal_inpt.classList.remove('is-invalid');
+    } 
+
+    if (!onlyDigits(class_age_modal_inpt.value.trim())) {
+        class_age_modal_inpt.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        class_age_modal_inpt.classList.remove('is-invalid');
+    }
+
+    if (!onlyDigits(class_hours_modal_inpt.value.trim())) {
+        class_hours_modal_inpt.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        class_hours_modal_inpt.classList.remove('is-invalid');
+    }    
+
+    return isValid;
+};
+
+class_commit_modal_btn.addEventListener('click', (event) =>{
+    if (!validateExtraClassesFields()) {
+        const classModal = new bootstrap.Modal(document.getElementById('classModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        classModal.show();
+        return
+    }
     var extra_class = {
         "medcard_num": medcard_num,
         "classes_type": class_type_modal_inpt.value,
@@ -805,7 +871,19 @@ function delete_past_illness(diagnosis, start_date){
     delete_commit_modal_btn.value = 'delete_past_illness'
 }
 
-past_illness_commit_modal_btn.addEventListener('click', () =>{
+past_illness_commit_modal_btn.addEventListener('click', (event) =>{
+    const requaredInputs = [  
+        past_illness_diagnosis_modal_inpt,
+        past_illness_start_date_modal_dtpkr
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const pastIllnessModal = new bootstrap.Modal(document.getElementById('pastIllnessModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        pastIllnessModal.show();
+        return
+    }
     var past_illness = {
         "medcard_num": medcard_num,
         "diagnosis": past_illness_diagnosis_modal_inpt.value,
@@ -903,7 +981,19 @@ function delete_hospitalization(start_date){
     delete_commit_modal_btn.value = 'delete_hospitalization'
 }
 
-hospitalization_commit_modal_btn.addEventListener('click', () =>{
+hospitalization_commit_modal_btn.addEventListener('click', (event) =>{
+    const requaredInputs = [  
+        hospitalization_diagnosis_modal_txt,
+        hospitalization_start_date_modal_dtpkr
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const hospitalizationModal = new bootstrap.Modal(document.getElementById('hospitalizationModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        hospitalizationModal.show();
+        return
+    }
     var hospitalization = {
         "medcard_num": medcard_num,
         "diagnosis": hospitalization_diagnosis_modal_txt.value,
@@ -1005,7 +1095,20 @@ function delete_spa_treatment(start_date){
     delete_commit_modal_btn.value = 'delete_spa_treatment'
 }
 
-spa_treatment_commit_modal_btn.addEventListener('click', () =>{
+spa_treatment_commit_modal_btn.addEventListener('click', (event) =>{
+    const requaredInputs = [  
+        spa_treatment_diagnosis_modal_txt,
+        spa_treatment_start_date_modal_dtpkr,
+        spa_treatment_founding_modal_inpt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const spaTreatmentModal = new bootstrap.Modal(document.getElementById('spaTreatmentModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        spaTreatmentModal.show();
+        return
+    }
     var spa_treatment = {
         "medcard_num": medcard_num,
         "diagnosis": spa_treatment_diagnosis_modal_txt.value,
@@ -1130,7 +1233,22 @@ function update_medical_certificate(disease, cert_date){
     });
 }
 
-medical_certificate_commit_modal_btn.addEventListener('click', () => {
+medical_certificate_commit_modal_btn.addEventListener('click', (event) => {
+    const requaredInputs = [  
+        medical_certificate_disease_modal_inpt,
+        medical_certificate_cert_date_modal_dtpkr,
+        medical_certificate_start_date_modal_dtpkr,
+        medical_certificate_end_date_modal_dtpkr,
+        medical_certificate_doctor_modal_inpt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const medicalCertificateModal = new bootstrap.Modal(document.getElementById('medicalCertificateModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        medicalCertificateModal.show();
+        return
+    }
     var medical_certificate = {
         "medcard_num": medcard_num,
         "disease": medical_certificate_disease_modal_inpt.value,
@@ -1269,7 +1387,22 @@ function delete_dispensary(id){
     delete_commit_modal_btn.value = 'delete_dispensary'
 }
 
-dispensary_commit_modal_btn.addEventListener('click', () =>{
+dispensary_commit_modal_btn.addEventListener('click', (event) =>{
+    const requaredInputs = [  
+        dispensary_diagnosis_modal_inpt,
+        dispensary_start_date_modal_dtpkr,
+        dispensary_end_date_modal_dtpkr,
+        dispensary_specialist_modal_inpt,
+        dispensary_end_reason_modal_txt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const dispensaryModal = new bootstrap.Modal(document.getElementById('dispensaryModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        dispensaryModal.show();
+        return
+    }
     var dispensary = {
         "medcard_num": medcard_num,
         "diagnosis": dispensary_diagnosis_modal_inpt.value,
@@ -1406,7 +1539,14 @@ function delete_visit_specialist_control(assigned_date){
     delete_commit_modal_btn.value = 'delete_visit_specialist_control'
 }
 
-visit_specialist_control_commit_modal_btn.addEventListener('click', () => {
+visit_specialist_control_commit_modal_btn.addEventListener('click', (event) => {
+    if (!visit_specialist_control_assigned_date_modal_dtpkr.value) {
+        const dispensaryModal = new bootstrap.Modal(document.getElementById('dispensaryModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        dispensaryModal.show();
+        return
+    }
     var visit_specialist_control = {
         "dispensary_id": visit_specialist_control_add_btn.value,
         "assigned_date": visit_specialist_control_assigned_date_modal_dtpkr.value,
@@ -1498,7 +1638,19 @@ function delete_deworming(deworming_date){
     delete_commit_modal_btn.value = 'delete_deworming'
 }
 
-deworming_commit_modal_btn.addEventListener('click', () =>{
+deworming_commit_modal_btn.addEventListener('click', (event) =>{
+    const requaredInputs = [  
+        deworming_date_modal_dtpkr,
+        deworming_result_modal_txt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const dewormingModal = new bootstrap.Modal(document.getElementById('dewormingModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        dewormingModal.show();
+        return
+    }
     var deworming = {
         "medcard_num": medcard_num,
         "deworming_date": deworming_date_modal_dtpkr.value,
@@ -1598,7 +1750,20 @@ function delete_oral_sanation(sanation_date){
     delete_commit_modal_btn.value = 'delete_oral_sanation';
 }
 
-oral_sanation_commit_modal_btn.addEventListener('click', () =>{
+oral_sanation_commit_modal_btn.addEventListener('click', (event) =>{
+    const requaredInputs = [  
+        oral_sanation_date_modal_dtpkr,
+        oral_sanation_dental_result_modal_txt,
+        oral_sanation_result_modal_txt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const oralSanationModal = new bootstrap.Modal(document.getElementById('oralSanationModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        oralSanationModal.show();
+        return
+    }
     var oral_sanation = {
         "medcard_num": medcard_num,
         "sanation_date": oral_sanation_date_modal_dtpkr.value,
@@ -1706,7 +1871,20 @@ function delete_prevaccination_checkup(examination_date){
     delete_commit_modal_btn.value = 'delete_prevaccination_checkup';
 }
 
-prevaccination_checkup_commit_modal_btn.addEventListener('click', () =>{    
+prevaccination_checkup_commit_modal_btn.addEventListener('click', (event) =>{
+    const requaredInputs = [  
+        prevaccination_checkup_examination_date_modal_dtpkr,
+        prevaccination_checkup_diagnosis_modal_inpt,
+        prevaccination_checkup_doctor_modal_inpt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const prevaccinationCheckupModal = new bootstrap.Modal(document.getElementById('prevaccinationCheckupModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        prevaccinationCheckupModal.show();
+        return
+    }
     var prevaccination_checkup = {
         "medcard_num": medcard_num,
         "examination_date": prevaccination_checkup_examination_date_modal_dtpkr.value,
@@ -1825,7 +2003,21 @@ function delete_prof_vaccination(vac_name_id, vac_type){
     delete_commit_modal_btn.value = 'delete_prof_vaccination';
 }
 
-prof_vaccination_commit_modal_btn.addEventListener('click', () =>{    
+prof_vaccination_commit_modal_btn.addEventListener('click', (event) =>{  
+    const requaredInputs = [  
+        prof_vaccination_date_modal_dtpk,
+        prof_vaccination_serial_modal_inpt,
+        prof_vaccination_dose_modal_inpt,
+        prof_vaccination_doctor_modal_inpt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const profVaccinationModal = new bootstrap.Modal(document.getElementById('profVaccinationModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        profVaccinationModal.show();
+        return
+    }
     var prof_vaccination = {
         "medcard_num": medcard_num,
         "vac_name_id": prof_vaccination_vac_name_modal_slct.value,
@@ -1944,7 +2136,21 @@ function delete_epid_vaccination(vac_name_id, vac_type){
     delete_commit_modal_btn.value = 'delete_epid_vaccination';
 }
 
-epid_vaccination_commit_modal_btn.addEventListener('click', () =>{    
+epid_vaccination_commit_modal_btn.addEventListener('click', (event) =>{
+    const requaredInputs = [  
+        epid_vaccination_date_modal_dtpk,
+        epid_vaccination_serial_modal_inpt,
+        epid_vaccination_dose_modal_inpt,
+        epid_vaccination_doctor_modal_inpt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const epidVaccinationModal = new bootstrap.Modal(document.getElementById('epidVaccinationModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        epidVaccinationModal.show();
+        return
+    }  
     var epid_vaccination = {
         "medcard_num": medcard_num,
         "vac_name_id": epid_vaccination_vac_name_modal_slct.value,
@@ -2060,7 +2266,22 @@ function delete_gamma_globulin_injection(vac_date){
     delete_commit_modal_btn.value = 'delete_gamma_globulin_injection';
 }
 
-gg_injection_commit_modal_btn.addEventListener('click', () =>{    
+gg_injection_commit_modal_btn.addEventListener('click', (event) =>{    
+    const requaredInputs = [  
+        gg_injection_date_modal_dtpk,
+        gg_injection_reason_modal_txt,
+        gg_injection_serial_modal_inpt,
+        gg_injection_dose_modal_inpt,
+        gg_injection_doctor_modal_inpt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const ggInjectionModal = new bootstrap.Modal(document.getElementById('ggInjectionModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        ggInjectionModal.show();
+        return
+    }
     var gg_injection = {
         "medcard_num": medcard_num,
         "vac_date": gg_injection_date_modal_dtpk.value,
@@ -2164,7 +2385,14 @@ function delete_mantoux_test(check_date){
     delete_commit_modal_btn.value = 'delete_mantoux_test';
 }
 
-mantoux_test_commit_modal_btn.addEventListener('click', () =>{    
+mantoux_test_commit_modal_btn.addEventListener('click', (event) =>{
+    if (!mantoux_test_date_modal_dtpk.value) {
+        const mantouxTestModal = new bootstrap.Modal(document.getElementById('mantouxTestModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        mantouxTestModal.show();
+        return
+    }
     var mantoux_test = {
         "medcard_num": medcard_num,
         "check_date": mantoux_test_date_modal_dtpk.value,
@@ -2266,7 +2494,21 @@ function delete_tuberculosis_vaccination(vac_date){
     delete_commit_modal_btn.value = 'delete_tuberculosis_vaccination';
 }
 
-tub_vac_commit_modal_btn.addEventListener('click', () =>{    
+tub_vac_commit_modal_btn.addEventListener('click', (event) =>{
+    const requaredInputs = [  
+        tub_vac_date_modal_dtpk,
+        tub_vac_serial_modal_inpt,
+        tub_vac_dose_modal_inpt,
+        tub_vac_doctor_modal_inpt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const tubVacModal = new bootstrap.Modal(document.getElementById('tubVacModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        tubVacModal.show();
+        return
+    }
     var tub_vac = {
         "medcard_num": medcard_num,
         "vac_date": tub_vac_date_modal_dtpk.value,
@@ -2411,7 +2653,22 @@ function delete_medical_examination(period){
     delete_commit_modal_btn.value = 'delete_medical_examination';
 }
 
-medical_examination_commit_modal_btn.addEventListener('click', () =>{    
+medical_examination_commit_modal_btn.addEventListener('click', (event) =>{
+    const requaredInputs = [  
+        medical_examination_date_modal_dtpk,
+        medical_examination_height_modal_inpt,
+        medical_examination_weight_modal_inpt,
+        medical_examination_health_group_modal_slct,
+        medical_examination_sport_group_modal_slct 
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const medicalExaminationModal = new bootstrap.Modal(document.getElementById('medicalExaminationModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        medicalExaminationModal.show();
+        return
+    }
     var medical_examination = {
         "medcard_num": medcard_num,
         "period":  medical_examination_period_modal_slct.value,
@@ -2582,7 +2839,21 @@ function delete_ongoing_medical_supervision(examination_date){
     delete_commit_modal_btn.value = 'delete_oms';
 }
 
-oms_commit_modal_btn.addEventListener('click', () =>{    
+oms_commit_modal_btn.addEventListener('click', (event) =>{
+    const requaredInputs = [  
+        oms_examination_date_modal_dtpk,
+        oms_examination_data_modal_txt,
+        oms_diagnosis_modal_txt,
+        oms_doctor_modal_inpt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const omsModal = new bootstrap.Modal(document.getElementById('omsModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        omsModal.show();
+        return
+    }
     var oms = {
         "medcard_num": medcard_num,
         "examination_date": oms_examination_date_modal_dtpk.value,
@@ -2719,7 +2990,21 @@ function delete_screening(age){
     delete_commit_modal_btn.value = 'delete_screening';
 }
 
-screening_commit_modal_btn.addEventListener('click', () =>{ 
+screening_commit_modal_btn.addEventListener('click', (event) =>{ 
+    const requaredInputs = [  
+        screening_examination_date_modal_dtpk,
+        screening_questionnaire_test_modal_slct,
+        screening_height_modal_inpt,
+        screening_weight_modal_inpt
+    ];
+
+    if (hasEmptyInput(requaredInputs)) {
+        const screeningModal = new bootstrap.Modal(document.getElementById('screeningModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        screeningModal.show();
+        return
+    }
     var screening = {
         "medcard_num": medcard_num,
         "examination_date": screening_examination_date_modal_dtpk.value,

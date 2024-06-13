@@ -1,4 +1,4 @@
-<div class="modal fade" id="classModal" tabindex="-1" aria-labelledby="classModalLabel" aria-hidden="true">
+<div class="modal fade" id="classModal" tabindex="-1" aria-labelledby="classModalLabel" aria-hidden="true" style="overflow-y: auto;">
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -12,11 +12,11 @@
             </div>
             <div class="col-md-4">
                 <label for="class-age-modal" class="form-label">Возраст</label>
-                <input type="text" class="form-control only-digits-modal" id="class-age-modal" placeholder="3" required>
+                <input type="text" class="form-control only-digits-modal" id="class-age-modal" placeholder="3" required pattern="\d+" maxlength="1" required>
             </div>
             <div class="col-md-4">
                 <label for="class-hours-modal" class="form-label">Часов в неделю</label>
-                <input type="text" class="form-control only-digits-modal" id="class-hours-modal" placeholder="ЧЧ" required>
+                <input type="text" class="form-control only-digits-modal" id="class-hours-modal" placeholder="ЧЧ" required pattern="\d+" maxlength="2" required>
             </div>  
                     
         </div>
