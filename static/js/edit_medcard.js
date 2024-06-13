@@ -27,10 +27,10 @@ const allergy_close_modal_btn = document.querySelector('#allergy-close-modal');
 const allergy_modal_header = document.querySelector('#allergyModalLabel');
 const allergen = document.querySelector('#allergen-modal');
 const allergy_type = document.querySelector('#allergyType-modal');
-const start_age = document.querySelector('#allergyStartAge-modal');
-const reaction_type = document.querySelector('#allergyReactionType-modal');
-const diagnosis_date = document.querySelector('#allergyDiagnosisDate-modal');
-const note = document.querySelector('#allergyNote-modal');
+const allergy_start_age = document.querySelector('#allergyStartAge-modal');
+const allergy_reaction_type = document.querySelector('#allergyReactionType-modal');
+const allergy_diagnosis_date = document.querySelector('#allergyDiagnosisDate-modal');
+const allergy_note = document.querySelector('#allergyNote-modal');
 
 /*********************************************************************************************/
 /* PARENTS CONST */
@@ -274,8 +274,18 @@ const delete_modal_header = document.querySelector('#deleteModalLabel');
 const delete_commit_modal_btn = document.querySelector('#delete_modal_commit');
 const close_delete_modal_btn = document.querySelector('#delete_close_modal');
 
+const onlyLetters = (str) => /^[a-zA-Zа-яА-Я\s]+$/.test(str);
+const onlyDigits = (str) => /^\d+$/.test(str);
+
 
 /* CHILD */
+const ValidateChildFields = () => {
+    child_surname_modal_inpt.value = child.surname;
+    child_name_modal_inpt.value = child.name;
+    child_patronymic_modal_inpt.value = child.patronymic;
+    child_birthday_modal_inpt.value = child.birthday;
+    child_address_modal_inpt.value = child.address;
+}
 function update_child(){
     $.ajax({
         type: "GET",
@@ -350,16 +360,57 @@ child_commit_modal_btn.addEventListener('click', () => {
 })
 
 /* ALLERGY */
-allergy_commit_modal_btn.addEventListener('click', () => {
+const validateAllergyFields = () => {
+    let isValid = true;
+    if (!allergen.value) {
+        allergen.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        allergen.classList.remove('is-invalid');
+    }
+
+    if (!onlyDigits(allergy_start_age.value.trim())) {
+        allergy_start_age.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        allergy_start_age.classList.remove('is-invalid');
+    }
+
+    if (!allergy_reaction_type.value) {
+        allergy_reaction_type.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        allergy_reaction_type.classList.remove('is-invalid');
+    }
+
+    if (!allergy_diagnosis_date.value) {
+        allergy_diagnosis_date.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        allergy_diagnosis_date.classList.remove('is-invalid');
+    }
+
+    return isValid;
+};
+
+allergy_commit_modal_btn.addEventListener('click', (event) => {
     var allergy = {
             "medcard_num": medcard_num,
             "allergen": allergen.value,
             "allergy_type": allergy_type.value,
-            "start_age": start_age.value,
-            "reaction_type": reaction_type.value,
-            "diagnosis_date": diagnosis_date.value,
-            "note": note.value
+            "start_age": allergy_start_age.value,
+            "reaction_type": allergy_reaction_type.value,
+            "diagnosis_date": allergy_diagnosis_date.value,
+            "note": allergy_note.value
         };
+    
+    if (!validateAllergyFields()) {
+        const allergyModal = new bootstrap.Modal(document.getElementById('allergyModal'));
+        event.preventDefault();
+        event.stopPropagation();
+        allergyModal.show();
+        return
+    }
 
     switch (allergy_commit_modal_btn.value) {
         case 'add':
@@ -385,6 +436,9 @@ allergy_commit_modal_btn.addEventListener('click', () => {
                         <button type="button" class="btn btn-outline-primary mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#allergyModal" id="btn-update-'+ allergy["allergen"].replace(/ /g,'') +'" value="' + allergy["allergen"] + '///' + allergy["allergy_type"] + '///' + allergy["start_age"] + '///' + allergy["reaction_type"] + '///' + allergy["diagnosis_date"] + '///' + allergy["note"] + '" onclick="update_allergy(\'' + allergy["allergen"] + '\')">Редактировать</button>\
                         <button type="button" class="btn btn-outline-danger mt-2 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" id="btn-delete-'+ allergy["allergen"].replace(/ /g,'') +'"  onclick="delete_allergy(\'' + allergy["allergen"] + '\')">Удалить</button>\
                     </div>'
+                },
+                error: ()=> {
+                    
                 }
             });
             break;
@@ -428,10 +482,10 @@ function add_allergy(){
     allergy_modal_header.innerHTML = 'Добавление данных об аллергии';
     allergy_commit_modal_btn.value = 'add';
     allergen.value = "";
-    start_age.value = "";
-    reaction_type.value = "";
-    diagnosis_date.value = "";
-    note.value = "";
+    allergy_start_age.value = "";
+    allergy_reaction_type.value = "";
+    allergy_diagnosis_date.value = "";
+    allergy_note.value = "";
 }
 
 function update_allergy(allergen_name){
@@ -442,10 +496,10 @@ function update_allergy(allergen_name){
     allergy_data = btn_caller.value.split('///')
     allergen.value = allergy_data[0];
     allergy_type.value = allergy_data[1];
-    start_age.value = allergy_data[2];
-    reaction_type.value = allergy_data[3];
-    diagnosis_date.value = allergy_data[4];
-    note.value = allergy_data[5];
+    allergy_start_age.value = allergy_data[2];
+    allergy_reaction_type.value = allergy_data[3];
+    allergy_diagnosis_date.value = allergy_data[4];
+    allergy_note.value = allergy_data[5];
 }
 
 function delete_allergy(allergen_name){
@@ -3352,14 +3406,4 @@ function deleteMedcard(medcard_num) {
     } else {
         alert(`Для удаления необходимо ввести в поле ввода текст: "${confirmDeleteString}"`)
     }
-}
-
-function export_to_xlsx() {
-    const url = "/api/v1/children/" + medcard_num + "/xlsx";
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "data.xlsx";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
 }

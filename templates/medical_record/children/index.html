@@ -5,13 +5,14 @@
 {% endblock %}
 
 {% block content %}
-	<div class="container">
+	<div class="container" id="content">
     <div class="row">
-      <div class="col-8">
+      <div class="col-7">
         <h1 class="text-left">{{ child.surname.upper() }} {{ child.name }} {{ child.patronymic }}</h1>
       </div>
-      <div class="col-4 d-flex justify-content-end align-items-center">
-        <button onclick="export_to_xlsx()" class="btn btn-outline-success me-2" >Экспорт</button>
+      <div class="col-5 d-flex justify-content-end align-items-center">
+        <button onclick="export_to_xlsx()" class="btn btn-outline-success me-2" >Экспорт в Excel</button>
+        <button onclick="export_to_pdf('{{ child.surname }} {{ child.name }} {{ child.patronymic }}')" class="btn btn-outline-danger me-2" >Экспорт в PDF</button>
         <a href="/medical_record/all" type="button" class="btn btn-outline-primary" >Все медкарты</a>
       </div>
     </div>
@@ -327,7 +328,7 @@
           </div>
         </div>
       </div>
-      <div class="accordion-item">
+      <div class="accordion-item" id="dellete-accordion-item">
         <h2 class="accordion-header" id="screening-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#delete-collapse" aria-expanded="false" aria-controls="delete-collapse">
             УДАЛИТЬ ДАННЫЕ ТЕКУЩЕЙ МЕДКАРТЫ
@@ -434,4 +435,7 @@
 
 {% block script %}
     <script src="{{ url_for('static', path='js/edit_medcard.js') }}"></script>
+    <script src="{{ url_for('static', path='js/html2canvas.min.js') }}"></script>
+    <script src="{{ url_for('static', path='js/jspdf.umd.min.js') }}"></script>
+    <script src="{{ url_for('static', path='js/exports.js') }}"></script>
 {% endblock %}
