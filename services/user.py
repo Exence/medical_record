@@ -82,7 +82,7 @@ class UserService():
         new_password_hash = self.get_hashed_password(new_password)
         db_user = self._get(user.kindergarten_num)
         db_user.password_hash = new_password_hash
-        user.password_hash = new_password_hash
+        user.password_hash = new_password_hash.decode('utf-8')
         self.session.commit()
         return user
 
