@@ -9,9 +9,6 @@ from settings import settings, prod
 from app import router as app_router
 from api import router as api_router
 
-if prod:
-    import main
-
 
 locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
 app = FastAPI(
