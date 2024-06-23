@@ -2,8 +2,8 @@
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
       "beforeBuildCommand": "pyinstaller ../pyinstaller.spec -y",
-      "beforeDevCommand": "pyinstaller ../pyinstaller.spec -y && dist/MedicalRecord/MedicalRecord",
-      "devPath": "http://localhost:8000",
+      "beforeDevCommand": "pyinstaller ../pyinstaller.spec -y",
+      "devPath": "../src",
       "distDir": "../dist"
     },
   "package": {
@@ -12,12 +12,17 @@
   },
   "tauri": {
     "bundle": {
-      "identifier": "com.example.my-tauri-app",
+      "identifier": "MedicalRecord",
       "active": true,
-      "targets": ["deb", "appimage", "msi", "dmg"]
+      "targets": ["deb", "appimage", "msi", "dmg", "app"],
+      "resources": ["../dist/MedicalRecord"]
     },
     "windows": [
       {
+        "label": "MedicalRecord",
+        "url": "http://localhost:8000", 
+        "fileDropEnabled": true,
+        "fullscreen": false,
         "title": "Medical Record",
         "width": 1024,
         "height": 768

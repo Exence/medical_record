@@ -16,7 +16,8 @@ def _set_sqlite_pragma(dbapi_connection, connection_record):
         cursor.execute('PRAGMA foreign_keys=ON;')
         cursor.close()
 
-db_path = path.join(s.current_path, "medical_record.db")
+current_dir = path.dirname(path.abspath(__file__))
+db_path = path.join(current_dir, "medical_record.db")
 engine = create_engine(
     f"sqlite:///{db_path}"
 )
